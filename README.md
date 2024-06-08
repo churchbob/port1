@@ -1,6 +1,6 @@
 <style>
   body {background-color: powderblue;}
-  .header   {color: blue;}
+  #header   {color: blue;}
 </style>
 
 <div id="header">testing GitHub!</div>
