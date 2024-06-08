@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  opacity: 0.8;
+  background-size: 10px 10px;
+}
+div {
+  width: 100%;
+  height: 100%;
+}
+.outer{
+        
+        
+    }
+.container {
+  margin: 20px;
+  width: 320px;
+  height: 444px;
+  perspective: 1000px;
+  
+}
+.card_img {
+  border-radius: 4%;
+  width: 320px;
+  height: 444px;
+}
+.card {
+   border-radius: 4%;   
+  transition: transform 2s;
+  transform-style: preserve-3d;
+  cursor: pointer;
+	background-color:#fff;
+ 
+}
+.front, .back {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backface-visibility: hidden;
+    
+  border-radius: 5%;
+  box-shadow: 1px 1px 15px #00529b;
+}
+.front:hover {
+  bottom: 0px;
+  left: 0px;
+ 
+}
+.back {
+ 
+    transform: rotateY(180deg);
+}
+.back:hover {
+  bottom: 0px;
+  right: 0px;
+  
+}
+    
+.header {
+  overflow: hidden;
+  background-color: #f1f1f1;
+  padding: 20px 10px;
+}
+.main{
+    margin: -10px,-10px,-10px,-10px;
+    padding: -10px,-10px,-10px,-10px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+   background-size: 50px 50px;
+    background-color: #74c4ea;
+    
+    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -ms-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);      
+        
+    }
+    
+</style>
+<script>
+    
+  function flip(event){
+	var element = event.currentTarget;
+	if (element.className === "card") {
+   //alert(element.className);
+        
+    if(element.style.transform == "rotateY(180deg)") {
+      element.style.transform = "rotateY(0deg)";
+    }
+    else {
+      element.style.transform = "rotateY(180deg)";
+    }
+  }
+}; 
+
+    
+</script>    
+    
+</head>
+<body>
+       
+    <!--<div class="header">LEADER DECK</div>-->
+    <div class="main">
+    <div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_01-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_01-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_02-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_02-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_03-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_03-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_04-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_04-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_05-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_05-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_06-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_06-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_07-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_07-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_08-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_08-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_09-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_09-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_10-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_10-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_11-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_11-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_12-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_12-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_13-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_13-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_15-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_15-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_16-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_16-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_17-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_17-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_18-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_18-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_19-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_19-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_20-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_20-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_21-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_21-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_22-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_22-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br><div class="container"><div class="card" onclick="flip(event)"><div class="front"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_23-1.svg' class='card_img' alt='cardFront' ></img></div><div class="back"><img src='leader_cards_jpg/LeadershipCards_2022_01-1_23-2.svg' class='card_img' alt='cardBack' ></img></div></div></div><br><br></div>
+</body>    
+</html>
