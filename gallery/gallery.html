@@ -6,6 +6,26 @@
     <link rel="stylesheet" href="style.css">
     <title>Image Gallery</title>
   <style>
+
+      body{
+    margin: -10px,-10px,-10px,-10px;
+    padding: -10px,-10px,-10px,-10px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+   background-size: 50px 50px;
+    background-color: #F2D069;
+    
+    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -ms-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);      
+        
+    }
      .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -103,7 +123,7 @@ src="Red Tornado Gold Iron.jpeg"
 onclick="openModal('Red Tornado Gold Iron.jpeg')" alt="Image 6">
     </div>
     <div class="gallery-item">
-      <img src="Flash Supergril Atom.jpeg" onclick="openModal('Flash Supergril Atom.jpeg')" alt="Image 7">
+      <img src="Metal Men Argue.jpeg" onclick="openModal('Metal Men Argue.jpeg')" alt="Image 7">
     </div>
     <div class="gallery-item">
       <img 
