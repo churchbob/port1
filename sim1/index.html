@@ -34,16 +34,17 @@ body, html {
     font-size: 12px;
     border: 2px;
     background: transparent;
-    .input1{
+}
+    pinned-input.input1{
         border-color: red;
         top: 76px; /* Adjust this value to position the input vertically */
         left: 8px; /* Adjust this value to position the input horizontally */
     }
-      .input2{
+      pinned-input.input2{
         top: 6px; /* Adjust this value to position the input vertically */
         left: 8px; /* Adjust this value to position the input horizontally */
     }
-}
+
 #coords {
   position: fixed;
   top: 20px;
@@ -58,7 +59,7 @@ body, html {
    
     <div class="container">
         <img src="preRegDemoScreenTemplateC.png" alt="Background Image" class="background-image">
-        <input type="text" class="pinned-input input1" placeholder=&mdash>
+        <input type="text" class="pinned-input.input1" placeholder=&mdash>
          <div id="coords">X: 0, Y: 0</div>
     </div>
       <script>
