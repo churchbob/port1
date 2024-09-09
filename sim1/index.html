@@ -55,7 +55,7 @@ input[type=text]:focus {
     }
 #input5{
         top: 102px; /* Adjust this value to position the input vertically */
-        left: 485px; /* Adjust this value to position the input horizontally */
+        left: 418px; /* Adjust this value to position the input horizontally */
     }
 #input6{
         top: 92px; /* Adjust this value to position the input vertically */
@@ -74,7 +74,7 @@ input[type=text]:focus {
 <body>
    
     <div class="container">
-        <img src="preRegDemoScreenTemplateC.png" alt="Background Image" class="background-image">
+        <img src="preRegDemoScreenTemplateC.png" alt="Background Image" id="backimage" class="background-image">
         <input type="text" id="input1" class="pinned-input" placeholder= - >
         <input type="text" id="input2" class="pinned-input" placeholder= - >
         <input type="text" id="input3" class="pinned-input" placeholder= ->
@@ -83,8 +83,10 @@ input[type=text]:focus {
          <div id="coords">X: 0, Y: 0</div>
     </div>
       <script>
+    const imgstartX = document.getElementById("backimage").left;
+    const imgstartY = document.getElementById("backimage").top;       
     const coords = document.getElementById('coords');
-
+    console.log(imgstartX = "&"+imgstartY);
     document.addEventListener('mousemove', (event) => {
       coords.textContent = `X: ${event.clientX}, Y: ${event.clientY}`;
     });
