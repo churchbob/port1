@@ -86,7 +86,7 @@ input[type=text]:focus {
     const imgstartX = document.getElementById("backimage").left;
     const imgstartY = document.getElementById("backimage").top;       
     const coords = document.getElementById('coords');
-    console.log(imgstartX = "&"+imgstartY);
+    console.log(imgstartX + "&"+ imgstartY);
     document.addEventListener('mousemove', (event) => {
       coords.textContent = `X: ${event.clientX}, Y: ${event.clientY}`;
     });
