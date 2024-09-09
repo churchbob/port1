@@ -83,7 +83,7 @@ input[type=text]:focus {
          <div id="coords">X: 0, Y: 0</div>
     </div>
       <script>
-    const rect = image.getBoundingClientRect();
+    const rect = backimage.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
     const coords = document.getElementById('coords');
