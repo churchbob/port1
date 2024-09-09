@@ -75,7 +75,7 @@ input[type=text]:focus {
    
     <div class="container">
         <img src="preRegDemoScreenTemplateC.png" alt="Background Image" id="backimage" class="background-image">
-        <input type="text" id="input1" class="pinned-input" placeholder= - >
+        <input type="text" id="input1" class="pinned-input" placeholder= ZZZZZ >
         <input type="text" id="input2" class="pinned-input" placeholder= - >
         <input type="text" id="input3" class="pinned-input" placeholder= ->
         <input type="text" id="input4" class="pinned-input" placeholder= - >   
@@ -97,7 +97,16 @@ image.addEventListener("click", (event) => {
   console.log("X: ", coordinates.x);
   console.log("Y: ", coordinates.y);
 });
-  
+
+function getStarters(){
+    const backrect = backimage.getBoundingClientRect();
+    const backx = backrect.left;
+    const backy = backrect.top;
+    console.log(backx, backy);
+    document.getElementById("input1").left = backx + 62;
+    document.getElementById("input1").top = backy + 37;
+}
+getStarters()    
 </script>
 </body>
 </html>
