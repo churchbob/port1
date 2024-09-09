@@ -82,16 +82,15 @@ input[type=text]:focus {
         <input type="text" id="input5" class="pinned-input" placeholder= ** >  
          <div id="coords">X: 0, Y: 0</div>
     </div>
-      <script>
-    backimage.addEventListener("click", (event) => {
- function getRelativeCoordinates(event, image) {
+<script>
+   function getRelativeCoordinates(event, image) {
   const rect = image.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
   return { x, y };
 }
 
-const image = document.querySelector("#myImage");
+const image = document.querySelector("#backimage");
 
 image.addEventListener("click", (event) => {
   const coordinates = getRelativeCoordinates(event, image);
@@ -99,6 +98,6 @@ image.addEventListener("click", (event) => {
   console.log("Y: ", coordinates.y);
 });
   
-  </script>
+</script>
 </body>
 </html>
