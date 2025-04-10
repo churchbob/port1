@@ -103,13 +103,13 @@ var contrls =
 		  background-color: #FFF;
 		}
 		#dropArea1{
-			background-image:url("https://bjc.sharepoint.com/:i:/r/sites/BobsProjects/TestSite/drag/Shared%20Documents/dropzones/Slide1.PNG");
+			background-image:url("dropzones/Slide1.PNG");
 			background-repeat: no-repeat;
 			 background-size: auto;
 			 background-position: left 10px;
 		}
 		#dropArea2{
-			background-image:url("https://bjc.sharepoint.com/:i:/r/sites/BobsProjects/TestSite/drag/Shared%20Documents/dropzones/Slide2.PNG");
+			background-image:url("dropzones/Slide2.PNG");
 			background-repeat: no-repeat;
 			background-size: auto;
 			background-position: left 10px;
@@ -209,7 +209,7 @@ document.getElementById("gameHolder").innerHTML += '<div class="screenFrame" id=
 
 // create the coverage cards //////////////////
 for (i=0;i<9;i++){
-	document.getElementById("cardArea").innerHTML += ' <div class="cardHolder" id="cardHolder'+(i+1)+'" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"><div class="front" id="card'+(i+1)+'" draggable="true" ondragstart="dragstartHandler(event)"><img src="'+context+'ins2/Slide'+(i+1)+'.png" class="card_img" draggable="false" id="ins'+(i+1)+'"></img></div><br><br>'
+	document.getElementById("cardArea").innerHTML += ' <div class="cardHolder" id="cardHolder'+(i+1)+'" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"><div class="front" id="card'+(i+1)+'" draggable="true" ondragstart="dragstartHandler(event)"><img src="'+'ins2/Slide'+(i+1)+'.png" class="card_img" draggable="false" id="ins'+(i+1)+'"></img></div><br><br>'
 
 }
 
