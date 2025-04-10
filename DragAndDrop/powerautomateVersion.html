@@ -1,0 +1,399 @@
+<script>
+console.log("in the first script");
+
+var context = "https://bjc.sharepoint.com/:i:/r/sites/BobsProjects/TestSite/drag/Shared%20Documents/";
+var contrls = 
+{
+  "Quiz": [
+    {
+		"id": 1,
+		"name": "Item A",
+		"character": "Charmandar",
+		"avatar": context + "/avatars/Slide1.PNG",
+		"screen":context + "/screens/Slide1.png",
+		"answer": [1,2]
+    },
+    {
+		"id": 2,
+		"name": "Item B",
+		"character": "Bulsaur",
+		"avatar": context + "/avatars/Slide2.PNG",
+		"screen":context + "/screens/Slide2.png",
+		"answer": [2,3]
+    },
+    {
+		"id": 3,
+		"name": "Item C",
+		"character": "Pikachu",
+		"avatar": context + "/avatars/Slide3.PNG",
+		"screen":context + "/screens/Slide3.png",
+		"answer": [3,4]
+    },
+	 {
+		"id": 4,
+		"name": "Item D",
+		"character": "Squirtle",
+		"avatar": context + "/avatars/Slide4.PNG",
+		"screen":context + "/screens/Slide4.png",
+		"answer": [4,5]
+    }
+  ]
+}
+
+</script>
+
+
+
+    <style>
+		.container {
+            display: flex;
+            flex-direction: column;
+		
+		  flex-wrap: wrap;
+   background-size: 20px 20px;
+    background-color: #F2D069;
+    
+    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -ms-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);      
+     
+		}
+        .header, .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+			font-family: roboto;
+			font-size: 3em;
+			color:#88aaaa;
+			background-color:#F2D069;
+        }
+        .main {
+            display: flex;
+            flex: 1;
+        }
+        .sidebar {
+            background-color: #f8f9fa80;
+            padding: 20px;
+            width: 300px;
+			margin: 10px 0;
+			flex: .3;
+        }
+		
+        .content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding: 20px;
+        }
+        .content-top, .content-bottom {
+            background-color: #f8f9fa80;
+            margin: 10px 0;
+            padding: 20px;
+            flex: 1;
+        }
+		#dropArea1, #dropArea2 {
+		  float: left;
+		  width: 90%;
+		  height: 100px;
+		  margin: 10px;
+		  padding: 10px;
+		  border: 1px solid black;
+		  background-color: #FFF;
+		}
+		#dropArea1{
+			background-image:url("https://bjc.sharepoint.com/:i:/r/sites/BobsProjects/TestSite/drag/Shared%20Documents/dropzones/Slide1.PNG");
+			background-repeat: no-repeat;
+			 background-size: auto;
+			 background-position: left 10px;
+		}
+		#dropArea2{
+			background-image:url("https://bjc.sharepoint.com/:i:/r/sites/BobsProjects/TestSite/drag/Shared%20Documents/dropzones/Slide2.PNG");
+			background-repeat: no-repeat;
+			background-size: auto;
+			background-position: left 10px;
+		}
+		
+		.cardArea{
+		  width: 100%;
+		  height: 100%;
+		  display: flex;
+		  justify-content: space-around;
+		  align-items: center;
+		  flex-wrap: wrap;
+		  max-width: 400px;
+    }
+		.cardHolder {
+            display: flex;
+            flex-direction: column;
+             margin: 4px;
+			  width: 96px;
+			  height: 96px;
+			  border-style: solid;
+			  border-width: 5px;
+			  border-color: #FFD14D;
+			  background-color: rgba(201, 76, 76, 0.3);
+
+        }
+
+	.card_img {
+	  border-radius: 4%;
+
+	}
+
+	.front {
+	  position: absolute;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: center;
+	  align-items: center;
+	  backface-visibility: hidden;
+		
+	  border-radius: 5%;
+	  box-shadow: 1px 1px 7px #777777;
+	  
+	  width: 96px;
+	  height: 96px;
+	}
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Header</div>
+        <div class="main">
+            <div class="sidebar"><div class="patientHolder" id="patientHolder"></div></div>
+			
+            <div class="content">
+                <div class="content-top"><div id="feedback"></div>Content Top</div>
+                <div class="content-bottom"><div class="patientHolder" id="gameHolder"></div></div>
+            </div>
+			
+			<div class="content" id="c3">
+                <div class="content-top" id="c3r1">
+					<div id="dropArea1" ondrop="dropHandler(event)"   ondragover="dragoverHandler(event)"></div>
+					<div id="dropArea2" ondrop="dropHandler(event)"   ondragover="dragoverHandler(event)"></div>
+					<button onclick="scoreQ()">Click me</button></div>
+                <div class="content-bottom" id="c3r2"><div class="cardArea" id="cardArea"></div></div>
+            </div>
+			 
+        </div>
+        <div class="footer">Footer</div>
+    </div>
+<script>
+
+
+// make sure none of the actual images are draggable /////////////////
+document.querySelectorAll('img').forEach(img => {
+    img.setAttribute('draggable', 'false');
+});
+
+
+
+numQ = contrls.Quiz.length
+console.log(numQ);
+
+
+////////////////////////////////////////////////////////////////
+// create the patients ///////
+for (i=0;i<numQ;i++){
+	document.getElementById("patientHolder").innerHTML += '<div class="patientFrame" id="patient'+i+'"> <img src="'+contrls.Quiz[i].avatar+'" id="patientImg'+i+'"></img></div><br><br>'
+}
+document.getElementById("patientImg0").style.opacity = "1";
+
+// create the information screens/pages/sheets, etc in the main game info area ///////////
+document.getElementById("gameHolder").innerHTML += '<div class="screenFrame" id="screen1"> <img src="'+contrls.Quiz[0].screen+'" id="screenImg1"></img></div><br><br>'
+
+
+// create the coverage cards //////////////////
+for (i=0;i<9;i++){
+	document.getElementById("cardArea").innerHTML += ' <div class="cardHolder" id="cardHolder'+(i+1)+'" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"><div class="front" id="card'+(i+1)+'" draggable="true" ondragstart="dragstartHandler(event)"><img src="'+context+'ins2/Slide'+(i+1)+'.png" class="card_img" draggable="false" id="ins'+(i+1)+'"></img></div><br><br>'
+
+}
+
+/////////////////////////////////////////////////////////////
+function dragstartHandler(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+	//console.log(ev.target);
+}
+
+function dragoverHandler(ev) {
+  ev.preventDefault();
+}
+
+
+function dropHandler(ev) {
+	ev.preventDefault();
+	//console.log(ev.target);
+	var div = document.getElementById(ev.target.id);
+	var divID = div.id
+	var data = ev.dataTransfer.getData("text");
+	var num = parseInt(data.replace(/\D/g, ''), 10);
+	
+	//console.log("--------------------------");
+	//console.log("divID:"+divID);
+	//console.log(data + " *is getting appended to div* "+divID);
+	//console.log("number is: "+num);
+	
+
+	var searchString = /cardHolder/;
+	var searchString2 = /dropArea/;
+	var searchString3 = /dropAreaImg/;
+	if (searchString.test(divID)) {////////////
+		//console.log("you're putting this back to the cardHolders area");
+		//console.log("_____________________");
+		
+		var cardHolderDrop = document.getElementById("cardHolder"+num);
+	//	console.log(cardHolderDrop);
+	//	console.log(data);
+		var element = document.getElementById(data)
+	//	console.log(element);
+		cardHolderDrop.innerHTML = "";
+		
+		cardHolderDrop.appendChild(element);
+
+	}else if(searchString2.test(divID)) {/////////
+	//	console.log("you're putting this into a regular drop area");
+	//	console.log(ev.target);
+		var imgParentTemp = document.getElementById(ev.target.id);
+			console.log("here: "+imgParentTemp.id);
+	//	console.log(ev.target.children.length)
+		if (ev.target.children.length > 0){/////////
+	//		console.log("you still have a card here "+ ev.target.children[0].id);
+			
+			var element = ev.target.children[0]
+			var elementID = ev.target.children[0].id;
+			var origincardHolderNum = parseInt(elementID.replace(/\D/g, ''), 10);
+	//		console.log("old card is "+origincardHolderNum);
+		
+			var origincardHolder = document.getElementById("cardHolder"+origincardHolderNum);
+			console.log("sending old card back to: " + origincardHolder.id + "-" + origincardHolder);
+			//attach the icon already in the drop area back to its origin cardHolder///
+			origincardHolder.innerHTML = "";
+			origincardHolder.appendChild(element);
+		}
+		ev.target.appendChild(document.getElementById(data));
+	}else{//////
+		console.log("you're putting this into a someplace wierd");
+		
+		var droppedElement = document.getElementById(divID)
+		var reciever = droppedElement.parentElement.parentElement;
+	//	console.log("dropped on:"+droppedElement.id);
+	//	console.log("reciever:"+reciever.id);
+		
+		var searchString3 = /dropArea/;
+		if(searchString3.test(reciever.id)){
+	//		console.log("you are trying to drop this on another icon that is in a regular drop zone");
+			//find the icon that is already in the dropArea//
+			var element = droppedElement.parentElement;
+			
+			var elementID = element.id
+	//		console.log("remove this:"+elementID);
+			var origincardHolderNum = parseInt(elementID.replace(/\D/g, ''), 10);
+	//		console.log("old card is "+origincardHolderNum);
+			
+			var origincardHolder = document.getElementById("cardHolder"+origincardHolderNum);
+	//		console.log("sending old card back to: " + origincardHolder.id + "-" + origincardHolder);
+			//attach the icon already in the drop area back to its origin cardHolder///
+			//origincardHolder.innerHTML = "";
+			origincardHolder.appendChild(element);
+			//element.remove();
+			// attach the new/dropped icon into the dropArea
+			reciever.appendChild(document.getElementById(data));
+		
+		}
+
+	}
+	
+}
+studentAnswer=[];
+for (i=0;i<contrls.Quiz.length;i++){
+	studentAnswer.push([]);
+}
+//var studentAnswer = [[],[],];
+var score = [];
+var quizScore = 0;
+var currentQuestion = 0;
+function scoreQ(){
+	 console.log("SCORE THE QUESTION");
+	 console.log(currentQuestion);
+	 
+	document.getElementById("feedback").innerHTML = "";
+	var order = [null,"primary","secondary"];
+	for(i=0;i<10;i++){
+	var dArea = document.getElementById("dropArea"+i);
+		answerPair="";
+		if(dArea != null){
+		
+			if(dArea.children.length>0){
+			
+				// GET THE NUMBER FROM THE CARD ID //////
+				var answerNum = dArea.children[0].id.match(/\d+/g).map(Number);
+				//console.log(answerNum[0]);
+				studentAnswer[currentQuestion].push(answerNum[0]);
+				
+				document.getElementById("feedback").innerHTML += "you chose  "+dArea.children[0].id+" as the "+order[i]+" coverage<br>";
+				document.getElementById("feedback").innerHTML += "the correct answer for "+order[i]+" is: "+contrls.Quiz[currentQuestion].answer[i-1]+"<br><br>";
+
+			}
+		}
+		
+	}
+	
+	if(JSON.stringify(studentAnswer[currentQuestion]) === JSON.stringify(contrls.Quiz[currentQuestion].answer)){
+		console.log("YESYESYESYES!!! CORRECT!!!!!!!");
+		document.getElementById("feedback").innerHTML = "CORRECT!!!<br><br>"+document.getElementById("feedback").innerHTML;
+		score[currentQuestion] = 1;
+		quizScore + 1;
+	}else{
+		score[currentQuestion] = 0;
+		quizScore +0;
+	}
+	//console.log("SCORE="+score);
+	//console.log(studentAnswer[currentQuestion]);
+	//console.log(contrls.Quiz[currentQuestion].answer);
+
+	currentQuestion += 1;
+	QuestionSetup(currentQuestion);
+	
+}
+
+function QuestionSetup(num){
+	console.log("IN QUESTION SETUP");
+	
+////	SEND CARDS BACK TO THEIR HOLDERS ----------------------------------
+	for(i=1;i<10;i++){
+		dArea = document.getElementById("dropArea"+i);
+
+		if(dArea != null && dArea.children.length>0){
+			console.log(dArea.children[0].id);
+			//GET THE NUMBER ----------------
+			var cardNum = dArea.children[0].id.match(/\d+/g).map(Number);
+			//document.getElementById("cardHolder"+cardNum).innerHTML 
+			document.getElementById("cardHolder"+cardNum).appendChild(dArea.children[0]);
+		}
+		
+		
+	}
+	
+	
+	if(num<numQ){
+		avatar2remove = document.getElementById("patient"+(num-1));
+		newScreen = contrls.Quiz[num].screen;
+		avatar2remove.remove();
+		document.getElementById("screen1").innerHTML = "<img src="+newScreen+" id='screenImg'"+num+"></img>";
+	}else{
+	console.log("you've maxed out on Questions");
+	}
+
+}
+
+
+
+
+
+</script>
+</body>
+
