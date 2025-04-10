@@ -10,7 +10,7 @@ var contrls =
 		"name": "Item A",
 		"character": "Charmandar",
 		"avatar": context + "avatars/Slide1.PNG",
-		"screen":context + "screens/Slide1.png",
+		"screen":context + "screens/Slide1.PNG",
 		"answer": [1,2]
     },
     {
@@ -18,7 +18,7 @@ var contrls =
 		"name": "Item B",
 		"character": "Bulsaur",
 		"avatar": context + "avatars/Slide2.PNG",
-		"screen":context + "screens/Slide2.png",
+		"screen":context + "screens/Slide2.PNG",
 		"answer": [2,3]
     },
     {
@@ -26,7 +26,7 @@ var contrls =
 		"name": "Item C",
 		"character": "Pikachu",
 		"avatar": context + "avatars/Slide3.PNG",
-		"screen":context + "screens/Slide3.png",
+		"screen":context + "screens/Slide3.PNG",
 		"answer": [3,4]
     },
 	 {
@@ -34,7 +34,7 @@ var contrls =
 		"name": "Item D",
 		"character": "Squirtle",
 		"avatar": context + "avatars/Slide4.PNG",
-		"screen":context + "screens/Slide4.png",
+		"screen":context + "screens/Slide4.PNG",
 		"answer": [4,5]
     }
   ]
@@ -209,7 +209,7 @@ document.getElementById("gameHolder").innerHTML += '<div class="screenFrame" id=
 
 // create the coverage cards //////////////////
 for (i=0;i<9;i++){
-	document.getElementById("cardArea").innerHTML += ' <div class="cardHolder" id="cardHolder'+(i+1)+'" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"><div class="front" id="card'+(i+1)+'" draggable="true" ondragstart="dragstartHandler(event)"><img src="'+'ins2/Slide'+(i+1)+'.png" class="card_img" draggable="false" id="ins'+(i+1)+'"></img></div><br><br>'
+	document.getElementById("cardArea").innerHTML += ' <div class="cardHolder" id="cardHolder'+(i+1)+'" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"><div class="front" id="card'+(i+1)+'" draggable="true" ondragstart="dragstartHandler(event)"><img src="'+'ins2/Slide'+(i+1)+'.PNG" class="card_img" draggable="false" id="ins'+(i+1)+'"></img></div><br><br>'
 
 }
 
@@ -354,7 +354,7 @@ function scoreQ(){
 	//console.log("SCORE="+score);
 	//console.log(studentAnswer[currentQuestion]);
 	//console.log(contrls.Quiz[currentQuestion].answer);
-
+	document.getElementById("feedback").innerHTML += "CURRENT SCORE:" + quizScore;
 	currentQuestion += 1;
 	QuestionSetup(currentQuestion);
 	
