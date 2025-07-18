@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Image Gallery</title>
+  <style>
+
+      body{
+    margin: -10px,-10px,-10px,-10px;
+    padding: -10px,-10px,-10px,-10px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+   background-size: 50px 50px;
+    background-color: #255eba;
+    
+    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -moz-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -ms-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);      
+        
+    }
+     .gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+  padding: 20px;
+}
+
+.gallery-item {
+  overflow: hidden;
+ 
+}
+
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+box-shadow: 10px 10px 7px 2px #00000044;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 80px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+.heading{
+    background-color:#8facdb;
+    padding: 12px;
+    margin: 12px;
+}
+  </style>
+    
+</head>
+<body>
+  <!-- Heading Name -->
+    <div class="heading">
+    <h1>Powerpoint Image Gallery</h1>
+    <p> story telling.
+    </p>
+        <p>
+            Click each of the thumbnails below to see the image and then use the small 'x' in the upper right side of the screen to close the image.
+        </p>
+    </div>
+    <!-- Image Gallery section all image in one div -->
+    <div class="gallery">
+    <div class="gallery-item">
+      <img 
+ src="Cardio patches.png" 
+onclick="openModal('Cardio patches.png')" alt="Image 1">
+    </div>
+    <div class="gallery-item">
+      <img 
+ src="AquamanFamily.png" 
+onclick="openModal('AquamanFamily.png')" alt="Image 2">
+    </div>
+    <div class="gallery-item">
+      <img src="Flash Atom Gold.jpeg" 
+onclick="openModal('Flash Atom Gold.jpeg')" alt="Image 2">
+    </div>
+    <div class="gallery-item">
+      <img src="GL and Atom.jpeg" 
+onclick="openModal('GL and Atom.jpeg')" 
+alt="Image 3">
+    </div>
+
+    <div class="gallery-item">
+      <img 
+src="Red Tornado Gold Iron.jpeg" 
+onclick="openModal('Red Tornado Gold Iron.jpeg')" alt="Image 6">
+    </div>
+    <div class="gallery-item">
+      <img 
+src="GL Gold and Carol.jpeg" 
+onclick="openModal('GL Gold and Carol.jpeg')" alt="Image 7">
+    </div>  
+    <div class="gallery-item">
+      <img 
+src="Hawkman Atom GA BC.jpeg" 
+onclick="openModal('Hawkman Atom GA BC.jpeg')" alt="Image 8">
+    </div>
+  
+    <div class="gallery-item">
+      <img 
+        src="Detective Chimp.jpeg" 
+        onclick="openModal('Detective Chimp.jpeg')" alt="Image 4">
+</div>
+<div class="gallery-item">
+      <img 
+        src="Metal Men.jpeg" 
+        onclick="openModal('Metal Men.jpeg')" alt="Image 4">
+</div>        
+    <div class="gallery-item">
+      <img 
+        src="Metal Men aruge.jpeg" 
+        onclick="openModal('Metal Men aruge.jpeg')" alt="Image 4">
+</div>
+<div class="gallery-item">
+      <img 
+        src="Metal Men on the move.jpeg" 
+        onclick="openModal('Metal Men on the move.jpeg')" alt="Image 4">
+</div>
+<div class="gallery-item">
+      <img 
+        src="batgirl supergirl.jpeg" 
+        onclick="openModal('batgirl supergirl.jpeg')" alt="Image 4">
+</div>
+<div class="gallery-item">
+      <img 
+        src="Green Lantern.jpeg" 
+        onclick="openModal('Green Lantern.jpeg')" alt="Image 4">
+</div>
+  <div class="gallery-item">
+      <img 
+src="Flash.jpeg" 
+ onclick="openModal('Flash.jpeg')" alt="Image 5">
+    </div>
+     <div class="gallery-item">
+      <img 
+        src="Metal Men Chemo.jpeg" 
+        onclick="openModal('Metal Men Chemo.jpeg')" alt="Image 4">
+</div>   
+  </div>
+    <div id="myModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+  </div>
+    <script src="script.js"></script>
+  <script>
+    function openModal(imageSrc) {
+  var modal = document.getElementById("myModal");
+  var modalImg = document.getElementById("modalImage");
+  modal.style.display = "block";
+  modalImg.src = imageSrc;
+}
+
+function closeModal() {
+  var modal = document.getElementById("myModal");
+  modal.style.display = "none";
+}
+
+  </script>
+</body>
+</html>
