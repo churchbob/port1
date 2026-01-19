@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hospital Room • 360° Panorama</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://unpkg.com/photo-sphere-viewer@4/dist/photo-sphere-viewer.css" />
+  <style>
+    html, body { height: 100%; margin: 0; }
+    #viewer { width: 100%; height: 100vh; background: #000; }
+    .brand { position: fixed; left: 12px; bottom: 12px; color: #fff; font: 600 12px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; opacity: .85; }
+  </style>
+</head>
+<body>
+  <div id="viewer" aria-label="Interactive 360 panorama of a hospital patient room"></div>
+  <div class="brand">Use your mouse or arrow keys to look around • Scroll to zoom • Press F to toggle fullscreen</div>
+
+  <!-- Dependencies -->
+  <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/photo-sphere-viewer@4/dist/photo-sphere-viewer.js"></script>
+
+  <script>
+    // Initialize PhotoSphereViewer with keyboard arrows enabled
+    const viewer = new PhotoSphereViewer.Viewer({
+      container: document.getElementById('viewer'),
+      panorama: 'hospital_room_360.jpg', // Place the panorama file next to this HTML
+      navbar: ['zoom', 'autorotate', 'fullscreen'],
+      mousewheel: true,
+      defaultYaw: 0,
+      defaultPitch: 0,
+      keyboard: {
+        arrows: true, // enable ← → ↑ ↓ to look around
+      },
+      touchmoveTwoFingers: true, // avoid accidental drags on touchpads
+      autorotateDelay: 3000,
+      autorotateIdle: true
+    });
+
+    // Optional: gently start/stop autorotate on inactivity
+    let idleTimer; 
+    const resetIdle = () => { 
+      clearTimeout(idleTimer); 
+      viewer.stopAutorotate(); 
+      idleTimer = setTimeout(() => viewer.startAutorotate(), 60000); 
+    };
+    ['keydown','mousedown','mousemove','touchstart','wheel'].forEach(e => window.addEventListener(e, resetIdle));
+    resetIdle();
+  </script>
+</body>
+</html>
