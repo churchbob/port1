@@ -5,9 +5,10 @@
   <meta charset="utf-8" />
   <title>Hospital Room 360°</title>
 
-  <!-- CSP: allow only same-origin scripts/styles; block blobs -->
+
+ <!-- CSP: allow same-origin + data + blob for images -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+        content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -73,4 +74,3 @@
   <script src="app.js"></script>
 </body>
 </html>
-
