@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Hospital Room 360°</title>
+
+  <!-- CSP: allow only same-origin scripts/styles; block blobs -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Pannellum (local files you provide under /lib/pannellum) -->
+  <link rel="stylesheet" href="lib/pannellum/pannellum.css" />
+
+  <style>
+    html, body { height:100%; margin:0; background:#111; }
+    #panorama  { width:100%; height:100%; }
+
+    /* Overlay (hotspot #1) */
+    .overlay {
+      position: fixed; inset: 0; display: none; place-items: center;
+      background: rgba(0,0,0,.55); z-index: 9999;
+    }
+    .overlay.open { display: grid; }
+    .card {
+      max-width: 720px; width: min(92vw, 720px);
+      background: #fff; color:#222; border-radius: 10px; overflow:hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,.35);
+      font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    .card header { padding: 14px 18px; font-weight: 600; background:#005EB8; color:#fff; }
+    .card .content { padding: 16px 18px; }
+    .card img { max-width: 100%; height: auto; border-radius: 6px; }
+    .btn-row { display:flex; gap:.5rem; justify-content:flex-end; padding: 0 18px 16px; }
+    button { background:#005EB8; color:#fff; border:0; padding:.6rem .9rem; border-radius:6px; cursor:pointer; }
+    button.secondary { background:#e6e6e6; color:#111; }
+
+    /* Optional: simple fallback text while loading */
+    .fallback {
+      position: absolute; inset: 0; display: grid; place-items: center;
+      color: #eee; text-align: center; padding: 1rem;
+      font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="panorama">
+    <div id="fallback" class="fallback">
+      Loading viewer… If this remains, make sure
+      <code>/lib/pannellum/pannellum.js</code> and
+      <code>assets/room_16k.jpg</code> exist and paths are correct.
+    </div>
+  </div>
+
+  <!-- Hotspot #1 overlay -->
+  <div class="overlay" id="infoOverlay" aria-modal="true" role="dialog">
+    <div class="card" role="document">
+      <header>Nurse Call Panel</header>
+      <div class="content">
+        <p>Details about the nurse call panel go here.</p>
+        <img src="assets/nurse_panel.png" alt="Nurse call panel illustration" />
+      </div>
+      <div class="btn-row">
+        <button class="secondary close-info" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load viewer library (local) and app code (external file; no inline JS) -->
+  <script src="lib/pannellum/pannellum.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
