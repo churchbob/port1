@@ -1,63 +1,44 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <title>Hospital Room 360° (GitHub Pages)</title>
-
-  <!-- Pages-friendly Content Security Policy (local origin only) -->
+  <!-- GitHub Pages served via meta CSP: remove directives not supported here (e.g., frame-ancestors) -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; img-src 'self' data: blob:;
-                 style-src 'self' 'unsafe-inline';
-                 script-src 'self';
-                 frame-ancestors 'self';
-                 object-src 'none'; base-uri 'self'; form-action 'self'">
-
+        content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <link rel="stylesheet" href="lib/pannellum/pannellum.css" />
   <style>
     html, body { height:100%; margin:0; background:#111; }
     #panorama  { width:100%; height:100%; }
-
-    /* Simple overlay for hotspot #1 (info) */
-    .overlay {
-      position: fixed; inset: 0; display: none; place-items: center;
-      background: rgba(0,0,0,.55); z-index: 9999;
-    }
+    .overlay { position: fixed; inset: 0; display: none; place-items: center; background: rgba(0,0,0,.55); z-index: 9999; }
     .overlay.open { display: grid; }
-    .card {
-      max-width: 720px; width: min(92vw, 720px);
-      background: #fff; color:#222; border-radius: 10px; overflow:hidden;
-      box-shadow: 0 12px 40px rgba(0,0,0,.35);
-      font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
+    .card { max-width: 720px; width: min(92vw, 720px); background: #fff; color:#222; border-radius: 10px; overflow:hidden; box-shadow: 0 12px 40px rgba(0,0,0,.35); font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
     .card header { padding: 14px 18px; font-weight: 600; background:#005EB8; color:#fff; }
     .card .content { padding: 16px 18px; }
     .card img { max-width: 100%; height: auto; border-radius: 6px; }
     .btn-row { display:flex; gap:.5rem; justify-content:flex-end; padding: 0 18px 16px; }
     button { background:#005EB8; color:#fff; border:0; padding:.6rem .9rem; border-radius:6px; cursor:pointer; }
     button.secondary { background:#e6e6e6; color:#111; }
+    .fallback { position: absolute; inset: 0; display: grid; place-items: center; color: #eee; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; text-align: center; padding: 1rem; }
   </style>
 </head>
 <body>
-  <div id="panorama"></div>
+  <div id="panorama"><div id="fallback" class="fallback">Loading viewer… If this message stays, add the Pannellum files to <code>/lib/pannellum/</code>.</div></div>
 
   <!-- Hotspot #1: info overlay -->
   <div class="overlay" id="infoOverlay" aria-modal="true" role="dialog">
     <div class="card" role="document">
       <header>Nurse Call Panel</header>
       <div class="content">
-        <p>This is a placeholder overlay describing the nurse call panel.</p>
-        <img alt="Mock nurse panel" src="assets/nurse_panel.png" />
-        <p style="margin-top:.5rem">
-          Teaching points:
-          <ul>
-            <li>Red button triggers immediate assistance.</li>
-            <li>Light indicators show active calls and staff acknowledgement.</li>
-            <li>Follow unit policy for response times.</li>
-          </ul>
-        </p>
+        <p>Placeholder overlay describing the nurse call panel.</p>
+        <img src="assets/nurse_panel.png" alt="Nurse call panel mock" />
+        <p style="margin-top:.5rem">Teaching points:</p>
+        <ul style="margin:0 0 1rem 1.2rem;">
+          <li>Red button triggers immediate assistance.</li>
+          <li>Light indicators show active calls and staff acknowledgement.</li>
+          <li>Follow unit policy for response times.</li>
+        </ul>
       </div>
       <div class="btn-row">
         <button class="secondary" onclick="document.getElementById('infoOverlay').classList.remove('open')">Close</button>
@@ -66,66 +47,6 @@
   </div>
 
   <script src="lib/pannellum/pannellum.js"></script>
-  <script>
-    // Switch to true only if you add multires tiles under /assets/tiles/room/
-    const useMultiRes = false;
-
-    const baseConfig = {
-      autoLoad: true,
-      showZoomCtrl: true,
-      compass: false,
-      keyboardZoom: true,
-      mouseZoom: true,
-      hfov: 100,
-      minHfov: 60,
-      maxHfov: 120,
-      pitch: 0,
-      yaw: 0
-    };
-
-    const panoConfig = useMultiRes ? {
-      type: "multires",
-      multiRes: {
-        basePath: "assets/tiles/room",
-        tileResolution: 512,
-        maxLevel: 5,
-        cubeResolution: 8192
-      }
-    } : {
-      type: "equirectangular",
-      panorama: "assets/room_placeholder_8k.jpg"
-    };
-
-    function openInfoHotspot() {
-      document.getElementById('infoOverlay').classList.add('open');
-    }
-    function openLocalPDF() {
-      // Pages serves from the same origin; this remains within 'self'
-      window.open('assets/policy.pdf', '_blank', 'noopener,noreferrer');
-    }
-
-    const viewer = pannellum.viewer('panorama', {
-      ...baseConfig,
-      ...panoConfig,
-      hotSpots: [
-        {
-          pitch: 4, yaw: 35, type: "info",
-          text: "Nurse Call Panel",
-          clickHandlerFunc: openInfoHotspot
-        },
-        {
-          pitch: -2, yaw: -110, type: "info",
-          text: "Room Safety Policy (PDF)",
-          clickHandlerFunc: openLocalPDF
-        }
-      ]
-    });
-
-    // Authoring helper: click to log yaw/pitch (remove for production)
-    viewer.on('mousedown', function(ev) {
-      const [pitch, yaw] = viewer.mouseEventToCoords(ev);
-      console.log(`yaw: ${yaw.toFixed(2)}, pitch: ${pitch.toFixed(2)}`);
-    });
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
