@@ -8,7 +8,7 @@
 
   // IMPORTANT: Direct file path to your panorama (no blob:)
   // Place room_16k.jpg in /assets and keep this exact path.
-  const PANORAMA_PATH = "assets/room_16k.jpg";
+  const PANORAMA_PATH = "assets/room_v.jpg";
 
   // Helper functions for hotspots
   function openInfoHotspot() {
