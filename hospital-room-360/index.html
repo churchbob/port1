@@ -2,34 +2,39 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-<meta charset='utf-8'>
-<title>Hospital Room 360° – Multires</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<link rel='stylesheet' href='lib/pannellum/pannellum.css'>
-<style>html,body{height:100%;margin:0;background:#111;}#panorama{width:100%;height:100%;}</style>
+  <meta charset='utf-8'>
+  <title>Hospital Room 360° – Multires</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' href='lib/pannellum/pannellum.css'>
+  <style>
+    html,body{height:100%;margin:0;background:#111}
+    #panorama{width:100%;height:100%}
+    .overlay{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.55);z-index:9999}
+    .overlay.open{display:grid}
+    .card{max-width:720px;width:min(92vw,720px);background:#fff;color:#222;border-radius:10px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.35);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .card header{padding:14px 18px;font-weight:600;background:#005EB8;color:#fff}
+    .card .content{padding:16px 18px}
+    .btn-row{display:flex;gap:.5rem;justify-content:flex-end;padding:0 18px 16px}
+    button{background:#005EB8;color:#fff;border:0;padding:.6rem .9rem;border-radius:6px;cursor:pointer}
+    button.secondary{background:#e6e6e6;color:#111}
+  </style>
 </head>
 <body>
-<div id='panorama'></div>
- lib/pannellum/pannellum.js</script>
-<script>
-const viewer = pannellum.viewer('panorama', {
-  autoLoad: true,
-  type: 'multires',
-  multiRes: {
-    basePath: 'assets/tiles/room',
-    path: '/%l/%s%y_%x',
-    fallbackPath: '',
-    extension: 'jpg',
-    tileResolution: 512,
-    maxLevel: 4,
-    cubeResolution: 4096
-  },
-  hotSpots: [
-    { pitch: 4, yaw: 35, type: 'info', text: 'Nurse Call Panel', clickHandlerFunc: function(){document.getElementById('infoOverlay').classList.add('open');} },
-    { pitch: -2, yaw: -110, type: 'info', text: 'Room Safety Policy (PDF)', clickHandlerFunc: function(){ window.open('assets/policy.pdf', '_blank', 'noopener,noreferrer'); } }
-  ]
-});
-</script>
+  <div id='panorama'></div>
+  <div class='overlay' id='infoOverlay' aria-modal='true' role='dialog'>
+    <div class='card' role='document'>
+      <header>Nurse Call Panel</header>
+      <div class='content'>
+        <p>Placeholder overlay describing the nurse call panel.</p>
+        <img src='assets/nurse_panel.png' alt='Nurse call panel mock'>
+      </div>
+      <div class='btn-row'>
+        <button class='secondary close-info'>Close</button>
+      </div>
+    </div>
+  </div>
+  lib/pannellum/pannellum.js</script>
+  <script src='app.js'></script>
 </body>
 </html>
