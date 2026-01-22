@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<title>Hospital Room 360° – Multires</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<link rel='stylesheet' href='lib/pannellum/pannellum.css'>
+<style>html,body{height:100%;margin:0;background:#111;}#panorama{width:100%;height:100%;}</style>
+</head>
+<body>
+<div id='panorama'></div>
+ lib/pannellum/pannellum.js</script>
+<script>
+const viewer = pannellum.viewer('panorama', {
+  autoLoad: true,
+  type: 'multires',
+  multiRes: {
+    basePath: 'assets/tiles/room',
+    path: '/%l/%s%y_%x',
+    fallbackPath: '',
+    extension: 'jpg',
+    tileResolution: 512,
+    maxLevel: 4,
+    cubeResolution: 4096
+  },
+  hotSpots: [
+    { pitch: 4, yaw: 35, type: 'info', text: 'Nurse Call Panel', clickHandlerFunc: function(){document.getElementById('infoOverlay').classList.add('open');} },
+    { pitch: -2, yaw: -110, type: 'info', text: 'Room Safety Policy (PDF)', clickHandlerFunc: function(){ window.open('assets/policy.pdf', '_blank', 'noopener,noreferrer'); } }
+  ]
+});
+</script>
+</body>
+</html>
