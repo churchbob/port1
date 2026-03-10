@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Phone Call Simulator (Browser • Free Prototype)</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --panel:#f7f7f7;
+      --border:#d9d9d9;
+      --ok:#e7f7ee;
+      --okBorder:#bfe6cf;
+      --warn:#fff3cd;
+      --warnBorder:#ffeeba;
+      --text:#222;
+      --muted:#666;
+      --btn:#fff;
+    }
+    body { font-family: Segoe UI, Arial, sans-serif; margin: 22px; color:var(--text); background:var(--bg); }
+    h2 { margin: 0 0 12px; font-weight:600; }
+    .row { display:flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 14px; align-items:center; }
+    button, select {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--btn);
+      font-size: 14px;
+    }
+    button { cursor: pointer; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    label { display:inline-flex; align-items:center; gap:8px; }
+    #status { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--warnBorder); background: var(--warn); border-radius: 12px; }
+    #log { white-space: pre-wrap; border: 1px solid var(--border); padding: 12px; height: 360px; overflow: auto; border-radius: 12px; background:#fff; }
+    .small { font-size: 12px; color: var(--muted); margin-top: 10px; }
+    .pill { display:inline-block; padding: 2px 10px; border-radius: 999px; background:#eef; margin-left: 8px; font-size:12px; }
+    .ok { background: var(--ok); border-color: var(--okBorder); }
+    .warn { background: var(--warn); border-color: var(--warnBorder); }
+    .spacer { flex: 1 1 auto; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h2>Phone Call Simulator <span class="pill">Free / Browser Prototype</span></h2>
+
+  <div class="row">
+    <button id="btnStart">Start Call</button>
+    <button id="btnEnd" disabled>End Call</button>
+    <button id="btnRepeat" disabled>Repeat Prompt</button>
+    <button id="btnMute" disabled>Mute TTS</button>
+    <button id="btnTyped" disabled>Typed Reply (Fallback)</button>
+    <span class="spacer"></span>
+
+    <label>
+      Voice:
+      <select id="voiceSelect" title="Device voices (Windows/Edge)"></select>
+    </label>
+
+    <label>
+      Style:
+      <select id="styleSelect" title="TTS delivery style">
+        <option value="neutral">Neutral</option>
+        <option value="confused" selected>Confused patient</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="status" class="warn">Status: Ready.</div>
+  <div id="log"></div>
+
+  <p class="small">
+    Uses Web Speech API: speech synthesis + speech recognition. [1](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
+    Note: speech recognition in some browsers can use a server-based engine and may not work offline. [3](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)[4](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API)
+  </p>
+
+  <script>
+    /*****************************************************************
+     * 1) Scenario (branching)
+     *****************************************************************/
+    const scenario = {
+      start: "greeting",
+      nodes: {
+        greeting: {
+          say: "Hi… I’m sorry, I’m a little confused. I’m calling because I got a notice, and I’m not sure what it means. Can you help?",
+          listen: true,
+          routes: [
+            { matchAny: ["yes", "sure", "okay", "ok", "help"], goto: "verify" },
+            { matchAny: ["no"], goto: "fallback_help" }
+          ],
+          fallback: "Sorry… I didn’t catch that. Can you help me understand what this notice means?"
+        },
+
+        fallback_help: {
+          say: "Oh… okay. I guess I’ll try again later. Thank you.",
+          listen: false
+        },
+
+        verify: {
+          say: "Thanks. Um… can you tell me what you need from me to look this up? I can give you my date of birth if that helps.",
+          listen: true,
+          routes: [
+            { match: "DOB_REQUEST", goto: "dob" },
+            { matchAny: ["date of birth", "birthday", "dob"], goto: "dob" },
+            { matchAny: ["member id", "id number", "policy"], goto: "memberid" }
+          ],
+          fallback: "I can share my date of birth, or my member I.D. Which one do you need?"
+        },
+
+        dob: {
+          say: "Okay… my date of birth is… please wait… I’m trying to remember…",
+          listen: true,
+          routes: [
+            { match: "DATE", goto: "reason" }
+          ],
+          fallback: "Sorry… could you repeat what format you want? I can say it like January 5th 1980."
+        },
+
+        memberid: {
+          say: "Okay. My member I.D. is… um… I have it here. Do you want me to read it now?",
+          listen: true,
+          routes: [
+            { matchAny: ["yes", "read", "go ahead", "sure"], goto: "reason" },
+            { matchAny: ["no", "later"], goto: "reason" }
+          ],
+          fallback: "Sorry… should I read it now?"
+        },
+
+        reason: {
+          say: "So… here’s the part I don’t understand. Is this about billing, or is it about scheduling?",
+          listen: true,
+          routes: [
+            { matchAny: ["bill", "billing", "balance", "statement", "payment"], goto: "billing" },
+            { matchAny: ["schedule", "scheduling", "appointment", "reschedule"], goto: "scheduling" }
+          ],
+          fallback: "I’m sorry… is it billing or scheduling?"
+        },
+
+        billing: {
+          say: "Okay… billing. The amount looks… maybe wrong? Is it a balance, a payment, or a statement issue?",
+          listen: true,
+          routes: [
+            { matchAny: ["balance"], goto: "billing_balance" },
+            { matchAny: ["payment", "pay"], goto: "billing_payment" },
+            { matchAny: ["statement"], goto: "billing_statement" }
+          ],
+          fallback: "Sorry… balance, payment, or statement?"
+        },
+
+        billing_balance: {
+          say: "Right. The balance is what confused me. Can you explain why I have a balance?",
+          listen: true,
+          routes: [
+            { matchAny: ["explain", "why", "because"], goto: "empathy" },
+            { matchAny: ["deductible", "coinsurance", "copay"], goto: "empathy" }
+          ],
+          fallback: "I’m just not sure why it’s there… can you explain it?"
+        },
+
+        billing_payment: {
+          say: "Okay… payment. I’m not sure if my payment went through. Can you check that?",
+          listen: true,
+          routes: [
+            { matchAny: ["yes", "check", "sure", "okay"], goto: "wrapup" }
+          ],
+          fallback: "Sorry… can you check whether it went through?"
+        },
+
+        billing_statement: {
+          say: "It might be the statement. I didn’t understand it. Can you help me read it?",
+          listen: true,
+          routes: [
+            { matchAny: ["yes", "help", "sure", "okay"], goto: "wrapup" }
+          ],
+          fallback: "Can you help me understand the statement?"
+        },
+
+        scheduling: {
+          say: "Okay… scheduling. I’m trying to make an appointment but I’m not sure what day is available. What weekday should I pick?",
+          listen: true,
+          routes: [
+            { matchAny: ["monday","tuesday","wednesday","thursday","friday"], goto: "wrapup" }
+          ],
+          fallback: "Sorry… can you suggest a weekday? Monday through Friday."
+        },
+
+        empathy: {
+          say: "Thank you. I’m sorry… this is stressful. I appreciate your help. One moment while you review it.",
+          listen: false,
+          goto: "wrapup"
+        },
+
+        wrapup: {
+          say: "Okay… I think that makes sense now. Thank you for explaining it. This concludes the practice call.",
+          listen: false
+        }
+      }
+    };
+
+    /*****************************************************************
+     * 2) UI helpers
+     *****************************************************************/
+    const elLog = document.getElementById("log");
+    const elStatus = document.getElementById("status");
+
+    const btnStart  = document.getElementById("btnStart");
+    const btnEnd    = document.getElementById("btnEnd");
+    const btnRepeat = document.getElementById("btnRepeat");
+    const btnMute   = document.getElementById("btnMute");
+    const btnTyped  = document.getElementById("btnTyped");
+
+    const voiceSelect = document.getElementById("voiceSelect");
+    const styleSelect = document.getElementById("styleSelect");
+
+    function setStatus(text, kind = "warn") {
+      elStatus.textContent = "Status: " + text;
+      elStatus.className = (kind === "ok") ? "ok" : "warn";
+    }
+
+    function logLine(prefix, text) {
+      elLog.textContent += `${prefix}: ${text}\n`;
+      elLog.scrollTop = elLog.scrollHeight;
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    /*****************************************************************
+     * 3) Web Speech API setup
+     *    - TTS: speechSynthesis / SpeechSynthesisUtterance [5](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis)[2](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance)
+     *    - STT: SpeechRecognition / webkitSpeechRecognition [3](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)[4](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API)
+     *****************************************************************/
+    const synth = window.speechSynthesis; // speech controller [5](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis)
+    const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition; // prefixed on some browsers [4](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API)
+    const canRecognize = !!SpeechRecognitionCtor;
+
+    let recognition = null;
+    let active = false;
+    let currentNodeId = scenario.start;
+    let lastPromptText = "";
+    let ttsMuted = false;
+
+    /*****************************************************************
+     * 4) Voice list + auto-select (Windows/Edge friendly)
+     *    getVoices() + voiceschanged event [5](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis)
+     *****************************************************************/
+    let voices = [];
+    let selectedVoice = null;
+
+    const preferredVoiceNameHints = [
+      "Microsoft Aria", "Microsoft Jenny", "Microsoft Guy",
+      "Microsoft Zira", "Microsoft David"
+    ];
+
+    function populateVoiceList() {
+      voices = synth.getVoices(); // available voices [5](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis)
+
+      voiceSelect.innerHTML = "";
+      voices.forEach((v, idx) => {
+        const opt = document.createElement("option");
+        opt.value = String(idx);
+        opt.textContent = `${v.name} — ${v.lang}`;
+        voiceSelect.appendChild(opt);
+      });
+
+      selectedVoice =
+        voices.find(v => preferredVoiceNameHints.some(h => v.name.includes(h))) ||
+        voices.find(v => v.lang === "en-US") ||
+        voices[0] ||
+        null;
+
+      if (selectedVoice) {
+        const idx = voices.indexOf(selectedVoice);
+        if (idx >= 0) voiceSelect.value = String(idx);
+      }
+    }
+
+    voiceSelect.addEventListener("change", () => {
+      const idx = Number(voiceSelect.value);
+      selectedVoice = voices[idx] || null;
+    });
+
+    if ("onvoiceschanged" in synth) {
+      synth.onvoiceschanged = populateVoiceList; // voice list may populate asynchronously [5](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis)
+    }
+    populateVoiceList();
+
+    /*****************************************************************
+     * 5) Branching / routing helpers
+     *****************************************************************/
+    function looksLikeDate(text) {
+      return /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b/i.test(text) ||
+             /\b\d{1,2}\/\d{1,2}\/\d{2,4}\b/.test(text) ||
+             /\b\d{1,2}(st|nd|rd|th)?\b.*\b\d{4}\b/i.test(text);
+    }
+
+    function route(node, userText) {
+      const t = (userText || "").toLowerCase();
+
+      if (node.routes) {
+        for (const r of node.routes) {
+          if (r.match === "DATE" && looksLikeDate(userText)) return r.goto;
+          if (r.match === "DOB_REQUEST") {
+            // Treat common agent prompts as DOB request
+            if (t.includes("date of birth") || t.includes("dob") || t.includes("birthday")) return r.goto;
+          }
+          if (r.matchAny && r.matchAny.some(k => t.includes(k))) return r.goto;
+        }
+      }
+      if (node.goto) return node.goto;
+      return null;
+    }
+
+    /*****************************************************************
+     * 6) TTS: "Confused patient" style
+     *    SpeechSynthesisUtterance supports voice/rate/pitch/volume [2](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance)
+     *****************************************************************/
+    function maybeAddConfusion(text) {
+      const fillers = [
+        "Um… ",
+        "Uh… ",
+        "Sorry… ",
+        "Let me think… ",
+        "I’m not sure, but… "
+      ];
+      if (Math.random() < 0.35) {
+        return fillers[Math.floor(Math.random() * fillers.length)] + text;
+      }
+      return text;
+    }
+
+    function speak(text) {
+      lastPromptText = text;
+
+      // cancel queued speech to avoid stacking [5](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis)
+      synth.cancel();
+
+      let spokenText = text;
+      const style = styleSelect?.value || "confused";
+      if (style === "confused") spokenText = maybeAddConfusion(text);
+
+      logLine("SIM", spokenText);
+      if (ttsMuted) return Promise.resolve();
+
+      return new Promise((resolve, reject) => {
+        const u = new SpeechSynthesisUtterance(spokenText); // speech request [2](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance)
+        if (selectedVoice) u.voice = selectedVoice;         // choose a voice [2](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance)
+
+        if (style === "confused") {
+          u.rate  = 0.95; // slightly slower [2](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance)
+          u.pitch = 1.05; // slightly higher/uncertain [2](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance)
+        } else {
+          u.rate  = 1.0;  // normal [2](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance)
+          u.pitch = 1.0;  // normal [2](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance)
+        }
+        u.volume = 1.0;   // normal [2](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance)
+
+        u.onend = () => resolve();
+        u.onerror = (e) => reject(e);
+
+        synth.speak(u); // speak utterance [5](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis)
+      });
+    }
+
+    /*****************************************************************
+     * 7) STT: listen once
+     *    SpeechRecognition is controller interface for recognition [3](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)
+     *****************************************************************/
+    function listenOnce(timeoutMs = 9000) {
+      return new Promise((resolve, reject) => {
+        if (!canRecognize) return reject(new Error("SpeechRecognition not supported."));
+
+        recognition = new SpeechRecognitionCtor(); // create recognizer [3](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)
+        recognition.lang = "en-US";
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        recognition.continuous = false;
+
+        let done = false;
+        const timer = setTimeout(() => {
+          if (done) return;
+          done = true;
+          try { recognition.stop(); } catch {}
+          logLine("USER", "(no speech detected)");
+          resolve("");
+        }, timeoutMs);
+
+        recognition.onresult = (event) => {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+
+          const transcript = event.results?.[0]?.[0]?.transcript?.trim() || "";
+          logLine("USER", transcript || "(no speech detected)");
+          resolve(transcript);
+        };
+
+        recognition.onerror = (event) => {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+          reject(new Error(event.error || "Speech recognition error"));
+        };
+
+        try {
+          recognition.start(); // start listening [3](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }
+
+    /*****************************************************************
+     * 8) Typed fallback (if recognition not available)
+     *****************************************************************/
+    let typedResolver = null;
+
+    function waitForTypedReply() {
+      return new Promise(resolve => {
+        typedResolver = resolve;
+        setStatus("Type your response using 'Typed Reply (Fallback)'.", "warn");
+      });
+    }
+
+    btnTyped.onclick = () => {
+      const txt = prompt("Type what you would have said:");
+      if (typedResolver) {
+        logLine("USER", (txt || "").trim() || "(empty)");
+        typedResolver((txt || "").trim());
+        typedResolver = null;
+        setStatus("Call running.", "ok");
+      }
+    };
+
+    /*****************************************************************
+     * 9) Scenario runner
+     *****************************************************************/
+    async function runCall() {
+      setStatus(
+        canRecognize ? "Call running. Listening after each prompt." :
+                       "Call running. Speech recognition unavailable here — use Typed Reply fallback.",
+        canRecognize ? "ok" : "warn"
+      );
+
+      while (active && currentNodeId) {
+        const node = scenario.nodes[currentNodeId];
+        if (!node) break;
+
+        await speak(node.say);
+        if (!active) break;
+
+        if (node.listen) {
+          let userText = "";
+
+          if (canRecognize) {
+            try {
+              userText = await listenOnce(9000);
+            } catch (e) {
+              logLine("SYS", `Recognition error: ${e.message}`);
+              userText = "";
+            }
+          } else {
+            userText = await waitForTypedReply();
+          }
+
+          let next = route(node, userText);
+
+          if (!next) {
+            if (node.fallback) {
+              await speak(node.fallback);
+              if (!active) break;
+
+              let retryText = "";
+              if (canRecognize) {
+                try { retryText = await listenOnce(9000); } catch { retryText = ""; }
+              } else {
+                retryText = await waitForTypedReply();
+              }
+
+              next = route(node, retryText) || currentNodeId; // stay if still unknown
+            } else {
+              next = null;
+            }
+          }
+
+          currentNodeId = next;
+        } else {
+          currentNodeId = node.goto || null;
+        }
+
+        await sleep(150);
+      }
+
+      endCall("Simulator ended.");
+    }
+
+    /*****************************************************************
+     * 10) Controls
+     *****************************************************************/
+    function startCall() {
+      active = true;
+      currentNodeId = scenario.start;
+      lastPromptText = "";
+      elLog.textContent = "";
+
+      btnStart.disabled  = true;
+      btnEnd.disabled    = false;
+      btnRepeat.disabled = false;
+      btnMute.disabled   = false;
+      btnTyped.disabled  = false;
+
+      logLine("SYS", "☎ Ring... Ring...");
+      setStatus("Starting call… allow microphone permissions if prompted.", "warn");
+
+      runCall();
+    }
+
+    function endCall(reason = "Call ended.") {
+      active = false;
+
+      try { recognition?.stop(); } catch {}
+      try { synth.cancel(); } catch {}
+
+      btnStart.disabled  = false;
+      btnEnd.disabled    = true;
+      btnRepeat.disabled = true;
+      btnMute.disabled   = true;
+      btnTyped.disabled  = true;
+
+      setStatus(reason, "warn");
+      logLine("SYS", reason);
+    }
+
+    btnStart.onclick = () => startCall();
+    btnEnd.onclick   = () => endCall("User ended the call.");
+    btnRepeat.onclick = () => {
+      if (!active) return;
+      if (lastPromptText) speak(lastPromptText);
+    };
+    btnMute.onclick = () => {
+      ttsMuted = !ttsMuted;
+      btnMute.textContent = ttsMuted ? "Unmute TTS" : "Mute TTS";
+      if (ttsMuted) synth.cancel();
+    };
+
+    /*****************************************************************
+     * 11) Startup checks + status
+     *****************************************************************/
+    if (!("speechSynthesis" in window)) {
+      setStatus("TTS not supported in this browser.", "warn");
+      logLine("SYS", "This browser doesn't support speechSynthesis.");
+    } else if (!canRecognize) {
+      setStatus("Speech recognition not available here. Use Typed Reply fallback (Chrome/Edge recommended).", "warn");
+    } else {
+      setStatus("Ready. Speech recognition + synthesis available.", "ok");
+    }
+  </script>
+</body>
+</html>
