@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Phone Call Simulator (Browser • Free Prototype)</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --panel:#f7f7f7;
+      --border:#d9d9d9;
+      --ok:#e7f7ee;
+      --okBorder:#bfe6cf;
+      --warn:#fff3cd;
+      --warnBorder:#ffeeba;
+      --text:#222;
+      --muted:#666;
+      --btn:#fff;
+    }
+    body { font-family: Segoe UI, Arial, sans-serif; margin: 22px; color:var(--text); background:var(--bg); }
+    h2 { margin: 0 0 12px; font-weight:600; }
+    .row { display:flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 14px; align-items:center; }
+    button, select {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--btn);
+      font-size: 14px;
+    }
+    button { cursor: pointer; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    label { display:inline-flex; align-items:center; gap:8px; }
+    #status { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--warnBorder); background: var(--warn); border-radius: 12px; }
+    #log { white-space: pre-wrap; border: 1px solid var(--border); padding: 12px; height: 360px; overflow: auto; border-radius: 12px; background:#fff; }
+    .small { font-size: 12px; color: var(--muted); margin-top: 10px; }
+    .pill { display:inline-block; padding: 2px 10px; border-radius: 999px; background:#eef; margin-left: 8px; font-size:12px; }
+    .ok { background: var(--ok); border-color: var(--okBorder); }
+    .warn { background: var(--warn); border-color: var(--warnBorder); }
+    .spacer { flex: 1 1 auto; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h2>Phone Call Simulator <span class="pill">Free / Browser Prototype</span></h2>
+
+  <div class="row">
+    <button id="btnStart">Start Call</button>
+    <button id="btnEnd" disabled>End Call</button>
+    <button id="btnRepeat" disabled>Repeat Prompt</button>
+    <button id="btnMute" disabled>Mute TTS</button>
+    <button id="btnTyped" disabled>Typed Reply (Fallback)</button>
+    <span class="spacer"></span>
+
+    <label>
+      Voice:
+      <select id="voiceSelect" title="Device voices (Windows/Edge)"></select>
+    </label>
+
+    <label>
+      Style:
+      <select id="styleSelect" title="TTS delivery style">
+        <option value="neutral">Neutral</option>
+        <option value="confused" selected>Confused patient</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="status" class="warn">Status: Ready.</div>
+  <div id="log"></div>
+
+  <p class="small">
+    Uses Web Speech API: speech synthesis + speech recognition.
+    Mic permission is requested once when you click <b>Start Call</b>.
+    Note: Speech recognition may be server-based and may not work offline.
+  </p>
+
+  <script>
+    /*****************************************************************
+     * 1) Scenario (branching)
+     *****************************************************************/
+    const scenario = {
+      start: "greeting",
+      nodes: {
+        greeting: {
+          say: "Hi… I’m sorry, I’m a little confused. I’m calling because I got a call from you guys, and I’m not sure what it means. Can you help?",
+          listen: true,
+          routes: [
+            { matchAny: ["yes", "sure", "okay", "ok", "help", "absolutley"], goto: "verify" },
+            { matchAny: ["no"], goto: "fallback_help" }
+          ],
+          fallback: "Sorry… I didn’t catch that. Can you help me understand what that call was all about?"
+        },
+
+        fallback_help: {
+          say: "Oh… okay. I guess I’ll try again later. Thank you.",
+          listen: false
+        },
+
+        verify: {
+          say: "Great!",
+          listen: true,
+          routes: [
+            { match: "verify", goto: "dob" },
+            { matchAny: ["date of birth", "birthday", "dob"], goto: "dob" },
+            { matchAny: ["member id", "id number", "policy"], goto: "memberid" }
+          ],
+          fallback: "I can share my date of birth, or my member I.D. Which one do you need?"
+        },
+
+        dob: {
+          say: "Okay… my date of birth is… Hang on… It's 12 January 1980",
+          listen: true,
+          routes: [
+            { matchAny: ["yes", "perfect", "12 january 1980", "thanks", "thank you", "ok"], goto: "reason" }
+          ],
+          fallback: "Sorry… It's 12 January 1980."
+        },
+
+        memberid: {
+          say: "Okay. My member I.D. is… um… I have it here. Do you want me to read it now?",
+          listen: true,
+          routes: [
+            { matchAny: ["yes", "read", "go ahead", "sure"], goto: "reason" },
+            { matchAny: ["no", "later"], goto: "reason" }
+          ],
+          fallback: "Sorry… should I read it now?"
+        },
+
+        reason: {
+          say: "So… here’s the part I don’t understand. Is this about billing, or is it about scheduling?",
+          listen: true,
+          routes: [
+            { matchAny: ["bill", "billing", "balance", "statement", "payment"], goto: "billing" },
+            { matchAny: ["schedule", "scheduling", "appointment", "reschedule"], goto: "scheduling" }
+          ],
+          fallback: "I’m sorry… is it billing or scheduling?"
+        },
+
+        billing: {
+          say: "Okay… billing. The amount looks… maybe wrong? Is it a balance, a payment, or a statement issue?",
+          listen: true,
+          routes: [
+            { matchAny: ["balance"], goto: "billing_balance" },
+            { matchAny: ["payment", "pay"], goto: "billing_payment" },
+            { matchAny: ["statement"], goto: "billing_statement" }
+          ],
+          fallback: "Sorry… balance, payment, or statement?"
+        },
+
+        billing_balance: {
+          say: "Right. The balance is what confused me. Can you explain why I have THIS balance?",
+          listen: true,
+          routes: [
+            { matchAny: ["explain", "why", "because"], goto: "empathy" },
+            { matchAny: ["deductible", "coinsurance", "copay"], goto: "empathy" }
+          ],
+          fallback: "I’m just not sure why it’s there… can you explain it?"
+        },
+
+        billing_payment: {
+          say: "Okay… payment. I’m not sure if my payment went through. Can you check that?",
+          listen: true,
+          routes: [
+            { matchAny: ["yes", "check", "sure", "okay"], goto: "wrapup" }
+          ],
+          fallback: "Sorry… can you check whether it went through?"
+        },
+
+        billing_statement: {
+          say: "It might be the statement. I didn’t understand it. Can you help me read it?",
+          listen: true,
+          routes: [
+            { matchAny: ["yes", "help", "sure", "okay"], goto: "wrapup" }
+          ],
+          fallback: "Can you help me understand the statement?"
+        },
+
+        scheduling: {
+          say: "Okay… scheduling. I’m trying to make an appointment but I’m not sure what day is available. What weekday should I pick?",
+          listen: true,
+          routes: [
+            { matchAny: ["monday","tuesday","wednesday","thursday","friday"], goto: "wrapup" }
+          ],
+          fallback: "Sorry… can you suggest a weekday? Monday through Friday."
+        },
+
+        empathy: {
+          say: "Thank you. I’m sorry… this is stressful. I appreciate your help. One moment while you review it.",
+          listen: false,
+          goto: "wrapup"
+        },
+
+        wrapup: {
+          say: "Okay… I think that makes sense now. Thank you for explaining it. This concludes the practice call.",
+          listen: false
+        }
+      }
+    };
+
+    /*****************************************************************
+     * 2) UI helpers
+     *****************************************************************/
+    const elLog = document.getElementById("log");
+    const elStatus = document.getElementById("status");
+
+    const btnStart  = document.getElementById("btnStart");
+    const btnEnd    = document.getElementById("btnEnd");
+    const btnRepeat = document.getElementById("btnRepeat");
+    const btnMute   = document.getElementById("btnMute");
+    const btnTyped  = document.getElementById("btnTyped");
+
+    const voiceSelect = document.getElementById("voiceSelect");
+    const styleSelect = document.getElementById("styleSelect");
+
+    function setStatus(text, kind = "warn") {
+      elStatus.textContent = "Status: " + text;
+      elStatus.className = (kind === "ok") ? "ok" : "warn";
+    }
+
+    function logLine(prefix, text) {
+      elLog.textContent += `${prefix}: ${text}\n`;
+      elLog.scrollTop = elLog.scrollHeight;
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    /*****************************************************************
+     * 3) Web Speech API setup
+     *****************************************************************/
+    const synth = window.speechSynthesis;
+    const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const canRecognize = !!SpeechRecognitionCtor;
+
+    let recognition = null;
+    let recognitionBusy = false;
+
+    let active = false;
+    let currentNodeId = scenario.start;
+    let lastPromptText = "";
+    let ttsMuted = false;
+
+    // NEW: remember whether mic was granted (if denied, we stay in typed mode)
+    let micGranted = false;
+
+    /*****************************************************************
+     * 4) Voice list + English-only + RANDOM ASSIGNMENT
+     *****************************************************************/
+    let voices = [];
+    let selectedVoice = null;
+    let lastRandomIdx = -1;
+
+    function randomIndexNoRepeat(max) {
+      if (max <= 1) return 0;
+      let idx;
+      do { idx = Math.floor(Math.random() * max); }
+      while (idx === lastRandomIdx);
+      lastRandomIdx = idx;
+      return idx;
+    }
+
+    function pickRandomEnglishVoice() {
+      if (!voices || voices.length === 0) return;
+
+      const idx = randomIndexNoRepeat(voices.length);
+      voiceSelect.value = String(idx);
+      selectedVoice = voices[idx] || null;
+
+      if (selectedVoice) {
+        logLine("SYS", `Random voice selected: ${selectedVoice.name} — ${selectedVoice.lang}`);
+      }
+    }
+
+    // Put the exact names you want to allow (copy them from your dropdown once)
+    const ALLOWED_VOICE_NAMES = new Set([
+      "Microsoft Aria Online (Natural) - English (United States)",
+      "Microsoft Guy Online (Natural) - English (United States)",
+      "Microsoft Sonia Online (Natural) - English (United Kingdom)",
+      "Microsoft Ryan Online (Natural) - English (United Kingdom)"
+    ]);
+
+    function populateVoiceList() {
+      const allVoices = synth.getVoices();
+
+      // English-only + (optional) allowlist by exact name
+      voices = allVoices.filter(v =>
+        (v.lang || "").toLowerCase().startsWith("en")
+        // && ALLOWED_VOICE_NAMES.has(v.name)
+      );
+
+      voiceSelect.innerHTML = "";
+      voices.forEach((v, idx) => {
+        const opt = document.createElement("option");
+        opt.value = String(idx);
+        opt.textContent = `${v.name} — ${v.lang}`;
+        voiceSelect.appendChild(opt);
+      });
+
+      if (!selectedVoice && voices.length) {
+        voiceSelect.value = "0";
+        selectedVoice = voices[0];
+      }
+    }
+
+    voiceSelect.addEventListener("change", () => {
+      const idx = Number(voiceSelect.value);
+      selectedVoice = voices[idx] || null;
+    });
+
+    if ("onvoiceschanged" in synth) {
+      synth.onvoiceschanged = populateVoiceList;
+    }
+    populateVoiceList();
+
+    /*****************************************************************
+     * 5) Branching / routing helpers
+     *****************************************************************/
+    function looksLikeDate(text) {
+      return /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b/i.test(text) ||
+             /\b\d{1,2}\/\d{1,2}\/\d{2,4}\b/.test(text) ||
+             /\b\d{1,2}(st|nd|rd|th)?\b.*\b\d{4}\b/i.test(text);
+    }
+
+    function route(node, userText) {
+      const t = (userText || "").toLowerCase();
+
+      if (node.routes) {
+        for (const r of node.routes) {
+          if (r.match === "DATE" && looksLikeDate(userText)) return r.goto;
+          if (r.match === "DOB_REQUEST") {
+            if (t.includes("date of birth") || t.includes("dob") || t.includes("birthday")) return r.goto;
+          }
+          if (r.matchAny && r.matchAny.some(k => t.includes(k))) return r.goto;
+        }
+      }
+      if (node.goto) return node.goto;
+      return null;
+    }
+
+    /*****************************************************************
+     * 6) TTS: "Confused patient" style
+     *****************************************************************/
+    function maybeAddConfusion(text) {
+      const fillers = [
+        "Um… ",
+        "Uh… ",
+        "Sorry… ",
+        "Let me think… ",
+        "I’m not sure, but… "
+      ];
+      if (Math.random() < 0.35) {
+        return fillers[Math.floor(Math.random() * fillers.length)] + text;
+      }
+      return text;
+    }
+
+    function speak(text) {
+      lastPromptText = text;
+      synth.cancel();
+
+      let spokenText = text;
+      const style = styleSelect?.value || "confused";
+      if (style === "confused") spokenText = maybeAddConfusion(text);
+
+      logLine("SIM", spokenText);
+      if (ttsMuted) return Promise.resolve();
+
+      return new Promise((resolve, reject) => {
+        const u = new SpeechSynthesisUtterance(spokenText);
+        if (selectedVoice) u.voice = selectedVoice;
+
+        if (style === "confused") {
+          u.rate  = 1.0;
+          u.pitch = 1.05;
+        } else {
+          u.rate  = 1.0;
+          u.pitch = 1.0;
+        }
+        u.volume = 1.0;
+
+        u.onend = () => resolve();
+        u.onerror = (e) => reject(e);
+
+        synth.speak(u);
+      });
+    }
+
+    /*****************************************************************
+     * 7) Mic permission: ASK ONCE (reliable)
+     *    Uses getUserMedia to trigger permission prompt on Start Call
+     *****************************************************************/
+    async function primeMicPermission() {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        throw new Error("getUserMedia not supported");
+      }
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(t => t.stop()); // release immediately
+    }
+
+    /*****************************************************************
+     * 8) STT: listen once (hardened)
+     *****************************************************************/
+    function listenOnce(timeoutMs = 9000) {
+      return new Promise((resolve) => {
+        if (!canRecognize) {
+          resolve("");
+          return;
+        }
+        if (recognitionBusy) {
+          // If somehow called while already listening, just resolve empty
+          resolve("");
+          return;
+        }
+        recognitionBusy = true;
+
+        // Stop any prior recognition instance cleanly
+        try { recognition?.stop(); } catch {}
+        recognition = new SpeechRecognitionCtor();
+
+        recognition.lang = "en-US";
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        recognition.continuous = false;
+
+        let done = false;
+        const timer = setTimeout(() => {
+          if (done) return;
+          done = true;
+          try { recognition.stop(); } catch {}
+          recognitionBusy = false;
+          logLine("USER", "(no speech detected)");
+          resolve("");
+        }, timeoutMs);
+
+        recognition.onresult = (event) => {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+
+          const transcript = event.results?.[0]?.[0]?.transcript?.trim() || "";
+          recognitionBusy = false;
+          logLine("USER", transcript || "(no speech detected)");
+          resolve(transcript);
+        };
+
+        recognition.onerror = (event) => {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+
+          const err = event.error || "speech error";
+          recognitionBusy = false;
+
+          // If permission was denied/blocked, flip into typed mode for remainder
+          if (err === "not-allowed" || err === "service-not-allowed") {
+            micGranted = false;
+            logLine("SYS", `Recognition blocked (${err}). Switching to typed replies.`);
+            resolve("");
+            return;
+          }
+
+          // For other errors, just resolve empty (keep sim moving)
+          logLine("SYS", `Recognition error: ${err}`);
+          resolve("");
+        };
+
+        recognition.onend = () => {
+          // Some browsers end without result; let timeout handle it unless already done
+          // No action needed here
+        };
+
+        try {
+          recognition.start();
+        } catch (e) {
+          clearTimeout(timer);
+          recognitionBusy = false;
+          logLine("SYS", `Recognition start failed: ${e.message}`);
+          resolve("");
+        }
+      });
+    }
+
+    /*****************************************************************
+     * 9) Typed fallback (if recognition not available or denied)
+     *****************************************************************/
+    let typedResolver = null;
+
+    function waitForTypedReply() {
+      return new Promise(resolve => {
+        typedResolver = resolve;
+        setStatus("Type your response using 'Typed Reply (Fallback)'.", "warn");
+      });
+    }
+
+    btnTyped.onclick = () => {
+      const txt = prompt("Type what you would have said:");
+      if (typedResolver) {
+        logLine("USER", (txt || "").trim() || "(empty)");
+        typedResolver((txt || "").trim());
+        typedResolver = null;
+        setStatus("Call running.", "ok");
+      }
+    };
+
+    /*****************************************************************
+     * 10) Scenario runner
+     *****************************************************************/
+    async function runCall() {
+      setStatus(
+        (canRecognize && micGranted) ? "Call running. Listening after each prompt." :
+        canRecognize ? "Call running. Mic unavailable/denied — using Typed Reply fallback." :
+                       "Call running. Speech recognition unavailable here — use Typed Reply fallback.",
+        (canRecognize && micGranted) ? "ok" : "warn"
+      );
+
+      while (active && currentNodeId) {
+        const node = scenario.nodes[currentNodeId];
+        if (!node) break;
+
+        await speak(node.say);
+        if (!active) break;
+
+        if (node.listen) {
+          let userText = "";
+
+          // Use STT only if supported AND mic granted
+          if (canRecognize && micGranted) {
+            userText = await listenOnce(9000);
+            // If recognition got blocked mid-run, micGranted may flip false
+            if (!micGranted) {
+              userText = await waitForTypedReply();
+            }
+          } else {
+            userText = await waitForTypedReply();
+          }
+
+          let next = route(node, userText);
+
+          if (!next) {
+            if (node.fallback) {
+              await speak(node.fallback);
+              if (!active) break;
+
+              let retryText = "";
+              if (canRecognize && micGranted) {
+                retryText = await listenOnce(9000);
+                if (!micGranted) retryText = await waitForTypedReply();
+              } else {
+                retryText = await waitForTypedReply();
+              }
+
+              next = route(node, retryText) || currentNodeId;
+            } else {
+              next = null;
+            }
+          }
+
+          currentNodeId = next;
+        } else {
+          currentNodeId = node.goto || null;
+        }
+
+        await sleep(150);
+      }
+
+      endCall("Simulator ended.");
+    }
+
+    /*****************************************************************
+     * 11) Controls
+     *****************************************************************/
+    async function startCall() {
+      active = true;
+      currentNodeId = scenario.start;
+      lastPromptText = "";
+      elLog.textContent = "";
+      micGranted = false;
+
+      // Ensure voices are loaded; then randomize ONE voice for this call
+      populateVoiceList();
+      pickRandomEnglishVoice();
+
+      btnStart.disabled  = true;
+      btnEnd.disabled    = false;
+      btnRepeat.disabled = false;
+      btnMute.disabled   = false;
+      btnTyped.disabled  = false;
+
+      logLine("SYS", "Ring... Ring...");
+      setStatus("Starting call… microphone permission may be requested once.", "warn");
+
+      // ASK ONCE — intentionally — on Start Call click
+      if (canRecognize) {
+        try {
+          await primeMicPermission();
+          micGranted = true;
+          logLine("SYS", "Microphone permission granted.");
+        } catch (e) {
+          micGranted = false;
+          logLine("SYS", "Microphone denied/unavailable — using typed replies.");
+          logLine("SYS", `Mic prime error: ${e.message}`);
+        }
+      }
+
+      runCall();
+    }
+
+    function endCall(reason = "Call ended.") {
+      active = false;
+
+      try { recognition?.stop(); } catch {}
+      try { synth.cancel(); } catch {}
+
+      recognitionBusy = false;
+
+      btnStart.disabled  = false;
+      btnEnd.disabled    = true;
+      btnRepeat.disabled = true;
+      btnMute.disabled   = true;
+      btnTyped.disabled  = true;
+
+      setStatus(reason, "warn");
+      logLine("SYS", reason);
+    }
+
+    btnStart.onclick = () => startCall();
+    btnEnd.onclick   = () => endCall("User ended the call.");
+    btnRepeat.onclick = () => {
+      if (!active) return;
+      if (lastPromptText) speak(lastPromptText);
+    };
+    btnMute.onclick = () => {
+      ttsMuted = !ttsMuted;
+      btnMute.textContent = ttsMuted ? "Unmute TTS" : "Mute TTS";
+      if (ttsMuted) synth.cancel();
+    };
+
+    /*****************************************************************
+     * 12) Startup checks + status
+     *****************************************************************/
+    if (!("speechSynthesis" in window)) {
+      setStatus("TTS not supported in this browser.", "warn");
+      logLine("SYS", "This browser doesn't support speechSynthesis.");
+    } else if (!canRecognize) {
+      setStatus("Speech recognition not available here. Use Typed Reply fallback (Chrome/Edge recommended).", "warn");
+    } else {
+      setStatus("Ready. Click Start Call to request mic permission once.", "ok");
+    }
+  </script>
+</body>
+</html>
