@@ -373,9 +373,14 @@ const scenario = {
       return text;
     }
 
-    function speak(text) {
-      lastPromptText = text;
-      synth.cancel();
+
+	function speak(textOrArray) {
+	  const text = Array.isArray(textOrArray)
+		? textOrArray[Math.floor(Math.random() * textOrArray.length)]
+		: textOrArray;
+
+	  lastPromptText = text;
+	  synth.cancel();
 
       let spokenText = text;
       const style = styleSelect?.value || "confused";
