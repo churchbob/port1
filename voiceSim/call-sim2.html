@@ -320,7 +320,21 @@ const scenario = {
     /*****************************************************************
      * 5) Branching / routing helpers
      *****************************************************************/
-    function looksLikeDate(text) {
+    
+	
+	function isCallGreeting(text) {
+	  const t = (text || "").toLowerCase();
+	  return [
+		"hello",
+		"hi",
+		"hey",
+		"good morning",
+		"good afternoon"
+	  ].some(k => t.includes(k));
+	}
+	
+	
+	function looksLikeDate(text) {
       return /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b/i.test(text) ||
              /\b\d{1,2}\/\d{1,2}\/\d{2,4}\b/.test(text) ||
              /\b\d{1,2}(st|nd|rd|th)?\b.*\b\d{4}\b/i.test(text);
@@ -510,15 +524,47 @@ const scenario = {
     /*****************************************************************
      * 10) Scenario runner
      *****************************************************************/
-    async function runCall() {
-      setStatus(
-        (canRecognize && micGranted) ? "Call running. Listening after each prompt." :
-        canRecognize ? "Call running. Mic unavailable/denied — using Typed Reply fallback." :
-                       "Call running. Speech recognition unavailable here — use Typed Reply fallback.",
-        (canRecognize && micGranted) ? "ok" : "warn"
-      );
+    async function waitForCallPickup() {
+  setStatus("Waiting for the caller to answer… say 'hello' to begin.", "warn");
 
-      while (active && currentNodeId) {
+  while (active) {
+    let heard = "";
+
+    if (canRecognize && micGranted) {
+      heard = await listenOnce(8000);
+      if (!micGranted) heard = await waitForTypedReply();
+    } else {
+      heard = await waitForTypedReply();
+    }
+
+    if (isCallGreeting(heard)) {
+      logLine("SYS", "Call answered.");
+      return true;
+    }
+
+    logLine("SIM", "…(waiting for an answer)");
+  }
+
+  return false;
+}
+	
+
+async function runCall() {
+  const pickedUp = await waitForCallPickup();
+  if (!pickedUp || !active) {
+    endCall("Call not answered.");
+    return;
+  }
+
+  setStatus(
+    (canRecognize && micGranted)
+      ? "Call running. Listening after each prompt."
+      : "Call running. Using Typed Reply fallback.",
+    (canRecognize && micGranted) ? "ok" : "warn"
+  );
+
+  while (active && currentNodeId) {
+
         const node = scenario.nodes[currentNodeId];
         if (!node) break;
 
