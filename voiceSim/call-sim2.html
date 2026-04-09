@@ -217,6 +217,63 @@ const scenario = {
 
     const voiceSelect = document.getElementById("voiceSelect");
     const styleSelect = document.getElementById("styleSelect");
+	
+	/*****************************************************************
+	 * Phone ringing sound (Web Audio API, no files)
+	 *****************************************************************/
+	let ringCtx = null;
+	let ringInterval = null;
+
+	function startRinging() {
+	  if (ringCtx || ringInterval) return;
+
+	  ringCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+	  function ringOnce() {
+		const t = ringCtx.currentTime;
+
+		const osc1 = ringCtx.createOscillator();
+		const osc2 = ringCtx.createOscillator();
+		const gain = ringCtx.createGain();
+
+		// Classic US phone ring frequencies
+		osc1.frequency.value = 440;
+		osc2.frequency.value = 480;
+
+		gain.gain.setValueAtTime(0.0001, t);
+		gain.gain.exponentialRampToValueAtTime(0.2, t + 0.02);
+
+		osc1.connect(gain);
+		osc2.connect(gain);
+		gain.connect(ringCtx.destination);
+
+		osc1.start(t);
+		osc2.start(t);
+
+		osc1.stop(t + 0.35);
+		osc2.stop(t + 0.35);
+	  }
+
+	  // Ring… ring… pause (classic cadence)
+	  ringOnce();
+	  setTimeout(ringOnce, 400);
+
+	  ringInterval = setInterval(() => {
+		ringOnce();
+		setTimeout(ringOnce, 400);
+	  }, 4000);
+	}
+
+	function stopRinging() {
+	  if (ringInterval) {
+		clearInterval(ringInterval);
+		ringInterval = null;
+	  }
+	  if (ringCtx) {
+		ringCtx.close();
+		ringCtx = null;
+	  }
+	}
 
     function setStatus(text, kind = "warn") {
       elStatus.textContent = "Status: " + text;
@@ -543,8 +600,9 @@ const scenario = {
     }
 
     if (isCallGreeting(heard)) {
-      logLine("SYS", "Call answered.");
-      return true;
+		stopRinging();
+		logLine("SYS", "Call answered.");
+		return true;
     }
 
     logLine("SIM", "…(waiting for an answer)");
@@ -642,7 +700,10 @@ async function runCall() {
       btnMute.disabled   = false;
       btnTyped.disabled  = false;
 
-      logLine("SYS", "Ring... Ring...");
+      
+		logLine("SYS", "Ring… Ring…");
+		startRinging();
+
       setStatus("Starting call… microphone permission may be requested once.", "warn");
 
       // ASK ONCE — intentionally — on Start Call click
@@ -663,7 +724,7 @@ async function runCall() {
 
     function endCall(reason = "Call ended.") {
       active = false;
-
+	  stopRinging();
       try { recognition?.stop(); } catch {}
       try { synth.cancel(); } catch {}
 
