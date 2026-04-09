@@ -79,81 +79,60 @@
      * 1) Scenario (branching)
      *****************************************************************/
 const scenario = {
-  start: "verify_consent",
+  start: "greeting",
   nodes: {
-    verify_consent: {
-      say: "Hi… this is about a call I received earlier. Before we go on, is it okay if we verify my identity?",
+    greeting: {
+      say: "Hi… I’m calling because I got a call from you earlier, and I’m not sure what it was about.",
       listen: true,
       routes: [
-        { matchAny: ["yes", "okay", "ok", "sure", "that's fine"], goto: "verify_name" },
-        { matchAny: ["no"], goto: "fallback_verify" }
+        { matchAny: ["verify", "verification", "identity", "name"], goto: "verify_name" }
       ],
-      fallback: "I just want to make sure it’s okay to verify me before we continue."
-    },
-
-    fallback_verify: {
-      say: "Oh… okay. I understand. I’ll try calling back later. Thank you.",
-      listen: false
+      fallback: "Sorry… I’m not sure what happens next."
     },
 
     /* =========================
-       VERIFICATION SEQUENCE
+       AGENT-LED VERIFICATION
        ========================= */
 
     verify_name: {
-      say: "Thank you. Can you please confirm my first and last name?",
+      say: "Sure. My first name is Robert… last name Church.",
       listen: true,
       routes: [
-        { matchAny: ["robert", "church"], goto: "verify_ssn" }
+        { matchAny: ["ssn", "social", "last four"], goto: "verify_ssn" }
       ],
-      fallback: "Sorry… my first and last name is Robert Church."
+      fallback: "My name is Robert Church."
     },
 
     verify_ssn: {
-      say: "Great. And the last four digits of my Social Security Number?",
+      say: "Okay… the last four of my Social Security number are one, two, three, four.",
       listen: true,
       routes: [
-        { matchAny: ["1234", "one two three four"], goto: "verify_dob" }
+        { matchAny: ["dob", "date of birth", "birthday"], goto: "verify_dob" }
       ],
       fallback: "It’s one… two… three… four."
     },
 
     verify_dob: {
-      say: "Thank you. What is my date of birth?",
+      say: "My date of birth is January 12th, 1980.",
       listen: true,
       routes: [
-        { matchAny: ["january 12 1980", "12 january 1980", "january twelfth 1980"], goto: "verify_address" }
+        { matchAny: ["address", "current address", "mailing"], goto: "verify_address" }
       ],
-      fallback: "It’s January twelfth, nineteen eighty."
+      fallback: "January twelfth, nineteen eighty."
     },
 
     verify_address: {
-      say: "And finally, can you confirm my current address?",
+      say: "Yes… my current address is the one listed on my statement.",
       listen: true,
       routes: [
-        { matchAny: ["street", "road", "avenue", "drive"], goto: "greeting" }
+        { matchAny: ["thank", "verified", "okay", "great"], goto: "reason" }
       ],
-      fallback: "Sorry… it’s the address on file — the one on my statement."
+      fallback: "It should be the address you have on file."
     },
 
     /* =========================
-       ORIGINAL FLOW
+       REASON FOR CALL
        ========================= */
-
-    greeting: {
-      say: "Thanks for verifying me. I’m calling because I got a call from you earlier, and I’m not sure what it means. Can you help?",
-      listen: true,
-      routes: [
-        { matchAny: ["yes", "sure", "okay", "ok", "help", "absolutely"], goto: "reason" },
-        { matchAny: ["no"], goto: "fallback_help" }
-      ],
-      fallback: "Sorry… I didn’t catch that. Can you help me understand why I was called?"
-    },
-
-    fallback_help: {
-      say: "Oh… okay. I guess I’ll try again later. Thank you.",
-      listen: false
-    },
 
     reason: {
       say: "So… here’s the part I don’t understand. Is this about billing, or is it about scheduling?",
@@ -186,7 +165,7 @@ const scenario = {
     },
 
     billing_payment: {
-      say: "I’m not sure if my payment went through. Can you check that for me?",
+      say: "I’m not sure if my payment went through. Can you check that?",
       listen: true,
       routes: [
         { matchAny: ["yes", "check", "sure", "okay"], goto: "wrapup" }
@@ -213,18 +192,17 @@ const scenario = {
     },
 
     empathy: {
-      say: "Thank you. I’m sorry… this is stressful. I appreciate your help while you look at it.",
+      say: "Thank you… I’m sorry. This stuff is stressful. I appreciate your help.",
       listen: false,
       goto: "wrapup"
     },
 
     wrapup: {
-      say: "Okay… I think that makes sense now. Thank you for explaining it. This concludes the practice call.",
+      say: "Okay… that makes more sense now. Thank you for explaining everything. This concludes the practice call.",
       listen: false
     }
   }
 };
-
     /*****************************************************************
      * 2) UI helpers
      *****************************************************************/
