@@ -78,124 +78,152 @@
     /*****************************************************************
      * 1) Scenario (branching)
      *****************************************************************/
-    const scenario = {
-      start: "greeting",
-      nodes: {
-        greeting: {
-          say: "Hi… I’m sorry, I’m a little confused. I’m calling because I got a call from you guys, and I’m not sure what it means. Can you help?",
-          listen: true,
-          routes: [
-            { matchAny: ["yes", "sure", "okay", "ok", "help", "absolutley"], goto: "verify" },
-            { matchAny: ["no"], goto: "fallback_help" }
-          ],
-          fallback: "Sorry… I didn’t catch that. Can you help me understand what that call was all about?"
-        },
+const scenario = {
+  start: "verify_consent",
+  nodes: {
+    verify_consent: {
+      say: "Hi… this is about a call I received earlier. Before we go on, is it okay if we verify my identity?",
+      listen: true,
+      routes: [
+        { matchAny: ["yes", "okay", "ok", "sure", "that's fine"], goto: "verify_name" },
+        { matchAny: ["no"], goto: "fallback_verify" }
+      ],
+      fallback: "I just want to make sure it’s okay to verify me before we continue."
+    },
 
-        fallback_help: {
-          say: "Oh… okay. I guess I’ll try again later. Thank you.",
-          listen: false
-        },
+    fallback_verify: {
+      say: "Oh… okay. I understand. I’ll try calling back later. Thank you.",
+      listen: false
+    },
 
-        verify: {
-          say: "Great!",
-          listen: true,
-          routes: [
-            { match: "verify", goto: "dob" },
-            { matchAny: ["date of birth", "birthday", "dob"], goto: "dob" },
-            { matchAny: ["member id", "id number", "policy"], goto: "memberid" }
-          ],
-          fallback: "I can share my date of birth, or my member I.D. Which one do you need?"
-        },
+    /* =========================
+       VERIFICATION SEQUENCE
+       ========================= */
 
-        dob: {
-          say: "Okay… my date of birth is… Hang on… It's 12 January 1980",
-          listen: true,
-          routes: [
-            { matchAny: ["yes", "perfect", "12 january 1980", "thanks", "thank you", "ok"], goto: "reason" }
-          ],
-          fallback: "Sorry… It's 12 January 1980."
-        },
+    verify_name: {
+      say: "Thank you. Can you please confirm my first and last name?",
+      listen: true,
+      routes: [
+        { matchAny: ["robert", "church"], goto: "verify_ssn" }
+      ],
+      fallback: "Sorry… my first and last name is Robert Church."
+    },
 
-        memberid: {
-          say: "Okay. My member I.D. is… um… I have it here. Do you want me to read it now?",
-          listen: true,
-          routes: [
-            { matchAny: ["yes", "read", "go ahead", "sure"], goto: "reason" },
-            { matchAny: ["no", "later"], goto: "reason" }
-          ],
-          fallback: "Sorry… should I read it now?"
-        },
+    verify_ssn: {
+      say: "Great. And the last four digits of my Social Security Number?",
+      listen: true,
+      routes: [
+        { matchAny: ["1234", "one two three four"], goto: "verify_dob" }
+      ],
+      fallback: "It’s one… two… three… four."
+    },
 
-        reason: {
-          say: "So… here’s the part I don’t understand. Is this about billing, or is it about scheduling?",
-          listen: true,
-          routes: [
-            { matchAny: ["bill", "billing", "balance", "statement", "payment"], goto: "billing" },
-            { matchAny: ["schedule", "scheduling", "appointment", "reschedule"], goto: "scheduling" }
-          ],
-          fallback: "I’m sorry… is it billing or scheduling?"
-        },
+    verify_dob: {
+      say: "Thank you. What is my date of birth?",
+      listen: true,
+      routes: [
+        { matchAny: ["january 12 1980", "12 january 1980", "january twelfth 1980"], goto: "verify_address" }
+      ],
+      fallback: "It’s January twelfth, nineteen eighty."
+    },
 
-        billing: {
-          say: "Okay… billing. The amount looks… maybe wrong? Is it a balance, a payment, or a statement issue?",
-          listen: true,
-          routes: [
-            { matchAny: ["balance"], goto: "billing_balance" },
-            { matchAny: ["payment", "pay"], goto: "billing_payment" },
-            { matchAny: ["statement"], goto: "billing_statement" }
-          ],
-          fallback: "Sorry… balance, payment, or statement?"
-        },
+    verify_address: {
+      say: "And finally, can you confirm my current address?",
+      listen: true,
+      routes: [
+        { matchAny: ["street", "road", "avenue", "drive"], goto: "greeting" }
+      ],
+      fallback: "Sorry… it’s the address on file — the one on my statement."
+    },
 
-        billing_balance: {
-          say: "Right. The balance is what confused me. Can you explain why I have THIS balance?",
-          listen: true,
-          routes: [
-            { matchAny: ["explain", "why", "because"], goto: "empathy" },
-            { matchAny: ["deductible", "coinsurance", "copay"], goto: "empathy" }
-          ],
-          fallback: "I’m just not sure why it’s there… can you explain it?"
-        },
+    /* =========================
+       ORIGINAL FLOW
+       ========================= */
 
-        billing_payment: {
-          say: "Okay… payment. I’m not sure if my payment went through. Can you check that?",
-          listen: true,
-          routes: [
-            { matchAny: ["yes", "check", "sure", "okay"], goto: "wrapup" }
-          ],
-          fallback: "Sorry… can you check whether it went through?"
-        },
+    greeting: {
+      say: "Thanks for verifying me. I’m calling because I got a call from you earlier, and I’m not sure what it means. Can you help?",
+      listen: true,
+      routes: [
+        { matchAny: ["yes", "sure", "okay", "ok", "help", "absolutely"], goto: "reason" },
+        { matchAny: ["no"], goto: "fallback_help" }
+      ],
+      fallback: "Sorry… I didn’t catch that. Can you help me understand why I was called?"
+    },
 
-        billing_statement: {
-          say: "It might be the statement. I didn’t understand it. Can you help me read it?",
-          listen: true,
-          routes: [
-            { matchAny: ["yes", "help", "sure", "okay"], goto: "wrapup" }
-          ],
-          fallback: "Can you help me understand the statement?"
-        },
+    fallback_help: {
+      say: "Oh… okay. I guess I’ll try again later. Thank you.",
+      listen: false
+    },
 
-        scheduling: {
-          say: "Okay… scheduling. I’m trying to make an appointment but I’m not sure what day is available. What weekday should I pick?",
-          listen: true,
-          routes: [
-            { matchAny: ["monday","tuesday","wednesday","thursday","friday"], goto: "wrapup" }
-          ],
-          fallback: "Sorry… can you suggest a weekday? Monday through Friday."
-        },
+    reason: {
+      say: "So… here’s the part I don’t understand. Is this about billing, or is it about scheduling?",
+      listen: true,
+      routes: [
+        { matchAny: ["bill", "billing", "balance", "statement", "payment"], goto: "billing" },
+        { matchAny: ["schedule", "scheduling", "appointment", "reschedule"], goto: "scheduling" }
+      ],
+      fallback: "I’m sorry… is it billing or scheduling?"
+    },
 
-        empathy: {
-          say: "Thank you. I’m sorry… this is stressful. I appreciate your help. One moment while you review it.",
-          listen: false,
-          goto: "wrapup"
-        },
+    billing: {
+      say: "Okay… billing. The amount looks… maybe wrong? Is it a balance, a payment, or a statement issue?",
+      listen: true,
+      routes: [
+        { matchAny: ["balance"], goto: "billing_balance" },
+        { matchAny: ["payment", "pay"], goto: "billing_payment" },
+        { matchAny: ["statement"], goto: "billing_statement" }
+      ],
+      fallback: "Sorry… balance, payment, or statement?"
+    },
 
-        wrapup: {
-          say: "Okay… I think that makes sense now. Thank you for explaining it. This concludes the practice call.",
-          listen: false
-        }
-      }
-    };
+    billing_balance: {
+      say: "Right. The balance is what confused me. Can you explain why I have this balance?",
+      listen: true,
+      routes: [
+        { matchAny: ["deductible", "coinsurance", "copay", "explain", "why"], goto: "empathy" }
+      ],
+      fallback: "I’m just not sure why it’s there… can you explain it?"
+    },
+
+    billing_payment: {
+      say: "I’m not sure if my payment went through. Can you check that for me?",
+      listen: true,
+      routes: [
+        { matchAny: ["yes", "check", "sure", "okay"], goto: "wrapup" }
+      ],
+      fallback: "Sorry… can you check whether it went through?"
+    },
+
+    billing_statement: {
+      say: "I didn’t really understand the statement. Can you help me read it?",
+      listen: true,
+      routes: [
+        { matchAny: ["yes", "help", "sure", "okay"], goto: "wrapup" }
+      ],
+      fallback: "Can you help me understand the statement?"
+    },
+
+    scheduling: {
+      say: "I’m trying to make an appointment but I’m not sure what day is available. What weekday should I pick?",
+      listen: true,
+      routes: [
+        { matchAny: ["monday", "tuesday", "wednesday", "thursday", "friday"], goto: "wrapup" }
+      ],
+      fallback: "Sorry… can you suggest a weekday? Monday through Friday."
+    },
+
+    empathy: {
+      say: "Thank you. I’m sorry… this is stressful. I appreciate your help while you look at it.",
+      listen: false,
+      goto: "wrapup"
+    },
+
+    wrapup: {
+      say: "Okay… I think that makes sense now. Thank you for explaining it. This concludes the practice call.",
+      listen: false
+    }
+  }
+};
 
     /*****************************************************************
      * 2) UI helpers
