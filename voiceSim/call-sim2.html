@@ -87,7 +87,7 @@ const scenario = {
       routes: [
         { matchAny: ["verify", "verification", "identity", "name"], goto: "verify_name" }
       ],
-      fallback: "Sorry… I’m not sure what happens next."
+      fallback: ["hello, is anyone there?", "Sorry… I’m not sure what happens next"]
     },
 
     /* =========================
@@ -122,7 +122,7 @@ const scenario = {
     },
 
     verify_address: {
-      say: "Yes… my current address is the one listed on my statement.",
+      say: "Yes… my current address is 1313 Mockingbird Lane.",
       listen: true,
       routes: [
         { matchAny: ["thank", "verified", "okay", "great"], goto: "reason" }
