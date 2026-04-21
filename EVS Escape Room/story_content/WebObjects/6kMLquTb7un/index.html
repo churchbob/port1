@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Alphabet Panel: SQUEAKY-CLEAN</title>
+
+<style>
+  * { box-sizing: border-box; }
+
+  :root{
+    --bg: #101318;
+    --panel: #171b22;
+    --panel-border: #232a36;
+
+    --display-bg: #ffffff;
+    --display-text: #1b2230;
+    --display-border: #d8dee9;
+
+    --accent: #4da3ff;
+    --key-text: #eaf0ff;
+    --focus-ring: #74b2ff;
+
+    /* ===== fixed Storyline web object size ===== */
+    --stage-w: 440px;
+    --stage-h: 500px;
+
+    /* ===== tuned layout for alphabet keypad ===== */
+    --panel-w: 384px;        /* snug inside 300 */
+    --panel-pad-x: 12px;
+    --panel-pad-y: 12px;
+
+    --display-h: 74px;       /* taller to hold slots + status */
+    --controls-h: 36px;
+
+    --alpha-key-h: 44px;
+    --alpha-gap: 6px;
+
+    --radius-panel: 22px;
+    --radius-display: 12px;
+    --radius-key: 14px;
+  }
+
+  html, body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden; /* no scrollbars in Storyline iframe */
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  }
+
+  .sl-stage{
+    width: var(--stage-w);
+    height: var(--stage-h);
+    display:grid;
+    place-items:center;
+    background:
+      radial-gradient(520px 260px at 70% -10%, rgba(77,163,255,.22) 0%, transparent 60%),
+      radial-gradient(420px 220px at 10% 110%, rgba(77,255,186,.10) 0%, transparent 55%),
+      var(--bg);
+    color:#fff;
+  }
+
+  .panel{
+    width: var(--panel-w);
+    border-radius: var(--radius-panel);
+    background: linear-gradient(180deg, #0e1218 0%, var(--panel) 100%);
+    border:1px solid var(--panel-border);
+    box-shadow: 0 22px 44px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
+    padding: var(--panel-pad-y) var(--panel-pad-x);
+    display:grid;
+    gap: 10px;
+  }
+
+  /* ===== Display (slots + "- CLEAN" + status line) ===== */
+  .display{
+    height: var(--display-h);
+    background: var(--display-bg);
+    color: var(--display-text);
+    border: 1px solid var(--display-border);
+    border-radius: var(--radius-display);
+    box-shadow: 0 8px 14px rgba(0,0,0,.35), inset 0 1px 0 rgba(0,0,0,.03);
+    padding: 10px 10px 8px;
+    display: grid;
+    gap: 6px;
+    align-content: center;
+  }
+
+  .wordline{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 8px;
+  }
+
+  .slots{
+    display:flex;
+    gap: 4px;
+    align-items:center;
+  }
+
+  .slot{
+    width: 22px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid rgba(27,34,48,.25);
+    background: rgba(255,255,255,.75);
+    display:grid;
+    place-items:center;
+    font-weight: 900;
+    font-size: 16px;
+    letter-spacing: .02em;
+    color: var(--display-text);
+  }
+
+  .dash{
+    font-weight: 900;
+    opacity: .75;
+    transform: translateY(-1px);
+  }
+
+  .suffix{
+    font-weight: 900;
+    letter-spacing: .08em;
+    color: #0b1422;
+    opacity: .85;
+    white-space: nowrap;
+  }
+
+  .status{
+    text-align:center;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(27,34,48,.75);
+    min-height: 14px; /* keeps layout stable */
+  }
+
+  /* Success + Fail states */
+  .display.success{
+    background: #19b36b;
+    border-color: #128a53;
+    box-shadow: 0 8px 14px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.10);
+  }
+  .display.success .slot,
+  .display.success .suffix,
+  .display.success .dash,
+  .display.success .status{
+    color: #062a18;
+    border-color: rgba(6,42,24,.25);
+    background: rgba(255,255,255,.72);
+  }
+
+  .display.fail{
+    background: #ffebe9;
+    border-color: #ffb5ae;
+  }
+  .display.fail .status{
+    color: #8a1f14;
+  }
+
+  /* ===== Controls ===== */
+  .controls{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+  }
+
+  .btn{
+    border:1px solid #0a0d12;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #233043 0%, #192331 55%);
+    color:#cfe3ff;
+    height: var(--controls-h);
+    display:grid;
+    place-items:center;
+    font-weight: 750;
+    font-size: 13px;
+    cursor:pointer;
+    user-select:none;
+    transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+    box-shadow: 0 5px 12px rgba(0,0,0,.45), inset 0 -1px 0 rgba(0,0,0,.35);
+    outline:none;
+    padding: 0 6px;
+    white-space: nowrap;
+  }
+  .btn:hover{ filter: brightness(1.06); }
+  .btn:active{ transform: translateY(1px); box-shadow: 0 3px 9px rgba(0,0,0,.55), inset 0 2px 8px rgba(0,0,0,.55); }
+  .btn:focus-visible{
+    box-shadow: 0 0 0 2px rgba(0,0,0,.65), 0 0 0 4px var(--focus-ring), 0 5px 12px rgba(0,0,0,.45);
+  }
+
+  /* ===== Alphabet keys ===== */
+  .keys{
+    display:grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 across fits nicely */
+    gap: var(--alpha-gap);
+  }
+
+  .key{
+    border-radius: var(--radius-key);
+    background:
+      linear-gradient(135deg, #2a3342 0%, #1b2230 60%),
+      radial-gradient(95px 60px at 30% 20%, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 55%);
+    box-shadow: 0 6px 12px rgba(0,0,0,.45), inset 0 -2px 0 rgba(0,0,0,.35);
+    border:1px solid #0a0d12;
+    display:grid;
+    place-items:center;
+    color: var(--key-text);
+    font-weight: 900;
+    letter-spacing: .06em;
+    user-select:none;
+    cursor:pointer;
+    height: var(--alpha-key-h);
+    font-size: 16px;
+    outline:none;
+    transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  }
+
+  @media (hover:hover){ .key:hover{ filter: brightness(1.06) saturate(1.02); } }
+
+  .key:focus-visible{
+    box-shadow: 0 0 0 2px rgba(0,0,0,.65), 0 0 0 4px var(--focus-ring), 0 6px 12px rgba(0,0,0,.45), inset 0 -2px 0 rgba(0,0,0,.35);
+  }
+  .key:active{
+    transform: translateY(2px) scale(.985);
+    box-shadow: 0 3px 8px rgba(0,0,0,.55), inset 0 3px 10px rgba(0,0,0,.55);
+  }
+
+  .key[disabled],
+  .btn[disabled]{
+    opacity: .45;
+    cursor: not-allowed;
+    filter: grayscale(.15);
+  }
+
+  /* Small footer dots (optional) */
+  .dots{
+    display:flex;
+    justify-content:center;
+    gap:7px;
+    opacity:.30;
+    margin-top: 2px;
+  }
+  .dots i{
+    width:5px; height:5px;
+    border-radius:50%;
+    background:#93baff;
+  }
+</style>
+</head>
+
+<body>
+  <div class="sl-stage">
+    <section class="panel" aria-label="Alphabet keypad that forms SQUEAKY-CLEAN">
+
+      <!-- Display -->
+      <div class="display" id="display">
+        <div class="wordline" aria-label="Entry for SQUEAKY and fixed suffix CLEAN">
+          <div class="slots" id="slots" aria-label="Seven letter slots for SQUEAKY"></div>
+          <span class="dash" aria-hidden="true">-</span>
+          <span class="suffix" aria-label="Suffix word CLEAN">CLEAN</span>
+        </div>
+        <div class="status" id="status" aria-live="polite"></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls" aria-label="Delete, clear, and submit controls">
+        <button id="btnDel" class="btn" type="button" aria-label="Delete last letter">Delete ⌫</button>
+        <button id="btnClear" class="btn" type="button" aria-label="Clear all letters">Clear ↺</button>
+        <button id="btnEnter" class="btn" type="button" aria-label="Submit word">Enter ⏎</button>
+      </div>
+
+      <!-- Alphabet keypad (built by JS) -->
+      <div class="keys" id="alphaKeys" role="group" aria-label="Alphabet keypad A through Z"></div>
+
+      <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    </section>
+  </div>
+
+<script>
+console.log("welcome to version 2.2");
+  // ===== Config =====
+  const TARGET = "SQUEAKY";         // what the learner must enter
+  const SUFFIX = "CLEAN";           // shown on the right (visual only)
+  const MAX_LEN = TARGET.length;    // 7
+
+  // ===== Elements =====
+  const displayEl = document.getElementById('display');
+  const slotsEl   = document.getElementById('slots');
+  const statusEl  = document.getElementById('status');
+
+  const keysWrap  = document.getElementById('alphaKeys');
+  const btnDel    = document.getElementById('btnDel');
+  const btnClear  = document.getElementById('btnClear');
+  const btnEnter  = document.getElementById('btnEnter');
+
+  // ===== State =====
+  let value = "";       // the user's entered letters (uppercase)
+  let locked = false;   // true once correct
+
+  // ===== Build slots =====
+  function buildSlots(){
+    slotsEl.innerHTML = "";
+    for (let i = 0; i < MAX_LEN; i++){
+      const s = document.createElement('div');
+      s.className = "slot";
+      s.textContent = "·";
+      slotsEl.appendChild(s);
+    }
+  }
+
+  function updateSlots(){
+    const kids = Array.from(slotsEl.children);
+    for (let i = 0; i < MAX_LEN; i++){
+      kids[i].textContent = value[i] ? value[i] : "·";
+    }
+  }
+
+  // ===== Build A-Z keypad =====
+  function buildKeys(){
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    keysWrap.innerHTML = "";
+    letters.forEach(ch => {
+      const b = document.createElement('button');
+      b.className = "key";
+      b.type = "button";
+      b.textContent = ch;
+      b.setAttribute("aria-label", `Letter ${ch}`);
+      b.addEventListener('click', () => pressLetter(ch));
+      keysWrap.appendChild(b);
+    });
+  }
+
+  function setLockedState(isLocked){
+    locked = isLocked;
+    // disable keys when locked
+    keysWrap.querySelectorAll('button.key').forEach(btn => btn.disabled = locked);
+    btnDel.disabled = locked;
+    btnEnter.disabled = locked;
+    // Clear stays enabled so you can reset if you want
+  }
+
+  function setStatus(msg){
+    statusEl.textContent = msg || "";
+  }
+
+  function clearStates(){
+    displayEl.classList.remove('success','fail');
+  }
+
+  function resetAll(){
+    value = "";
+    setLockedState(false);
+    clearStates();
+    setStatus("");
+    updateSlots();
+  }
+
+  function pressLetter(ch){
+    if (locked) return;
+	console.log(ch);
+    clearStates();
+    setStatus("");
+
+    if (value.length >= MAX_LEN) return;
+    value += ch;
+    updateSlots();
+
+    // DO NOT Auto-check when full (so SQUEAKY + CLEAN visually forms immediately)
+	// Instead prompt the learner to press Enter.
+	if (value.length === MAX_LEN){
+		setStatus('Press Enter to submit.');
+		console.log("you hit max length");
+	}
+
+  }
+
+  function deleteLast(){
+    if (locked) return;
+    if (!value.length) return;
+
+    clearStates();
+    setStatus("");
+    value = value.slice(0, -1);
+    updateSlots();
+  }
+
+  function validate(){
+    if (locked) return;
+
+    if (value === TARGET){
+      displayEl.classList.remove('fail');
+      displayEl.classList.add('success');
+      setStatus(`Great! ${TARGET}-${SUFFIX} formed.`);
+      setLockedState(true);
+		console.log("success");
+		
+console.log("parent GetPlayer:", window.parent && typeof window.parent.GetPlayer);
+//console.log("top GetPlayer:", window.top && typeof window.top.GetPlayer);
+
+      // Storyline variable hook (safe outside Storyline)
+      try{
+        //const player = parent.GetPlayer && parent.GetPlayer();
+		const player = window.parent.GetPlayer && window.parent.GetPlayer();
+        if (player && player.SetVar){
+          player.SetVar("showBam", true);
+		  console.log("should be showing some bam now")
+          // Optional extra variable if you want it later:
+          // player.SetVar("escapeCode", `${TARGET}-${SUFFIX}`);
+        }
+      }catch(e){ /* ignore */ }
+
+    } else {
+      displayEl.classList.remove('success');
+      displayEl.classList.add('fail');
+      setStatus("Try again (Clear or Delete).");
+    }
+  }
+
+  // ===== Controls =====
+  btnDel.addEventListener('click', deleteLast);
+  btnClear.addEventListener('click', resetAll);
+  btnEnter.addEventListener('click', validate);
+
+  // ===== Keyboard support (optional) =====
+  window.addEventListener('keydown', (e) => {
+    if (locked) return;
+
+    if (/^[a-zA-Z]$/.test(e.key)){
+      e.preventDefault();
+      pressLetter(e.key.toUpperCase());
+    }
+    if (e.key === 'Backspace'){
+      e.preventDefault();
+      deleteLast();
+    }
+    if (e.key === 'Enter'){
+      e.preventDefault();
+      validate();
+    }
+    if (e.key === 'Escape'){
+      e.preventDefault();
+      resetAll();
+    }
+  });
+
+  // ===== Init =====
+  buildSlots();
+  buildKeys();
+  updateSlots();
+</script>
+</body>
+</html>

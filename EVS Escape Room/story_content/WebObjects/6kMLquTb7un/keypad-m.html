@@ -1,0 +1,259 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pure CSS Keypad (with down states)</title>
+<style>
+  :root{
+    /* Theme */
+    --bg: #101318;
+    --panel: #171b22;
+    --panel-border: #232a36;
+    --key-face: #1f2530;
+    --key-edge: #0e1218;
+    --key-text: #eaf0ff;
+    --accent: #4da3ff;
+    --glow: rgba(77,163,255,.25);
+
+    /* Sizing */
+    --panel-w: 320px;
+    --panel-h: 320px;
+    --key-size: 82px;
+    --key-radius: 18px;
+    --gap: 10px;
+
+    /* Effects */
+    --key-light: linear-gradient(135deg, #2a3342 0%, #1b2230 60%);
+    --key-shine: radial-gradient(120px 80px at 30% 20%, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 55%);
+    --key-shadow: 0 8px 16px rgba(0,0,0,.45), inset 0 -2px 0 rgba(0,0,0,.35);
+
+    /* Pressed state effects */
+    --key-light-down: linear-gradient(135deg, #222a38 0%, #141a24 60%);
+    --key-shadow-down: 0 4px 8px rgba(0,0,0,.55), inset 0 3px 10px rgba(0,0,0,.55);
+    --press-translate: 2px;
+    --press-scale: 0.985;
+    --focus-ring: #74b2ff;
+  }
+
+  /* Page backdrop */
+  body{
+    margin:0;
+    min-height:100svh;
+    display:grid;
+    place-items:center;
+    background:
+      radial-gradient(800px 400px at 70% -10%, var(--glow) 0%, transparent 60%),
+      radial-gradient(600px 300px at 10% 110%, rgba(77,255,186,.12) 0%, transparent 55%),
+      var(--bg);
+    color:#fff;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  }
+
+  /* Phone panel */
+  .panel{
+    width:var(--panel-w);
+    height:var(--panel-h);
+    padding:24px 22px;
+    border-radius:28px;
+    background: linear-gradient(180deg, #0e1218 0%, var(--panel) 100%);
+    border:1px solid var(--panel-border);
+    box-shadow: 0 30px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
+    display:grid;
+    grid-template-rows: auto 1fr auto;
+    gap:22px;
+    position:relative;
+    transition: transform .12s ease;
+  }
+
+  /* Panel gives micro feedback while a key is pressed (modern browsers) */
+  .panel:has(.key:active){
+    transform: translateY(1px);
+  }
+
+  /* Top “speaker” slot (purely decorative) */
+  .speaker{
+    width: 40%;
+    height: 8px;
+    margin: 0 auto;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #2b3342 0%, #161b24 100%);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,.07), inset 0 -2px 3px rgba(0,0,0,.35);
+  }
+
+  /* Key grid */
+  .keys{
+    display:grid;
+    grid-template-columns: repeat(3, var(--key-size));
+    grid-auto-rows: var(--key-size);
+    justify-content:center;
+    align-content:center;
+    gap:var(--gap);
+  }
+
+  /* Base key style */
+  .key{
+    position:relative;
+    border-radius:var(--key-radius);
+    background:
+      var(--key-light),
+      var(--key-shine);
+    box-shadow: var(--key-shadow);
+    border:1px solid #0a0d12;
+    display:grid;
+    place-items:center;
+    color:var(--key-text);
+    text-align:center;
+    font-weight:700;
+    letter-spacing:.02em;
+    user-select:none;
+    cursor:pointer;
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease, filter .12s ease;
+    outline: none;
+  }
+
+  .key::before{
+    /* edge highlight */
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+    box-shadow: inset 0 2px 8px rgba(255,255,255,.05);
+    pointer-events:none;
+    transition: opacity .12s ease;
+  }
+
+  /* Numerals + sublabels */
+  .key .main{ font-size:28px; line-height:1; }
+  .key .sub{ margin-top:4px; font-size:11px; opacity:.65; letter-spacing:.08em; }
+
+  /* Special keys */
+  .special{
+    color:#cfe3ff;
+    background:
+      linear-gradient(135deg, #233043 0%, #192331 55%),
+      var(--key-shine);
+  }
+
+  /* Call button accent */
+  .call{
+    background:
+      linear-gradient(135deg, #214a33 0%, #173824 55%),
+      var(--key-shine);
+    color:#c9f7df;
+  }
+  .call svg{ width:22px; height:22px; filter: drop-shadow(0 1px 0 rgba(0,0,0,.4)); }
+
+  /* --- Interaction states --- */
+
+  /* Hover hint (desktop only) */
+  @media (hover:hover){
+    .key:hover{
+      filter: brightness(1.06) saturate(1.02);
+    }
+  }
+
+  /* Keyboard focus accessibility */
+  .key:focus-visible{
+    box-shadow:
+      0 0 0 2px rgba(0,0,0,.65),
+      0 0 0 4px var(--focus-ring),
+      var(--key-shadow);
+  }
+
+  /* Pressed / active state (mouse/touch) */
+  .key:active{
+    transform: translateY(var(--press-translate)) scale(var(--press-scale));
+    background:
+      var(--key-light-down),
+      var(--key-shine);
+    box-shadow: var(--key-shadow-down);
+  }
+  .key:active::before{
+    opacity:.02; /* reduce the top highlight when pressed */
+  }
+
+  /* Optional: stronger pressed look for special/call keys */
+  .special:active{
+    background: linear-gradient(135deg, #1d2736 0%, #131b26 55%), var(--key-shine);
+  }
+  .call:active{
+    background: linear-gradient(135deg, #1a3f2b 0%, #112a1d 55%), var(--key-shine);
+  }
+
+  /* Reduced motion: keep visual states, remove transforms */
+  @media (prefers-reduced-motion: reduce){
+    .key, .panel{ transition: none; }
+    .key:active{ transform: none; }
+    .panel:has(.key:active){ transform: none; }
+  }
+
+  /* Footer dots (decoration) */
+  .dots{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    opacity:.35;
+  }
+  .dots i{
+    width:6px; height:6px;
+    border-radius:50%;
+    background:#93baff;
+  }
+
+
+ .displayPanel{
+    width:var(--panel-w);
+    height:var(--panel-(h*.75));
+    padding:24px 22px;
+    border-radius:28px;
+    background: linear-gradient(180deg, #FFF 0%, var(--panel) 100%);
+    border:1px solid var(--panel-border);
+    box-shadow: 0 30px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
+    display:grid;
+    grid-template-rows: auto 1fr auto;
+    gap:22px;
+    position:relative;
+    transition: transform .12s ease;
+  }
+
+
+  /* Responsive scaling: panel grows but keys stay proportional */
+  @media (max-width: 380px){
+    :root{
+      --panel-w: 92vw;
+      --panel-h: 150vw;
+      --key-size: 22vw;
+      --gap: 3.2vw;
+    }
+  }
+</style>
+</head>
+<body>
+ <!-- Create a place to display choices -->
+	   <section class="displayPanel" role="img" aria-label="Stylized phone keypad made with CSS">
+	   	  </section>
+  <!-- Treat the whole panel as a decorative image; keys are focusable for accessibility -->
+  <section class="panel" role="img" aria-label="Stylized phone keypad made with CSS">
+    <div class="speaker"></div>
+
+    <div class="keys" aria-hidden="false">
+      <!-- Row 1 -->
+      <div class="key" tabindex="0" role="button" aria-label="Key 1"><div><div class="main">1</div><div class="sub">—</div></div></div>
+      <div class="key" tabindex="0" role="button" aria-label="Key 2 ABC"><div><div class="main">2</div><div class="sub">ABC</div></div></div>
+      <div class="key" tabindex="0" role="button" aria-label="Key 3 DEF"><div><div class="main">3</div><div class="sub">ABC</div></div></div>
+	  
+	
+      <!-- Row 2 -->
+      <div class="key" tabindex="0" role="button" aria-label="Key 4"><div><div class="main">4</div><div class="sub">—</div></div></div>
+      <div class="key" tabindex="0" role="button" aria-label="Key 5 ABC"><div><div class="main">5</div><div class="sub">ABC</div></div></div>
+      <div class="key" tabindex="0" role="button" aria-label="Key 6 DEF"><div><div class="main">6</div><div class="sub">ABC</div></div></div>
+
+	        <!-- Row 3 -->
+      <div class="key" tabindex="0" role="button" aria-label="Key 7"><div><div class="main">7</div><div class="sub">—</div></div></div>
+      <div class="key" tabindex="0" role="button" aria-label="Key 8 ABC"><div><div class="main">8</div><div class="sub">ABC</div></div></div>
+      <div class="key" tabindex="0" role="button" aria-label="Key 9 DEF"><div><div class="main">9</div><div class="sub">ABC</div></div></div>
+	  </div>
+	  </section>
