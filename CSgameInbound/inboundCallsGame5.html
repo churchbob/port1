@@ -1,0 +1,1569 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Inbound Calls — Jeopardy Board Mode</title>
+
+<!-- YOUR ORIGINAL CSS (kept as-is) -->
+<style>
+  :root{
+    /* Jeopardy-inspired palette */
+    --jBlue:#060ce9;   /* deep board blue */ /* from Jeopardy palette refs */ 
+    --jBlue2:#115ff4;  /* electric highlight blue */
+    --jNavy:#02021a;   /* stage shadow */
+    --jGold:#ffd166;   /* warm gold */
+    --jGold2:#ffcc33;  /* brighter gold for values */
+    --jWhite:#f7f8ff;
+
+    --panel: rgba(0,0,0,.28);
+    --panel2: rgba(255,255,255,.06);
+    --line: rgba(255,255,255,.12);
+
+    --shadow: 0 18px 55px rgba(0,0,0,.60);
+    --shadow2: 0 10px 30px rgba(0,0,0,.45);
+
+    --radius: 18px;
+
+    /* Font stacks approximating Korinna + Swiss-911 condensed */
+    --fontBoard: "Arial Narrow","HelveticaNeue-CondensedBold","Impact","Segoe UI",system-ui,sans-serif;
+    --fontClue: "Georgia","Times New Roman","Palatino Linotype",serif;
+  }
+
+#gameWrap {
+  transform: scale(0.92);
+  transform-origin: top center;
+}
+
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;
+    color:var(--jWhite);
+    font-family: var(--fontBoard);
+    min-height:100vh;
+    overflow-x:hidden;
+
+    /* “studio stage” background */
+    background:
+      radial-gradient(1200px 560px at 50% -10%, rgba(17,95,244,.55), transparent 62%),
+      radial-gradient(900px 520px at 18% 10%, rgba(6,12,233,.45), transparent 62%),
+      radial-gradient(900px 520px at 86% 12%, rgba(255,209,102,.18), transparent 70%),
+      radial-gradient(900px 720px at 50% 110%, rgba(0,0,0,.85), transparent 65%),
+      linear-gradient(180deg, #02021a, #01010f 55%, #000008);
+  }
+
+  body:before{
+    content:"";
+    position:fixed;
+    inset:-45% -45%;
+    background:
+      conic-gradient(from 180deg,
+        rgba(17,95,244,.14),
+        rgba(255,209,102,.07),
+        rgba(6,12,233,.12),
+        rgba(17,95,244,.14));
+    filter: blur(46px);
+    opacity:.9;
+    animation: spin 22s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 16px 14px 32px;
+    position:relative;
+    z-index:1;
+  }
+
+  .hud{
+    border-radius: 22px;
+    border: 2px solid rgba(255,209,102,.26);
+    background:
+      linear-gradient(180deg, rgba(6,12,233,.70), rgba(6,12,233,.45)),
+      radial-gradient(900px 260px at 50% 0%, rgba(17,95,244,.55), transparent 70%);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+
+  .hudTop{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding: 12px 14px;
+    background: rgba(0,0,0,.25);
+    border-bottom: 1px solid rgba(255,209,102,.18);
+    flex-wrap:wrap;
+  }
+
+  .title{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .title h1{
+    margin:0;
+    font-size: 18px;
+    font-weight: 1000;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 0 rgba(0,0,0,.45);
+  }
+
+  .pill{
+    font-size: 11px;
+    font-weight: 1000;
+    letter-spacing:.35px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,209,102,.28);
+    background: rgba(0,0,0,.22);
+    color: rgba(247,248,255,.95);
+    white-space:nowrap;
+    text-transform: uppercase;
+  }
+
+  .pill.gold{
+    border-color: rgba(255,209,102,.55);
+    color: rgba(255,209,102,.98);
+  }
+  .pill.cyan, .pill.mag, .pill.good, .pill.bad{
+    border-color: rgba(255,209,102,.28);
+    color: rgba(247,248,255,.92);
+  }
+
+  .statsRow{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:flex-end;
+  }
+
+  .metric{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    padding: 8px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,209,102,.18);
+    background: rgba(0,0,0,.22);
+    box-shadow: var(--shadow2);
+  }
+
+  .metric .k{
+    font-size: 10px;
+    font-weight: 1000;
+    letter-spacing:.35px;
+    text-transform: uppercase;
+    color: rgba(255,209,102,.88);
+  }
+
+  .metric .v{
+    font-size: 20px;
+    font-weight: 1000;
+    letter-spacing:.8px;
+    color: rgba(247,248,255,.96);
+    text-shadow: 0 2px 0 rgba(0,0,0,.45);
+  }
+
+  .btn{
+    cursor:pointer;
+    border: 1px solid rgba(255,209,102,.28);
+    background: rgba(0,0,0,.20);
+    color: rgba(247,248,255,.95);
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-weight: 1000;
+    letter-spacing:.35px;
+    text-transform: uppercase;
+    transition: transform .06s ease, filter .15s ease, background .15s ease;
+    user-select:none;
+  }
+
+  .btn:hover{
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+    background: rgba(0,0,0,.26);
+  }
+
+  .btn.primary{
+    border-color: rgba(255,209,102,.55);
+    background: linear-gradient(180deg, rgba(255,209,102,.22), rgba(0,0,0,.20));
+  }
+
+  select{
+    border-radius: 14px;
+    border: 1px solid rgba(255,209,102,.28);
+    background: rgba(0,0,0,.22);
+    color: rgba(247,248,255,.95);
+    padding: 10px 12px;
+    font-weight: 1000;
+    letter-spacing:.25px;
+    text-transform: uppercase;
+  }
+
+  .card{
+    margin-top: 16px;
+    border-radius: 22px;
+    border: 2px solid rgba(255,209,102,.22);
+    background:
+      linear-gradient(180deg, rgba(6,12,233,.72), rgba(6,12,233,.46)),
+      radial-gradient(800px 320px at 50% 0%, rgba(17,95,244,.55), transparent 65%);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+    position:relative;
+  }
+
+  .card:before{
+    content:"";
+    position:absolute;
+    inset: -2px;
+    border-radius: 24px;
+    pointer-events:none;
+    box-shadow:
+      inset 0 0 0 2px rgba(255,209,102,.18),
+      inset 0 0 40px rgba(255,209,102,.08);
+  }
+
+  .cardTop{
+    padding: 12px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+    border-bottom: 1px solid rgba(255,209,102,.18);
+    background: rgba(0,0,0,.20);
+  }
+
+  .body{ padding: 14px; }
+
+  .progressWrap{
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(0,0,0,.20);
+    border: 1px solid rgba(255,209,102,.18);
+    overflow:hidden;
+    box-shadow: inset 0 0 0 2px rgba(0,0,0,.20);
+  }
+
+  .progress{
+    height:100%;
+    width:0%;
+    background: linear-gradient(90deg, rgba(255,209,102,.75), rgba(17,95,244,.85));
+    transition: width .25s ease;
+  }
+
+  .qMeta{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top: 12px;
+  }
+
+  #qNum, #cat, #bonus{
+    border-color: rgba(255,209,102,.28) !important;
+    background: rgba(0,0,0,.22) !important;
+    color: rgba(255,209,102,.95) !important;
+    font-family: var(--fontBoard);
+    text-transform: uppercase;
+  }
+  
+#qNum,
+#cat {
+  font-size: 20px;
+  padding: 10px 16px;
+  font-weight: 1000;
+  letter-spacing: 0.5px;
+}
+
+
+  .question{
+    margin-top: 14px;
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: .8px;
+    line-height:1.20;
+    text-transform: uppercase;
+    text-align:center;
+    font-family: var(--fontClue);
+    text-shadow:
+      0 3px 0 rgba(0,0,0,.45),
+      0 10px 24px rgba(0,0,0,.35);
+    animation: clueIn 1s ease both;
+  }
+  @keyframes clueIn{
+    from{ opacity:0; transform: translateY(8px) scale(.995); }
+    to{ opacity:1; transform: translateY(0) scale(1); }
+  }
+
+  .sub{
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 1000;
+    color: rgba(247,248,255,.88);
+    line-height:1.35;
+    text-transform: uppercase;
+    letter-spacing:.25px;
+    text-align:center;
+  }
+
+  .choices{
+    margin-top: 16px;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 740px){
+    .choices{ grid-template-columns: 1fr; }
+    .question{ font-size: 26px; }
+  }
+
+  .choice{
+    text-align:center;
+    padding: 16px 14px;
+    border-radius: 18px;
+    border: 2px solid rgba(255,209,102,.22);
+    background:
+      linear-gradient(180deg, rgba(6,12,233,.88), rgba(6,12,233,.55));
+    color: rgba(255,209,102,.98);
+    font-weight: 1000;
+    cursor:pointer;
+    transition: transform .07s ease, filter .14s ease, box-shadow .14s ease;
+    box-shadow:
+      0 12px 24px rgba(0,0,0,.35),
+      inset 0 0 0 2px rgba(0,0,0,.18);
+    min-height: 64px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+    text-transform: uppercase;
+    letter-spacing:.35px;
+  }
+
+  .choice:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: radial-gradient(600px 90px at 50% 0%, rgba(255,255,255,.14), transparent 60%);
+    pointer-events:none;
+    opacity:.9;
+  }
+
+  .choice:hover{
+    transform: translateY(-2px);
+    filter: brightness(1.10);
+    box-shadow:
+      0 16px 32px rgba(0,0,0,.45),
+      0 0 0 2px rgba(255,209,102,.18),
+      inset 0 0 0 2px rgba(0,0,0,.18);
+  }
+
+  .choice:disabled{
+    cursor:not-allowed;
+    opacity:.78;
+    transform:none;
+    filter:none;
+  }
+
+  .choice.correct{
+    border-color: rgba(99,255,138,.60);
+    color: rgba(247,248,255,.96);
+    background: linear-gradient(180deg, rgba(0,170,80,.60), rgba(0,90,40,.40));
+    animation: flashGood .35s ease;
+  }
+  .choice.wrong{
+    border-color: rgba(255,77,77,.70);
+    color: rgba(247,248,255,.96);
+    background: linear-gradient(180deg, rgba(190,0,0,.60), rgba(90,0,0,.40));
+    animation: flashBad .35s ease;
+  }
+  @keyframes flashGood{ 0%{filter:brightness(1)} 40%{filter:brightness(1.25)} 100%{filter:brightness(1)} }
+  @keyframes flashBad{ 0%{filter:brightness(1)} 40%{filter:brightness(1.25)} 100%{filter:brightness(1)} }
+
+  .feedback{
+    margin-top: 16px;
+    border-radius: 18px;
+    border: 2px solid rgba(255,209,102,.18);
+    background: rgba(0,0,0,.22);
+    padding: 12px 12px;
+    display:none;
+    box-shadow: var(--shadow2);
+  }
+  .feedback.show{ display:block; }
+
+  .fbTop{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .fbHead{
+    font-weight: 1000;
+    letter-spacing:.35px;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: rgba(255,209,102,.98);
+  }
+  .fbBody{
+    margin-top: 10px;
+    font-weight: 900;
+    color: rgba(247,248,255,.92);
+    line-height:1.35;
+  }
+  .fbMini{
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 1000;
+    color: rgba(247,248,255,.84);
+  }
+
+  .drawer{
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,209,102,.18);
+    background: rgba(0,0,0,.20);
+    color: rgba(247,248,255,.92);
+    font-weight: 900;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing:.25px;
+    display:none; /* will be toggled via .show */
+  }
+  .drawer.show{ display:block; }
+</style>
+
+<!-- ADD-ON CSS for Board Mode + “question spotlight” (minimal + safe overrides) -->
+<style>
+  /* Board grid */
+  .board{
+    margin-top: 16px;
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 900px){
+    .board{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 520px){
+    .board{ grid-template-columns: 1fr; }
+  }
+
+  .boardCol{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+.boardCat {
+  text-align: center;
+  font-weight: 1000;
+  letter-spacing: .35px;
+  text-transform: uppercase;
+
+  padding: 12px 10px;
+
+  border-radius: 14px;
+  border: 2px solid rgba(255,209,102,.22);
+  background: rgba(0,0,0,.22);
+  color: rgba(255,209,102,.98);
+  box-shadow: var(--shadow2);
+
+  /* ✅ NEW */
+  height: 68px;                /* forces equal height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  line-height: 1.15;           /* tighter line spacing */
+  text-align: center;
+  overflow: hidden;
+}
+
+  .tile{
+    width:100%;
+    border-radius: 16px;
+    border: 2px solid rgba(255,209,102,.22);
+    background: linear-gradient(180deg, rgba(6,12,233,.90), rgba(6,12,233,.58));
+    box-shadow: 0 12px 22px rgba(0,0,0,.35), inset 0 0 0 2px rgba(0,0,0,.18);
+    color: rgba(255,209,102,.98);
+    font-weight: 1000;
+    letter-spacing:.6px;
+    text-transform: uppercase;
+    padding: 18px 10px;
+    cursor:pointer;
+    transition: transform .08s ease, filter .14s ease;
+    font-size: 22px;
+  }
+  .tile:hover{ transform: translateY(-2px); filter: brightness(1.08); }
+  .tile:focus-visible{
+    outline: 3px solid rgba(255,209,102,.75);
+    outline-offset: 2px;
+  }
+  .tile.used{
+    cursor:default;
+    opacity:.45;
+    filter:saturate(.5);
+    background: rgba(0,0,0,.35);
+    color: rgba(247,248,255,.55);
+  }
+
+  /* Hide/Show views */
+  .hidden{ display:none !important; }
+
+  /* Make the clue easier to read: spotlight the question */
+  .body{ padding: 22px 18px; }
+  .progressWrap{ opacity:.45; height: 6px; }
+  .qMeta{ opacity:.75; }
+
+  .question{
+    font-size: 42px;             /* bigger */
+    line-height: 1.25;
+    max-width: 820px;
+    margin: 24px auto 16px;
+    padding: 22px 18px;
+    background: rgba(0,0,0,.25);
+    border-radius: 18px;
+    border: 1px solid rgba(255,209,102,.14);
+    text-transform: none;        /* easier reading; remove if you want ALL CAPS */
+    letter-spacing: .4px;
+  }
+  @media (max-width: 740px){
+    .question{ font-size: 28px; padding: 18px 14px; }
+  }
+
+  .sub{
+    opacity:.65;
+    font-size: 11px;
+    margin-top: 4px;
+  }
+  .choices{
+    margin-top: 26px;
+    gap: 18px;
+  }
+
+  /* Daily Double banner */
+  .ddBanner{
+    position:absolute;
+    left: 12px;
+    right: 12px;
+    top: 70px;
+    z-index: 5;
+    padding: 10px 12px;
+    border-radius: 16px;
+    border: 2px solid rgba(255,209,102,.55);
+    background: rgba(0,0,0,.40);
+    color: rgba(255,209,102,.98);
+    text-align:center;
+    font-weight: 1000;
+    letter-spacing: .35px;
+    text-transform: uppercase;
+    box-shadow: 0 14px 30px rgba(0,0,0,.45);
+    display:none;
+    pointer-events:none;
+  }
+  .ddBanner.show{ display:block; animation: ddPop .35s ease both; }
+  @keyframes ddPop{
+    from{ transform: translateY(-8px); opacity:0; }
+    to{ transform: translateY(0); opacity:1; }
+  }
+  
+  
+</style>
+</head>
+
+<body>
+<div class="wrap" id="gameWrap">
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hudTop">
+      <div class="title">
+        <h1>Inbound Calls — Jeopardy Board Mode</h1>
+     
+     
+      </div>
+
+      <div class="statsRow">
+        <div class="metric"><div class="k">Score</div><div class="v" id="score">0</div></div>
+        <div class="metric"><div class="k">Timer</div><div class="v" id="timer">—</div></div>
+        <div class="metric"><div class="k">Used</div><div class="v" id="usedTiny">0/25</div></div>
+
+        <button class="btn" id="toggleStatsBtn" type="button" aria-expanded="false">Stats</button>
+		<button class="btn" id="muteBtn">Sound</button>
+      </div>
+    </div>
+
+    <div class="drawer" id="drawer">
+      <div>
+        <b>Accuracy:</b> <span id="acc">0%</span> &nbsp;
+        <b>Streak:</b> <span id="streak">0</span> &nbsp;
+        <b>Correct:</b> <span id="correct">0</span>/<span id="answered">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOARD VIEW -->
+  <div class="board" id="board" aria-label="Jeopardy Board"></div>
+
+  <!-- CLUE VIEW -->
+  <div class="card hidden" id="card">
+    <div class="ddBanner" id="ddBanner">DAILY DOUBLE!</div>
+
+    <div class="cardTop">
+      
+        <span class="pill cyan" id="qNum">$—</span>
+        <span class="pill" id="cat">Category</span>
+     
+    </div>
+
+    <div class="body">
+      <div class="progressWrap"><div class="progress" id="progress"></div></div>
+
+
+      <div class="question" id="question">Select a tile to reveal a clue.</div>
+      <div class="sub" id="sub">Choose 1–4.</div>
+
+      <div class="choices" id="choices"></div>
+
+      <div class="feedback" id="feedback" role="status" aria-live="polite">
+        <div class="fbTop">
+          <div class="fbHead" id="fbHead"></div>
+          <button class="btn primary" id="nextBtn" type="button">Return</button>
+        </div>
+        <div class="fbBody" id="fbBody"></div>
+        <div class="fbMini" id="fbMini"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  /* =========================
+     EDIT QUESTIONS HERE (same structure you already use)
+     ========================= */
+  const QUESTIONS = [
+    { cat:"Golden Rules", q:"What does a locked appointment slot mean?", options:[
+      "It is NOT available — do not book it.",
+      "Reserved for same-day STAT",
+      "Override allowed",
+      "Returning only"
+    ], correct:0, explain:"Locked = not available. Do not book." },
+
+    { cat:"Golden Rules", q:"Correct handoff method?", options:[
+      "Warm transfer",
+      "Give number",
+      "Send message only",
+      "Schedule anyway"
+    ], correct:0, explain:"Always warm transfer." },
+
+    { cat:"Golden Rules", q:"CT/MRI location change?", options:[
+      "Restart decision tree",
+      "Keep same answers",
+      "Schedule then fix",
+      "Escalate"
+    ], correct:0, explain:"Always restart decision tree." },
+
+    { cat:"Golden Rules", q:"Multiple appointments check?", options:[
+      "Check all for locks",
+      "Check first only",
+      "MRI only",
+      "Ignore locks"
+    ], correct:0, explain:"Locks apply to every slot." },
+
+    { cat:"Golden Rules", q:"Best mindset?", options:[
+      "Follow rules consistently",
+      "Move fast first",
+      "Book then fix",
+      "Transfer often"
+    ], correct:0, explain:"Consistency prevents errors." },
+
+    { cat:"Breast Imaging", q:"42-year-old screening mammo?", options:[
+      "Schedule",
+      "Transfer",
+      "Defer",
+      "Escalate"
+    ], correct:0, explain:"40+ can self-refer." },
+
+    { cat:"Breast Imaging", q:"Symptoms during screening?", options:[
+      "Send to provider",
+      "Keep scheduling",
+      "Schedule + note",
+      "Transfer anywhere"
+    ], correct:0, explain:"Symptoms = stop scheduling." },
+
+    { cat:"Breast Imaging", q:"Mammo van first check?", options:[
+      "Corporate/Roster label",
+      "Age",
+      "Time slot",
+      "Insurance"
+    ], correct:0, explain:"Don't schedule Corporate/Roster dates." },
+
+    { cat:"Breast Imaging", q:"Van phone rule?", options:[
+      "Warm transfer",
+      "Give number",
+      "Email",
+      "Post to Teams"
+    ], correct:0, explain:"No internal numbers." },
+
+    { cat:"Breast Imaging", q:"Quick rule?", options:[
+      "Locked=no / Symptoms=provider",
+      "Book fast",
+      "Escalate always",
+      "Transfer always"
+    ], correct:0, explain:"Simple safe rule." },
+
+    { cat:"Imaging Timing", q:"PET ≤2 weeks?", options:[
+      "First slot of day",
+      "Any slot",
+      "Last slot",
+      "STAT"
+    ], correct:0, explain:"Use first slot." },
+
+    { cat:"Imaging Timing", q:"PET same-day STAT?", options:[
+      "No",
+      "Yes w/approval",
+      "Yes first slot",
+      "Only MBMC"
+    ], correct:0, explain:"Not allowed." },
+
+    { cat:"Imaging Timing", q:"After 2 weeks PET?", options:[
+      "Any slot",
+      "Still first slot",
+      "Only set times",
+      "Transfer"
+    ], correct:0, explain:"Any slot allowed." },
+
+    { cat:"Imaging Timing", q:"Nuclear Medicine rule?", options:[
+      "No same-day/STAT",
+      "STAT ok",
+      "Same-day ok",
+      "Next day ok"
+    ], correct:0, explain:"Strict timing rules." },
+
+    { cat:"Imaging Timing", q:"PET availability explanation?", options:[
+      "Only times available",
+      "System broken",
+      "We can open slots",
+      "Pick any"
+    ], correct:0, explain:"Set expectations." },
+
+    { cat:"Routing", q:"Vascular ultrasound?", options:[
+      "Call vascular lab",
+      "General ultrasound",
+      "MRI",
+      "Radiology"
+    ], correct:0, explain:"Correct department matters." },
+
+    { cat:"Routing", q:"Ownership varies?", options:[
+      "Check manual first",
+      "Schedule anyway",
+      "Transfer randomly",
+      "Defer"
+    ], correct:0, explain:"Always confirm ownership." },
+
+    { cat:"Routing", q:"Pulmonary facility change?", options:[
+      "Patient calls provider",
+      "Scheduler changes",
+      "Dept updates",
+      "Re-transcribe"
+    ], correct:0, explain:"Provider request needed." },
+
+    { cat:"Routing", q:"Sleep studies?", options:[
+      "Often dept scheduled",
+      "Always central",
+      "Ultrasound",
+      "BJH only"
+    ], correct:0, explain:"Follow facility workflow." },
+
+    { cat:"Routing", q:"Best rule?", options:[
+      "Right test, right dept",
+      "Transfer fast",
+      "Book now fix later",
+      "Call leadership"
+    ], correct:0, explain:"Verify first." },
+
+    { cat:"High Risk", q:"MRI with sedation?", options:[
+      "Do not schedule",
+      "Schedule w/note",
+      "Defer",
+      "Any slot"
+    ], correct:0, explain:"Route this case." },
+
+    { cat:"High Risk", q:"TEE request?", options:[
+      "Check rules first",
+      "Schedule",
+      "Ultrasound",
+      "Defer"
+    ], correct:0, explain:"Do not assume." },
+
+    { cat:"High Risk", q:"Swallow + speech eval?", options:[
+      "Schedule swallow then transfer",
+      "Speech first",
+      "Both together",
+      "Defer"
+    ], correct:0, explain:"Sequence matters." },
+
+    { cat:"High Risk", q:"Diabetes + nutrition?", options:[
+      "Separate days",
+      "Same day",
+      "Nutrition only",
+      "Defer"
+    ], correct:0, explain:"Insurance rule." },
+
+    { cat:"High Risk", q:"Escalation ladder?", options:[
+      "Manual → lead → transfer",
+      "Schedule now",
+      "Defer",
+      "Give numbers"
+    ], correct:0, explain:"Follow escalation path." }
+  ];
+
+  /* =========================
+     DOM
+     ========================= */
+  const $ = (id) => document.getElementById(id);
+  const el = {
+    // HUD
+    modeTag: $("modeTag"),
+    score: $("score"),
+    timer: $("timer"),
+    usedTiny: $("usedTiny"),
+    toggleStatsBtn: $("toggleStatsBtn"),
+    drawer: $("drawer"),
+    acc: $("acc"),
+    streak: $("streak"),
+    correct: $("correct"),
+    answered: $("answered"),
+
+    // Views
+    board: $("board"),
+    card: $("card"),
+
+    // Controls
+
+    resetBtn: $("resetBtn"),
+    backBtn: $("backBtn"),
+
+    // Clue
+    ddBanner: $("ddBanner"),
+    progress: $("progress"),
+    qNum: $("qNum"),
+    cat: $("cat"),
+    question: $("question"),
+    sub: $("sub"),
+    choices: $("choices"),
+
+    // Feedback
+    feedback: $("feedback"),
+    fbHead: $("fbHead"),
+    fbBody: $("fbBody"),
+    fbMini: $("fbMini"),
+    nextBtn: $("nextBtn")
+  };
+
+  /* =========================
+     Constants
+     ========================= */
+  const VALUES = [100, 200, 300, 400, 500];
+  const CHALLENGE_SECONDS = 20;
+  const BASE_CORRECT = 100;
+  const STREAK_BONUS = 25;
+  const WRONG_PENALTY = 50;
+  const DAILY_DOUBLE_MULT = 2;
+
+  /* =========================
+     State
+     ========================= */
+  const state = {
+    boardData: [],        // [{category, questions:[{... , value, used}]}]
+    current: null,        // {col,row, ...question}
+    started: false,       // board exists
+    locked: false,
+
+    score: 0,
+    displayedScore: 0,
+    correctCount: 0,
+    answeredCount: 0,
+    streak: 0,
+
+    usedCount: 0,
+    totalCount: 25,
+
+    timerId: null,
+    remaining: null,
+	
+	elapsedId: null,
+	elapsedSeconds: 0,
+	elapsedStartMs: null,
+
+    dailyDoublePos: null, // {col,row}
+    dailyDoubleActive: false,
+
+    scoreAnimRAF: null
+		
+
+  };
+
+  /* =========================
+     Build board from QUESTIONS (no manual restructuring required)
+     Assumes 5 categories x 5 questions = 25 total
+     ========================= */
+  function buildBoardDataFromQuestions(questions){
+    const byCat = new Map();
+    for(const q of questions){
+      if(!byCat.has(q.cat)) byCat.set(q.cat, []);
+      byCat.get(q.cat).push(q);
+    }
+
+    // Keep category order as first seen in QUESTIONS
+    const catOrder = [];
+    for(const q of questions){
+      if(!catOrder.includes(q.cat)) catOrder.push(q.cat);
+    }
+
+    const board = catOrder.map(cat => {
+      const qs = (byCat.get(cat) || []).slice(0, 5); // take first 5 per cat
+      return {
+        category: cat,
+        questions: qs.map((qq, i) => ({
+          ...qq,
+          value: VALUES[i] ?? 100,
+          used: false
+        }))
+      };
+    });
+
+    // If fewer/more than 5 cats, still renders; but Jeopardy classic is 5.
+    state.totalCount = board.reduce((sum, col) => sum + col.questions.length, 0);
+    return board;
+  }
+
+  /* =========================
+     Board rendering
+     ========================= */
+  function renderBoard(){
+    el.board.innerHTML = "";
+
+    state.boardData.forEach((col, colIndex) => {
+      const colEl = document.createElement("div");
+      colEl.className = "boardCol";
+
+      const catEl = document.createElement("div");
+      catEl.className = "boardCat";
+      catEl.textContent = col.category;
+      colEl.appendChild(catEl);
+
+      col.questions.forEach((q, rowIndex) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "tile" + (q.used ? " used" : "");
+        //btn.textContent = q.used ? "—" : `$${q.value}`;
+	
+		btn.innerHTML = `
+		  <div class="tileInner">
+			<div class="tileFront">$${q.value}</div>
+			<div class="tileBack">—</div>
+		  </div>
+		`;
+
+        if(q.used){
+          btn.disabled = true;
+          btn.setAttribute("aria-disabled", "true");
+        } else {
+          btn.addEventListener("click", () => selectTile(colIndex, rowIndex));
+        }
+
+        colEl.appendChild(btn);
+      });
+
+      el.board.appendChild(colEl);
+    });
+
+    updateHUD();
+  }
+
+  function showBoardView(){
+   
+    el.board.classList.remove("hidden");
+    el.card.classList.add("hidden");
+    stopTimer();
+    hideFeedback();
+  }
+
+  function showClueView(){
+  
+    el.board.classList.add("hidden");
+    el.card.classList.remove("hidden");
+  }
+
+  /* =========================
+     Daily Double
+     ========================= */
+  function pickDailyDoublePos(){
+    // avoid top row and bottom row for “better surprise” if possible
+    const eligible = [];
+    for(let c=0;c<state.boardData.length;c++){
+      for(let r=0;r<state.boardData[c].questions.length;r++){
+        if(r !== 0 && r !== state.boardData[c].questions.length-1){
+          eligible.push({col:c,row:r});
+        }
+      }
+    }
+    const pool = eligible.length ? eligible : allTilePositions();
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+
+  function allTilePositions(){
+    const a = [];
+    for(let c=0;c<state.boardData.length;c++){
+      for(let r=0;r<state.boardData[c].questions.length;r++){
+        a.push({col:c,row:r});
+      }
+    }
+    return a;
+  }
+
+  function flashDailyDouble(){
+    el.ddBanner.classList.add("show");
+    setTimeout(() => el.ddBanner.classList.remove("show"), 1400);
+  }
+
+  /* =========================
+     Timer + Glow
+     ========================= */
+function stopTimer(){
+  if(state.timerId){
+    clearInterval(state.timerId);
+    state.timerId = null;
+  }
+  state.remaining = null;
+	//stopThinkLoop();
+  // reset glow
+  el.card.style.boxShadow = "";
+}
+
+  
+function formatMMSS(totalSeconds){
+  const s = Math.max(0, totalSeconds | 0);
+  const mm = String(Math.floor(s / 60)).padStart(2, "0");
+  const ss = String(s % 60).padStart(2, "0");
+  return `${mm}:${ss}`;
+}
+
+function stopElapsed(){
+  if(state.elapsedId){
+    clearInterval(state.elapsedId);
+    state.elapsedId = null;
+  }
+}
+
+function startElapsed(){
+  stopElapsed();
+  state.elapsedStartMs = Date.now();
+  state.elapsedSeconds = 0;
+
+  // update immediately so HUD shows 00:00 at start
+  updateHUD({ animateScore:false });
+
+  state.elapsedId = setInterval(() => {
+    state.elapsedSeconds = Math.floor((Date.now() - state.elapsedStartMs) / 1000);
+    updateHUD({ animateScore:false });
+  }, 1000);
+}
+
+  function updateCardGlow(){
+    if(state.remaining == null) return;
+
+    if(state.remaining <= 3){
+      el.card.style.boxShadow = `
+        0 0 30px rgba(255, 60, 60, 0.50),
+        0 0 80px rgba(255, 60, 60, 0.30),
+        0 0 140px rgba(255, 60, 60, 0.12),
+        0 18px 55px rgba(0,0,0,.60)
+      `;
+    } else if(state.remaining <= 7){
+      el.card.style.boxShadow = `
+        0 0 28px rgba(255, 140, 0, 0.45),
+        0 0 70px rgba(255, 140, 0, 0.25),
+        0 0 120px rgba(255, 140, 0, 0.10),
+        0 18px 55px rgba(0,0,0,.60)
+      `;
+    } else {
+      el.card.style.boxShadow = `
+        0 0 22px rgba(255, 209, 102, 0.40),
+        0 0 60px rgba(255, 209, 102, 0.20),
+        0 0 100px rgba(255, 209, 102, 0.08),
+        0 18px 55px rgba(0,0,0,.60)
+      `;
+    }
+  }
+
+function startTimer(seconds){
+  stopTimer();
+  state.remaining = seconds;
+
+  state.timerId = setInterval(() => {
+    state.remaining -= 1;
+    updateCardGlow();
+
+    if(state.remaining <= 0){
+      stopTimer();
+      timeoutIncorrect();
+    }
+  }, 1000);
+}
+
+  /* =========================
+     Audio (lightweight SFX only, no external files)
+     ========================= */
+  let audioCtx = null;
+
+  function ensureAudio(){
+    if(!audioCtx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audioCtx = AC ? new AC() : null;
+    }
+    if(audioCtx && audioCtx.state === "suspended"){
+      audioCtx.resume().catch(() => {});
+    }
+  }
+let muted = false;
+
+$("muteBtn").addEventListener("click", () => {
+  muted = !muted;
+});
+
+  function tone(freq, durMs, type="sine", gain=0.05, when=0){
+    if(!audioCtx || muted) return;
+    const t0 = audioCtx.currentTime + when;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t0);
+
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(gain, t0 + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + durMs/1000);
+
+    osc.connect(g);
+    g.connect(audioCtx.destination);
+    osc.start(t0);
+    osc.stop(t0 + durMs/1000 + 0.02);
+  }
+
+ // ✅ thinking music (TOP-LEVEL, not inside sfx)
+let thinkLoopInterval = null;
+
+function playThinkLoop(){
+  ensureAudio();
+
+  if(audioCtx && audioCtx.state === "suspended"){
+    audioCtx.resume();
+  }
+
+  if(!audioCtx) return;
+
+  stopThinkLoop();
+
+  const pattern = [
+    523, 659, 784, 659,
+    523, 659, 784, 988,
+    784, 659, 523, 440
+  ];
+
+  let i = 0;
+
+  function getSpeed(){
+    if(state.remaining == null) return 220;
+
+    // ✅ smooth progression
+    const maxTime = CHALLENGE_SECONDS;
+    const progress = 1 - (state.remaining / maxTime); // 0 → 1
+
+    // starts at 240ms, ends at ~140ms
+    const speed = 240 - (progress * 100);
+
+    return Math.max(140, Math.floor(speed));
+  }
+
+  function runLoop(){
+    const speed = getSpeed();
+
+    tone(pattern[i], 260, "triangle", 0.08);
+
+    i = (i + 1) % pattern.length;
+
+    thinkLoopInterval = setTimeout(runLoop, speed);
+  }
+
+  runLoop();
+}
+
+function stopThinkLoop(){
+  if(thinkLoopInterval){
+    clearTimeout(thinkLoopInterval);
+    thinkLoopInterval = null;
+  }
+}
+
+
+// ✅ your original sfx object (unchanged)
+const sfx = {
+  correct(){
+    ensureAudio();
+    tone(880, 120, "triangle", 0.06, 0.00);
+    tone(1175,120, "triangle", 0.06, 0.10);
+    tone(1568,140, "triangle", 0.06, 0.20);
+  },
+  wrong(){
+    ensureAudio();
+    tone(220, 220, "sawtooth", 0.05, 0.00);
+    tone(140, 260, "sawtooth", 0.05, 0.18);
+  },
+  time(){
+    ensureAudio();
+    tone(900, 70, "square", 0.04, 0.00);
+    tone(900, 70, "square", 0.04, 0.10);
+  },
+  dailyDouble(){
+    ensureAudio();
+    tone(523, 120, "triangle", 0.06, 0.00);
+    tone(659, 120, "triangle", 0.06, 0.10);
+    tone(784, 160, "triangle", 0.06, 0.22);
+  }
+};
+
+  /* =========================
+     Score animation
+     ========================= */
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+  function animateScoreTo(target, durationMs=420){
+    if(state.scoreAnimRAF) cancelAnimationFrame(state.scoreAnimRAF);
+    const start = performance.now();
+    const from = state.displayedScore;
+
+    const step = (now) => {
+      const p = Math.min(1, (now - start) / durationMs);
+      const eased = easeOutCubic(p);
+      const val = Math.round(from + (target - from) * eased);
+      state.displayedScore = val;
+      el.score.textContent = String(val);
+      if(p < 1) state.scoreAnimRAF = requestAnimationFrame(step);
+    };
+    state.scoreAnimRAF = requestAnimationFrame(step);
+  }
+
+  function setScoreUI(target, animate){
+    if(!animate){
+      state.displayedScore = target;
+      el.score.textContent = String(target);
+      return;
+    }
+    const delta = Math.abs(target - state.displayedScore);
+    const dur = Math.min(650, Math.max(240, 240 + delta * 1.2));
+    animateScoreTo(target, dur);
+  }
+
+  /* =========================
+     HUD + stats
+     ========================= */
+function updateHUD({animateScore=false} = {}){
+  setScoreUI(state.score, animateScore);
+
+  const acc = state.answeredCount ? Math.round((state.correctCount / state.answeredCount) * 100) : 0;
+  el.acc.textContent = `${acc}%`;
+  el.streak.textContent = String(state.streak);
+  el.correct.textContent = String(state.correctCount);
+  el.answered.textContent = String(state.answeredCount);
+
+  el.usedTiny.textContent = `${state.usedCount}/${state.totalCount}`;
+
+  // ✅ change THIS:
+  el.timer.textContent = formatMMSS(state.elapsedSeconds);
+
+  const pct = state.totalCount ? Math.round((state.usedCount / state.totalCount) * 100) : 0;
+  el.progress.style.width = `${pct}%`;
+}
+
+  /* =========================
+     Feedback
+     ========================= */
+  function showFeedback(head, body, mini=""){
+    el.feedback.classList.add("show");
+    el.fbHead.textContent = head;
+    el.fbBody.textContent = body;
+    el.fbMini.textContent = mini;
+    el.nextBtn.focus();
+  }
+
+  function hideFeedback(){
+    el.feedback.classList.remove("show");
+  }
+
+  function lockChoices(){
+    state.locked = true;
+    el.choices.querySelectorAll("button.choice").forEach(b => b.disabled = true);
+  }
+
+  function markChoices(chosenIndex){
+    const btns = [...el.choices.querySelectorAll("button.choice")];
+    btns.forEach((b,i) => {
+      if(i === state.current.correct) b.classList.add("correct");
+      if(i === chosenIndex && chosenIndex !== state.current.correct) b.classList.add("wrong");
+    });
+  }
+
+  /* =========================
+     Core board -> clue flow
+     ========================= */
+  function selectTile(col, row){
+    const q = state.boardData[col]?.questions[row];
+    if(!q || q.used) return;
+
+    state.current = { ...q, col, row };
+    state.locked = false;
+    state.dailyDoubleActive = !!(state.dailyDoublePos && state.dailyDoublePos.col === col && state.dailyDoublePos.row === row);
+
+    showClueView();
+    renderClue();
+  }
+
+  function renderClue(){
+    hideFeedback();
+    stopTimer();
+	playThinkLoop();
+
+    const q = state.current;
+    el.qNum.textContent = `$${q.value}`;
+    el.cat.textContent = q.cat;
+    el.question.textContent = q.q;
+    el.sub.textContent = "Choose 1–4.";
+
+    el.choices.innerHTML = "";
+    const frag = document.createDocumentFragment();
+
+    q.options.forEach((opt, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "choice";
+      b.textContent = opt;
+      b.addEventListener("click", () => choose(i));
+      frag.appendChild(b);
+    });
+
+    el.choices.appendChild(frag);
+
+    if(state.dailyDoubleActive){
+      flashDailyDouble();
+      sfx.dailyDouble();
+    }
+ 
+    startTimer(CHALLENGE_SECONDS);
+    updateHUD({animateScore:false});
+  }
+
+  function choose(i){
+  stopThinkLoop();
+    ensureAudio();
+    if(!state.current || state.locked) return;
+
+    lockChoices();
+    stopTimer();
+
+    state.answeredCount += 1;
+
+    const correct = (i === state.current.correct);
+    const mult = state.dailyDoubleActive ? DAILY_DOUBLE_MULT : 1;
+
+    // Keep your original streak scoring behavior:
+    // baseCorrect uses *current* streak before increment
+    const baseCorrect = BASE_CORRECT + (state.streak * STREAK_BONUS);
+
+    if(correct){
+      state.correctCount += 1;
+      state.streak += 1;
+
+      const points = baseCorrect * mult;
+      state.score += points;
+
+      markChoices(i);
+      sfx.correct();
+
+      showFeedback(
+        `✅ Correct (+${points})${state.dailyDoubleActive ? " • Daily Double!" : ""}`,
+        state.current.explain
+      );
+    } else {
+      state.streak = 0;
+
+      const penalty = WRONG_PENALTY * mult;
+      state.score = Math.max(0, state.score - penalty);
+
+      markChoices(i);
+      sfx.wrong();
+
+      showFeedback(
+        `❌ Incorrect (−${penalty})${state.dailyDoubleActive ? " • Daily Double!" : ""}`,
+        state.current.explain
+      );
+    }
+
+    // DD applies only to this clue
+    state.dailyDoubleActive = false;
+
+    updateHUD({animateScore:true});
+  }
+
+  function timeoutIncorrect(){
+  stopThinkLoop();
+    ensureAudio();
+    if(!state.current || state.locked) return;
+
+    lockChoices();
+    state.answeredCount += 1;
+    state.streak = 0;
+
+    const mult = state.dailyDoubleActive ? DAILY_DOUBLE_MULT : 1;
+    const penalty = WRONG_PENALTY * mult;
+
+    state.score = Math.max(0, state.score - penalty);
+
+    markChoices(-1);
+    sfx.time();
+
+    showFeedback(
+      `⏱️ Time (−${penalty})${state.dailyDoubleActive ? " • Daily Double!" : ""}`,
+      "Time expired — speed matters in Challenge mode, but the safest move is still the rule."
+    );
+
+    state.dailyDoubleActive = false;
+    updateHUD({animateScore:true});
+  }
+
+  function returnToBoardAndMarkUsed(){
+    if(!state.current) return;
+
+    const { col, row } = state.current;
+    const tile = state.boardData[col]?.questions[row];
+    if(tile && !tile.used){
+      tile.used = true;
+      state.usedCount += 1;
+    }
+
+    state.current = null;
+    state.locked = false;
+    stopTimer();
+    hideFeedback();
+
+    // If all tiles used, show final screen in clue view for clarity
+    if(state.usedCount >= state.totalCount){
+      showFinal();
+      return;
+    }
+
+    showBoardView();
+    renderBoard();
+  }
+
+function showFinal(){
+  stopElapsed(); // ✅ freeze final elapsed time
+
+  showClueView();
+  el.qNum.textContent = "DONE";
+  el.cat.textContent = "Results";
+  el.question.textContent = `Final Score: ${state.score}`;
+  el.sub.textContent = "Press Reset to play again.";
+  el.choices.innerHTML = "";
+  hideFeedback();
+  updateHUD({animateScore:false});
+}
+
+  /* =========================
+     Reset
+     ========================= */
+function resetGame(){
+  stopTimer();
+  hideFeedback();
+
+  state.boardData = buildBoardDataFromQuestions(QUESTIONS);
+  state.started = true;
+
+  // ✅ start overall elapsed clock
+  startElapsed();
+
+  state.score = 0;
+  state.displayedScore = 0;
+  state.correctCount = 0;
+  state.answeredCount = 0;
+  state.streak = 0;
+
+  state.usedCount = 0;
+
+  state.current = null;
+  state.locked = false;
+
+  state.dailyDoublePos = pickDailyDoublePos();
+  state.dailyDoubleActive = false;
+
+  el.ddBanner.classList.remove("show");
+  el.score.textContent = "0";
+  el.progress.style.width = "0%";
+
+  showBoardView();
+  renderBoard();
+  updateHUD({animateScore:false});
+}
+
+  /* =========================
+     Events
+     ========================= */
+
+  el.nextBtn.addEventListener("click", returnToBoardAndMarkUsed);
+
+  el.toggleStatsBtn.addEventListener("click", () => {
+    const open = el.drawer.classList.toggle("show");
+    el.toggleStatsBtn.setAttribute("aria-expanded", String(open));
+  });
+
+  // Keyboard: clue answers + return
+  document.addEventListener("keydown", (e) => {
+    // Only when clue view is visible
+    const clueVisible = !el.card.classList.contains("hidden");
+
+    if(clueVisible && state.current){
+      if(e.key >= "1" && e.key <= "4"){
+        choose(Number(e.key) - 1);
+      }
+      if(e.key.toLowerCase() === "n"){
+        if(el.feedback.classList.contains("show")){
+          returnToBoardAndMarkUsed();
+        }
+      }
+    }
+  });
+
+  /* Init */
+  resetGame();
+})();
+</script>
+</body>
+</html>
