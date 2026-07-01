@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>POS Sim</title>
+
+
+<!-- CONFIG -->
+<script id="config" type="application/json">
+{
+  "backgroundImage":"https://bjc-my.sharepoint.com/:i:/r/personal/rc31018_bjc_org/Documents/videos/CS%20Estimate%20to%20Payment%20Collection%20-%20for%20Bruce%20and%20Lex/online%20course%20for%20POS/POSsim/images/Epicbackground.png",
+
+  "deviceImage":"images/pos device cropped2.png",
+
+  "steps":[
+    {
+      "label":"CARD NUMBER",
+      "speech":"1 2 3 4 1 2 3 4 1 2 3 4 5 5 5 5",
+      "expectedInput":"1234123412345555"
+    },
+    {
+      "label":"CVV",
+      "speech":"567",
+      "expectedInput":"567"
+    },
+    {
+      "label":"ZIP",
+      "speech":"6 3 1 4 4",
+      "expectedInput":"63144"
+    }
+  ]
+}
+
+</script>
+
+
+
+
+<style>
+
+/* ================= GLOBAL ================= */
+body{
+  margin:0;
+  font-family:Segoe UI, Arial;
+  background:#e5e7eb;
+}
+
+/* ================= APP LAYOUT ================= */
+.app{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  width:920px;
+  height:520px;
+  margin:auto;
+  gap:10px;
+}
+
+/* ================= SIDE PANEL ================= */
+.side{
+  background: linear-gradient(
+    to bottom,
+    #a8a8a8,
+    #8f8f8f
+  );
+
+  color:#fff;
+  padding:18px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+
+  box-shadow: inset -2px 0 6px rgba(0,0,0,0.15);
+}
+
+.side h3{
+  margin:0 0 10px 0;
+  font-size:18px;
+  font-weight:600;
+}
+
+/* instruction text */
+.instructions{
+  font-size:13px;
+  line-height:1.5;
+  margin-bottom:15px;
+}
+
+/* control area */
+.controls{
+  margin-top:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.side h3{
+  margin-bottom:10px;
+}
+
+.side p{
+  font-size:13px;
+  line-height:1.4;
+}
+
+/* buttons */
+.btn{
+  padding:10px 14px;
+  border:none;
+  border-radius:6px;
+
+  background: #4f7db3;
+  color:white;
+
+  font-weight:600;
+  font-size:13px;
+
+  cursor:pointer;
+
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.btn:hover{
+  background:#3f6a9c;
+  transform: translateY(-1px);
+}
+
+/* ================= PANEL ================= */
+.panel{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  background-size:cover;
+  background-position:center;
+}
+
+/* overlay */
+.panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(255,255,255,0.75);
+}
+
+/* ================= DEVICE ================= */
+.device{
+  position:relative;
+  width:610px;
+  z-index:2;
+
+  filter:
+    drop-shadow(0 18px 25px rgba(0,0,0,0.35))
+    drop-shadow(0 6px 10px rgba(0,0,0,0.25));
+}
+
+.device img{
+  width:100%;
+}
+
+/* ================= SCREEN ================= */
+.screen{
+  position:absolute;
+  top:21%;
+  left:30.5%;
+  width:35.7%;
+  height:6.8%;
+
+  background:#A0AD27;
+  color:#000;
+
+  display:flex;
+  align-items:center;
+  padding-left:12px;
+
+  font-family:Consolas;
+  font-size:18px;
+  letter-spacing:1px;
+
+  box-shadow: inset 0 2px 3px rgba(0,0,0,0.5);
+}
+
+/* ================= KEYS ================= */
+.hotspot{
+  position:absolute;
+  border-radius:10px;
+  cursor:pointer;
+
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.15),
+    rgba(0,0,0,0.2)
+  );
+
+  box-shadow:
+    0 3px 6px rgba(0,0,0,0.5),
+    inset 0 2px 3px rgba(255,255,255,0.2);
+
+  transition:all .08s;
+}
+
+/* PRESS EFFECT */
+.hotspot.pressed{
+  transform:translateY(4px);
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.3),
+    rgba(0,0,0,0.7)
+  );
+  box-shadow: inset 0 6px 10px rgba(0,0,0,0.8);
+}
+
+/* ================= KEYPAD POSITIONS ================= */
+
+/* row 1 */
+.k7{left:26.8%;top:43.4%;width:9.7%;height:9.9%}
+.k8{left:38.5%;top:43.4%;width:9.7%;height:9.9%}
+.k9{left:50.3%;top:43.4%;width:9.7%;height:9.9%}
+
+/* row 2 */
+.k4{left:26.8%;top:55.4%;width:9.7%;height:9.9%}
+.k5{left:38.5%;top:55.4%;width:9.7%;height:9.9%}
+.k6{left:50.3%;top:55.4%;width:9.7%;height:9.9%}
+.kback{left:62.1%;top:55.4%;width:9.7%;height:9.9%}
+
+/* row 3 */
+.k1{left:26.8%;top:67.4%;width:9.7%;height:9.9%}
+.k2{left:38.5%;top:67.4%;width:9.7%;height:9.9%}
+.k3{left:50.3%;top:67.4%;width:9.7%;height:9.9%}
+.kenter{left:62.1%;top:67.4%;width:9.7%;height:22.4%}
+
+/* row 4 */
+.kcancel{left:26.8%;top:79.7%;width:9.7%;height:9.0%}
+.k0{left:38.5%;top:79.7%;width:9.7%;height:9.0%}
+.kclear{left:50.3%;top:79.7%;width:9.7%;height:9.0%}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="side">
+
+  <div>
+    <h3>POS Entry Simulation</h3>
+
+    <div class="instructions">
+      The patient will read values out loud.<br><br>
+
+      1. Press <b>Play</b><br>
+      2. Enter numbers on keypad<br>
+      3. Press <b>Enter</b><br>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" onclick="play()">▶ Play Audio</button>
+    <button class="btn" onclick="reset()">↺ Reset</button>
+  </div>
+
+</div>
+
+
+<div class="panel" id="panel">
+
+<div class="device">
+<img id="device" src="images/pos device cropped2.png">
+
+<div id="screen" class="screen">READY</div>
+
+<div class="hotspot k1" data="1"></div>
+<div class="hotspot k2" data="2"></div>
+<div class="hotspot k3" data="3"></div>
+<div class="hotspot k4" data="4"></div>
+<div class="hotspot k5" data="5"></div>
+<div class="hotspot k6" data="6"></div>
+<div class="hotspot k7" data="7"></div>
+<div class="hotspot k8" data="8"></div>
+<div class="hotspot k9" data="9"></div>
+<div class="hotspot k0" data="0"></div>
+
+<div class="hotspot kenter" data="enter"></div>
+<div class="hotspot kclear" data="clear"></div>
+<div class="hotspot kcancel" data="cancel"></div>
+<div class="hotspot kback" data="back"></div>
+
+</div>
+
+</div>
+</div>
+
+
+<script>
+
+let cfg;
+let step=0;
+let input="";
+
+const screen=document.getElementById("screen");
+
+/* INIT */
+function init(){
+  cfg = JSON.parse(document.getElementById("config").textContent);
+
+  document.getElementById("panel").style.backgroundImage =
+    `url('${cfg.backgroundImage}')`;
+
+  document.getElementById("device").src = cfg.deviceImage;
+
+  reset();
+}
+
+/* AUDIO */
+function play(){
+  let msg=new SpeechSynthesisUtterance(cfg.steps[step].speech);
+  speechSynthesis.cancel();
+  speechSynthesis.speak(msg);
+}
+
+/* INPUT */
+function press(v){
+  if(v==="enter") return check();
+  if(v==="clear"){input="";update("CLEARED");return;}
+  if(v==="cancel"){reset();return;}
+  if(v==="back"){input=input.slice(0,-1);update(input);return;}
+
+  input+=v;
+  update(input);
+}
+
+function update(t){screen.textContent=t}
+
+/* CHECK */
+function check(){
+  if(input===cfg.steps[step].expectedInput){
+    step++;
+    input="";
+
+    if(step>=cfg.steps.length){
+      update("APPROVED");
+      return;
+    }
+
+    update("OK");
+    setTimeout(()=>update(cfg.steps[step].label),600);
+  }else{
+    update("ERROR");
+    setTimeout(()=>{input="";update(cfg.steps[step].label)},600);
+  }
+}
+
+/* RESET */
+function reset(){
+  step=0;
+  input="";
+  update(cfg.steps[0].label);
+}
+
+/* EVENTS */
+document.querySelectorAll(".hotspot").forEach(btn=>{
+  btn.onclick=()=>{
+    btn.classList.add("pressed");
+    setTimeout(()=>btn.classList.remove("pressed"),100);
+    press(btn.getAttribute("data"));
+  };
+});
+
+/* START */
+init();
+
+</script>
+
+</body>
+</html>
