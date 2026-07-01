@@ -301,16 +301,40 @@ let input="";
 
 const screen=document.getElementById("screen");
 
-/* INIT */
-function init(){
-  cfg = JSON.parse(document.getElementById("config").textContent);
+async function init(){
 
-  document.getElementById("panel").style.backgroundImage =
-    `url('${cfg.backgroundImage}')`;
+  try{
 
-  document.getElementById("device").src = cfg.deviceImage;
+    const params = new URLSearchParams(window.location.search);
 
-  reset();
+    const configFile =
+      params.get("config") || "config.json";
+
+    const response =
+      await fetch(configFile);
+
+    if(!response.ok){
+      throw new Error("Could not load " + configFile);
+    }
+
+    cfg = await response.json();
+
+    document.getElementById("panel").style.backgroundImage =
+      `url('${cfg.backgroundImage}')`;
+
+    document.getElementById("device").src =
+      cfg.deviceImage;
+
+    reset();
+
+  }
+  catch(err){
+
+    console.error(err);
+
+    screen.textContent = "CONFIG ERROR";
+
+  }
 }
 
 /* AUDIO */
