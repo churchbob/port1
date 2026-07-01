@@ -1,0 +1,22 @@
+{
+  "backgroundImage": "images/Epicbackground.png",
+  "deviceImage": "images/pos device cropped2.png",
+
+  "steps": [
+    {
+      "label": "CARD NUMBER",
+      "speech": "1 2 3 4 1 2 3 4 1 2 3 4 5 5 5 5",
+      "expectedInput": "1234123412345555"
+    },
+    {
+      "label": "CVV",
+      "speech": "567",
+      "expectedInput": "567"
+    },
+    {
+      "label": "ZIP",
+      "speech": "6 3 1 4 4",
+      "expectedInput": "63144"
+    }
+  ]
+}
