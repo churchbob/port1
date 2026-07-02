@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>POS Simulation Author</title>
+
+<style>
+:root{
+    --bjc-blue:#005EB8;
+    --bjc-dark:#16395b;
+    --bg:#f5f7fa;
+    --card:#ffffff;
+    --border:#d9e2ec;
+    --text:#1f2933;
+    --muted:#6b7280;
+    --success:#107c10;
+    --danger:#c50f1f;
+    --warning:#8a6d00;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Segoe UI, Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    margin:0;
+    padding:24px;
+}
+
+h1{
+    margin:0 0 6px;
+    color:var(--bjc-dark);
+}
+
+h2{
+    margin-top:0;
+    color:var(--bjc-dark);
+}
+
+h3{
+    margin:0 0 10px;
+    color:var(--bjc-dark);
+}
+
+.subtitle{
+    color:var(--muted);
+    margin-bottom:20px;
+}
+
+.panel{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:0 4px 14px rgba(0,0,0,.06);
+    padding:20px;
+    margin-bottom:18px;
+}
+
+.field{
+    border-left:6px solid var(--bjc-blue);
+}
+
+label{
+    display:block;
+    font-weight:700;
+    margin:12px 0 6px;
+}
+
+input[type="text"],
+textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    font:inherit;
+    background:white;
+}
+
+textarea{
+    min-height:72px;
+    resize:vertical;
+}
+
+button{
+    border:0;
+    border-radius:10px;
+    padding:10px 14px;
+    font-weight:700;
+    cursor:pointer;
+    margin:6px 6px 6px 0;
+}
+
+button:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+}
+
+.primary{
+    background:var(--bjc-blue);
+    color:white;
+}
+
+.secondary{
+    background:#e8eef6;
+    color:var(--bjc-dark);
+}
+
+.danger{
+    background:#fde7e9;
+    color:var(--danger);
+}
+
+.success{
+    background:#e6f4ea;
+    color:var(--success);
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:14px;
+}
+
+.small{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.status{
+    display:none;
+    padding:12px;
+    border-radius:10px;
+    margin-top:12px;
+    border:1px solid var(--border);
+    background:#eef6ff;
+    color:var(--bjc-dark);
+    white-space:pre-wrap;
+}
+
+.status.show{
+    display:block;
+}
+
+.status.successBox{
+    background:#e6f4ea;
+    color:var(--success);
+    border-color:#b7dfc1;
+}
+
+.status.errorBox{
+    background:#fde7e9;
+    color:var(--danger);
+    border-color:#f5b5bd;
+}
+
+.status.warningBox{
+    background:#fff8d6;
+    color:var(--warning);
+    border-color:#f0df8a;
+}
+
+.linkBox{
+    background:#f8fafc;
+    border:1px dashed var(--border);
+    border-radius:12px;
+    padding:14px;
+    word-break:break-all;
+}
+
+.rowActions{
+    margin-top:14px;
+}
+
+.entryActions{
+    margin-top:12px;
+}
+
+.pill{
+    display:inline-block;
+    background:#eef6ff;
+    color:var(--bjc-dark);
+    border:1px solid #c9def7;
+    border-radius:999px;
+    padding:4px 10px;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.codeHint{
+    font-family:Consolas, monospace;
+    background:#f3f4f6;
+    border:1px solid #e5e7eb;
+    border-radius:8px;
+    padding:2px 6px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>POS Simulation Builder</h1>
+<div class="subtitle">
+    Build a POS simulation config, publish it to SharePoint through Power Automate, and generate a student-ready link.
+</div>
+
+<div class="panel">
+    <h2>Setup</h2>
+
+    <p class="small">
+        Paste your Power Automate HTTP POST URL below. This is the URL from the
+        <span class="codeHint">When an HTTP request is received</span> trigger.
+    </p>
+
+    <label>Power Automate Flow URL</label>
+    <input id="flowUrl" type="text" placeholder="Paste your Power Automate HTTP POST URL here">
+
+    <p class="small">
+        Tip: This value is saved in your browser only, so you do not have to paste it every time.
+    </p>
+</div>
+
+<div class="panel">
+    <h2>Simulation Details</h2>
+
+    <div class="grid">
+        <div>
+            <label>Simulation Title</label>
+            <input id="title" type="text" placeholder="Example: Insurance Card Payment Practice" oninput="handleTitleChange()">
+        </div>
+
+        <div>
+            <label>Auto-generated JSON Filename</label>
+            <input id="filenamePreview" type="text" readonly>
+        </div>
+    </div>
+
+    <label>Background Image URL</label>
+    <input id="backgroundImage" type="text" placeholder="Optional: paste image URL">
+
+    <div class="rowActions">
+        <button class="secondary" onclick="addField()">+ Add Entry</button>
+        <button class="secondary" onclick="loadConfig()">Load Existing JSON</button>
+        <button class="secondary" onclick="exportJson()">Export JSON Locally</button>
+        <button class="primary" id="publishBtn" onclick="publishToSharePoint()">Publish to SharePoint</button>
+    </div>
+
+    <input id="fileLoader" type="file" accept=".json,application/json" style="display:none">
+</div>
+
+<div id="fieldsContainer"></div>
+
+<div class="panel">
+    <h2>Student Link</h2>
+
+    <p class="small">
+        After publishing, the link returned by Power Automate will appear here.
+    </p>
+
+    <div id="studentLink" class="linkBox">
+        Nothing published yet.
+    </div>
+
+    <div class="rowActions">
+        <button class="secondary" onclick="copyStudentLink()">Copy Student Link</button>
+    </div>
+</div>
+
+<div id="statusBox" class="status"></div>
+
+<script>
+/* =========================================================
+   IMPORTANT:
+   This page publishes JSON to SharePoint by calling your
+   Power Automate HTTP trigger.
+
+   Power Automate should receive this shape:
+
+   {
+     "filename": "insurance-card-payment-practice.json",
+     "title": "Insurance Card Payment Practice",
+     "config": {
+       "title": "...",
+       "backgroundImage": "...",
+       "fields": [...]
+     }
+   }
+
+   Your flow should:
+   1. Receive this JSON
+   2. Create file in SharePoint
+   3. Return a Response with at least:
+      {
+        "success": true,
+        "filename": "...",
+        "studentUrl": "..."
+      }
+   ========================================================= */
+
+let config = {
+    title: "",
+    backgroundImage: "",
+    fields: []
+};
+
+let lastStudentUrl = "";
+
+
+/* =========================================================
+   STARTUP
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+    const savedFlowUrl = localStorage.getItem("posAuthorFlowUrl") || "";
+    document.getElementById("flowUrl").value = savedFlowUrl;
+
+    document.getElementById("flowUrl").addEventListener("input", () => {
+        localStorage.setItem(
+            "posAuthorFlowUrl",
+            document.getElementById("flowUrl").value.trim()
+        );
+    });
+
+    document.getElementById("fileLoader").addEventListener("change", handleFileLoad);
+
+    updateFilenamePreview();
+    renderFields();
+});
+
+
+/* =========================================================
+   FIELD MANAGEMENT
+   ========================================================= */
+
+function addField(data = {}) {
+    config.fields.push({
+        label: data.label || "",
+        value: data.value || "",
+        prompt: data.prompt || ""
+    });
+
+    renderFields();
+}
+
+function deleteField(index) {
+    config.fields.splice(index, 1);
+    renderFields();
+}
+
+function moveFieldUp(index) {
+    if (index <= 0) return;
+
+    const item = config.fields.splice(index, 1)[0];
+    config.fields.splice(index - 1, 0, item);
+
+    renderFields();
+}
+
+function moveFieldDown(index) {
+    if (index >= config.fields.length - 1) return;
+
+    const item = config.fields.splice(index, 1)[0];
+    config.fields.splice(index + 1, 0, item);
+
+    renderFields();
+}
+
+function renderFields() {
+    const container = document.getElementById("fieldsContainer");
+    container.innerHTML = "";
+
+    if (!config.fields.length) {
+        const empty = document.createElement("div");
+        empty.className = "panel";
+        empty.innerHTML = `
+            <h2>No Entries Yet</h2>
+            <p class="small">
+                Select <strong>+ Add Entry</strong> to add the first value the student should enter on the device.
+            </p>
+        `;
+        container.appendChild(empty);
+        return;
+    }
+
+    config.fields.forEach((field, index) => {
+        const div = document.createElement("div");
+        div.className = "panel field";
+
+        div.innerHTML = `
+            <span class="pill">Entry ${index + 1}</span>
+
+            <label>Field Label</label>
+            <input type="text"
+                   value="${escapeHtml(field.label)}"
+                   oninput="config.fields[${index}].label = this.value"
+                   placeholder="Example: Payment Amount">
+
+            <label>Expected Value</label>
+            <input type="text"
+                   value="${escapeHtml(field.value)}"
+                   oninput="config.fields[${index}].value = this.value"
+                   placeholder="Example: 25.00">
+
+            <label>Patient Prompt / Audio Text</label>
+            <textarea
+                oninput="config.fields[${index}].prompt = this.value"
+                placeholder="Example: The patient says, my payment amount is twenty-five dollars.">${escapeHtml(field.prompt)}</textarea>
+
+            <div class="entryActions">
+                <button class="secondary" onclick="moveFieldUp(${index})">Move Up</button>
+                <button class="secondary" onclick="moveFieldDown(${index})">Move Down</button>
+                <button class="danger" onclick="deleteField(${index})">Delete Entry</button>
+            </div>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+
+/* =========================================================
+   COLLECT + VALIDATE CONFIG
+   ========================================================= */
+
+function collectConfigFromForm() {
+    const title = document.getElementById("title").value.trim();
+    const backgroundImage = document.getElementById("backgroundImage").value.trim();
+
+    if (!title) {
+        throw new Error("Enter a Simulation Title first.");
+    }
+
+    if (!config.fields.length) {
+        throw new Error("Add at least one entry before publishing.");
+    }
+
+    const invalidIndex = config.fields.findIndex(field =>
+        !String(field.label || "").trim() ||
+        !String(field.value || "").trim()
+    );
+
+    if (invalidIndex >= 0) {
+        throw new Error("Entry " + (invalidIndex + 1) + " needs both a Field Label and Expected Value.");
+    }
+
+    config.title = title;
+    config.backgroundImage = backgroundImage;
+
+    return config;
+}
+
+
+/* =========================================================
+   FILENAME
+   ========================================================= */
+
+function handleTitleChange() {
+    updateFilenamePreview();
+}
+
+function titleToFilename(title) {
+    const cleaned = String(title || "")
+        .toLowerCase()
+        .replace(/&/g, " and ")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .replace(/-{2,}/g, "-");
+
+    return (cleaned || "simulation") + ".json";
+}
+
+function getFilename() {
+    const title = document.getElementById("title").value.trim();
+    return titleToFilename(title);
+}
+
+function updateFilenamePreview() {
+    document.getElementById("filenamePreview").value = getFilename();
+}
+
+
+/* =========================================================
+   LOAD EXISTING JSON
+   ========================================================= */
+
+function loadConfig() {
+    document.getElementById("fileLoader").click();
+}
+
+function handleFileLoad(event) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+        try {
+            const loaded = JSON.parse(reader.result);
+
+            config = {
+                title: loaded.title || "",
+                backgroundImage: loaded.backgroundImage || "",
+                fields: Array.isArray(loaded.fields) ? loaded.fields : []
+            };
+
+            document.getElementById("title").value = config.title;
+            document.getElementById("backgroundImage").value = config.backgroundImage;
+
+            updateFilenamePreview();
+            renderFields();
+
+            showStatus("Loaded JSON successfully.", "success");
+        }
+        catch (err) {
+            console.error(err);
+            showStatus("That JSON file could not be loaded. Check that it is valid JSON.", "error");
+        }
+    };
+
+    reader.readAsText(file);
+
+    event.target.value = "";
+}
+
+
+/* =========================================================
+   EXPORT LOCAL JSON BACKUP
+   ========================================================= */
+
+function exportJson() {
+    try {
+        const latestConfig = collectConfigFromForm();
+        const filename = getFilename();
+
+        const blob = new Blob(
+            [JSON.stringify(latestConfig, null, 2)],
+            { type: "application/json" }
+        );
+
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+
+        URL.revokeObjectURL(a.href);
+
+        showStatus("Exported local JSON backup: " + filename, "success");
+    }
+    catch (err) {
+        showStatus(err.message, "error");
+    }
+}
+
+
+/* =========================================================
+   PUBLISH TO SHAREPOINT THROUGH POWER AUTOMATE
+   ========================================================= */
+
+async function publishToSharePoint() {
+    const flowUrl = document.getElementById("flowUrl").value.trim();
+
+    if (!flowUrl) {
+        showStatus("Paste your Power Automate HTTP POST URL first.", "error");
+        return;
+    }
+
+    let latestConfig;
+    let filename;
+
+    try {
+        latestConfig = collectConfigFromForm();
+        filename = getFilename();
+    }
+    catch (err) {
+        showStatus(err.message, "error");
+        return;
+    }
+
+    const payload = {
+        filename: filename,
+        title: latestConfig.title,
+        config: latestConfig
+    };
+
+    const publishBtn = document.getElementById("publishBtn");
+    publishBtn.disabled = true;
+    publishBtn.textContent = "Publishing...";
+
+    showStatus("Publishing to SharePoint through Power Automate...", "warning");
+
+    try {
+        const response = await fetch(flowUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const text = await response.text();
+
+        let result = {};
+        if (text) {
+            try {
+                result = JSON.parse(text);
+            }
+            catch {
+                result = {
+                    rawResponse: text
+                };
+            }
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                "Power Automate returned " +
+                response.status +
+                ". " +
+                (result.message || result.error || text || "")
+            );
+        }
+
+        lastStudentUrl =
+            result.studentUrl ||
+            result.webUrl ||
+            result.url ||
+            "";
+
+        if (lastStudentUrl) {
+            document.getElementById("studentLink").innerHTML = `
+                <label>Published Student Link</label>
+                <input type="text"
+                       value="${escapeAttribute(lastStudentUrl)}"
+                       readonly
+                       onclick="this.select()"
+                       style="width:100%;padding:10px;border:1px solid #d9e2ec;border-radius:10px;">
+
+                <p class="small">
+                    Returned by Power Automate after creating the SharePoint JSON file.
+                </p>
+            `;
+        }
+        else {
+            document.getElementById("studentLink").innerHTML = `
+                <strong>Published, but no studentUrl was returned.</strong>
+                <p class="small">
+                    Update your Power Automate Response action to include a studentUrl value.
+                </p>
+                <p class="small">
+                    Filename created: <span class="codeHint">${escapeHtml(filename)}</span>
+                </p>
+            `;
+        }
+
+        showStatus(
+            "Published successfully.\n\nFilename: " +
+            filename +
+            (lastStudentUrl ? "\n\nStudent link returned by flow." : "\n\nNo studentUrl was returned by the flow."),
+            "success"
+        );
+    }
+    catch (err) {
+        console.error(err);
+
+        showStatus(
+            "Publish failed.\n\n" +
+            err.message +
+            "\n\nIf this is a CORS error, your browser may be blocking the GitHub page from calling the Power Automate URL directly.",
+            "error"
+        );
+    }
+    finally {
+        publishBtn.disabled = false;
+        publishBtn.textContent = "Publish to SharePoint";
+    }
+}
+
+
+/* =========================================================
+   COPY STUDENT LINK
+   ========================================================= */
+
+async function copyStudentLink() {
+    if (!lastStudentUrl) {
+        showStatus("There is no student link to copy yet. Publish the simulation first.", "warning");
+        return;
+    }
+
+    try {
+        await navigator.clipboard.writeText(lastStudentUrl);
+        showStatus("Student link copied.", "success");
+    }
+    catch {
+        showStatus("Could not copy automatically. Select the link field and copy it manually.", "warning");
+    }
+}
+
+
+/* =========================================================
+   STATUS + HELPERS
+   ========================================================= */
+
+function showStatus(message, type) {
+    const box = document.getElementById("statusBox");
+    box.textContent = message;
+    box.className = "status show";
+
+    if (type === "success") {
+        box.classList.add("successBox");
+    }
+    else if (type === "error") {
+        box.classList.add("errorBox");
+    }
+    else if (type === "warning") {
+        box.classList.add("warningBox");
+    }
+}
+
+function escapeHtml(value) {
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+function escapeAttribute(value) {
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+</script>
+
+</body>
+</html>
