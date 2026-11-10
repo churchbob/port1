@@ -1,0 +1,2442 @@
+
+const coverageData = [
+    {
+        id: '20030',
+        name: 'AETNA SIGNATURE',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'AETNA',
+            'AETNA SIGNATURE',
+            '22285',
+            '62599',
+            'SX110',
+            'IUHPLNS',
+            '91051',
+            '37217',
+            '59064',
+            '55213',
+            'CAPHP'
+        ]
+    },
+    {
+        id: '20003',
+        name: 'AETNA',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'CHOICE POS II',
+        financialClass: 'Commercial',
+        synonyms: [
+            'AETNA',
+            'CHOICE POS II',
+            'FIRST HEALTH NETWORK',
+            'NAP',
+            '60054'
+        ]
+    },
+    {
+        id: '20503',
+        name: 'BLUE ACCESS ILLINOIS',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'BLUE ACCESS',
+            'BLUE ACCESS IL',
+            'ILLINOIS',
+            'BCBS'
+        ]
+    },
+    {
+        id: '79807',
+        name: 'ANTHEM 99320 NC',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'ANTHEM',
+            '99320',
+            'BOP',
+            'PROFESSIONAL AND ANCILLARY ONLY'
+        ]
+    },
+    {
+        id: '20701',
+        name: 'MO HEALTHNET DIVISION',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicaid',
+        financialClass: 'Medicaid',
+        synonyms: [
+            'MO HEALTHNET',
+            'MISSOURI MEDICAID',
+            'MEDICAID',
+            'MO'
+        ]
+    },
+    {
+        id: '20703',
+        name: 'MEDICAID MO SPENDDOWN',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicaid Spenddown',
+        financialClass: 'Medicaid',
+        synonyms: [
+            'MO HEALTHNET',
+            'MEDICAID',
+            'SPENDDOWN',
+            'MO MEDICAID'
+        ]
+    },
+    {
+        id: '20704',
+        name: 'MEDICAID MO RESTRICTED',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicaid Restricted',
+        financialClass: 'Medicaid',
+        synonyms: [
+            'MO HEALTHNET',
+            'MEDICAID',
+            'RESTRICTED',
+            'MO MEDICAID'
+        ]
+    },
+    {
+        id: '27201',
+        name: 'DEPARTMENT OF MENTAL HEALTH',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: '',
+        synonyms: [
+            'DMH',
+            'DEPARTMENT OF MENTAL HEALTH'
+        ]
+    },
+    {
+        id: '21201',
+        name: 'UNITED HEALTHCARE COMMUNITY PLAN OF MISSOURI',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Managed Medicaid',
+        financialClass: 'Medicaid',
+        synonyms: [
+            'UHC',
+            'UNITED HEALTHCARE',
+            'UNITEDHEALTHCARE',
+            'COMMUNITY PLAN',
+            'MISSOURI',
+            'MC+'
+        ]
+    },
+    {
+        id: '63201',
+        name: 'HEALTHY BLUE MO',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Managed Medicaid',
+        financialClass: 'Medicaid',
+        synonyms: [
+            'HEALTHY BLUE',
+            'MISSOURI',
+            'MO',
+            'MC+',
+            'BCBS'
+        ]
+    },
+    {
+        id: '22701',
+        name: 'HOME STATE HEALTH PLAN',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Managed Medicaid',
+        financialClass: 'Medicaid',
+        synonyms: [
+            'HOME STATE',
+            'HOME STATE HEALTH',
+            'MISSOURI',
+            'MC+'
+        ]
+    },
+    {
+        id: '22705',
+        name: 'SHOW ME HEALTHY KIDS',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Managed Medicaid',
+        financialClass: 'Medicaid',
+        synonyms: [
+            'SHOW ME HEALTHY KIDS',
+            'SHOW-ME HEALTHY KIDS',
+            'MISSOURI',
+            'MC+'
+        ]
+    },
+    {
+        id: '20601',
+        name: 'MEDICARE PART A',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Part A',
+        financialClass: 'Medicare',
+        synonyms: [
+            'MEDICARE',
+            'PART A',
+            'TRADITIONAL MEDICARE'
+        ]
+    },
+    {
+        id: '20602',
+        name: 'MEDICARE PART B',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Part B',
+        financialClass: 'Medicare',
+        synonyms: [
+            'MEDICARE',
+            'PART B',
+            'TRADITIONAL MEDICARE'
+        ]
+    },
+    {
+        id: '20603',
+        name: 'MEDICARE PART A AND B',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Part A and B',
+        financialClass: 'Medicare',
+        synonyms: [
+            'MEDICARE',
+            'PART A',
+            'PART B',
+            'A AND B',
+            'TRADITIONAL MEDICARE'
+        ]
+    },
+    {
+        id: '22801',
+        name: 'HUMANA CHOICE MEDICARE PPO',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'PPO',
+        financialClass: 'Medicare',
+        synonyms: [
+            'HUMANA',
+            'HUMANA CHOICE',
+            'MEDICARE',
+            'PPO',
+            'MEDICARE ADVANTAGE'
+        ]
+    },
+    {
+        id: '22806',
+        name: 'HUMANA MEDICARE HMO',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'HMO',
+        financialClass: 'Medicare',
+        synonyms: [
+            'HUMANA',
+            'MEDICARE',
+            'HMO',
+            'MEDICARE ADVANTAGE'
+        ]
+    },
+    {
+        id: '71001',
+        name: 'MANHATTAN LIFE',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'MANHATTAN LIFE'
+        ]
+    },
+    {
+        id: '25101',
+        name: 'UHC MEDICARE ADVANTAGE',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Advantage',
+        financialClass: 'Medicare',
+        synonyms: [
+            'UHC',
+            'UNITED HEALTHCARE',
+            'UNITEDHEALTHCARE',
+            'MEDICARE ADVANTAGE'
+        ]
+    },
+    {
+        id: '52601',
+        name: 'TRANSAMERICA',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'TRANSAMERICA',
+            'TRANSAMERICA LIFE INSURANCE COMPANY'
+        ]
+    },
+    {
+        id: '21001',
+        name: 'AARP',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Supplement',
+        financialClass: 'Medicare',
+        synonyms: [
+            'AARP',
+            'AARP SUPPLEMENTAL',
+            'MEDICARE SUPPLEMENT'
+        ]
+    },
+    {
+        id: '84701',
+        name: 'DEVOTED MEDICARE PPO',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'PPO',
+        financialClass: 'Medicare',
+        synonyms: [
+            'DEVOTED',
+            'DEVOTED HEALTH',
+            'MEDICARE',
+            'PPO'
+        ]
+    },
+    {
+        id: '84702',
+        name: 'DEVOTED MEDICARE HMO',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'HMO',
+        financialClass: 'Medicare',
+        synonyms: [
+            'DEVOTED',
+            'DEVOTED HEALTH',
+            'MEDICARE',
+            'HMO'
+        ]
+    },
+    {
+        id: '84703',
+        name: 'DEVOTED MEDICARE DUAL',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Dual',
+        financialClass: 'Medicare',
+        synonyms: [
+            'DEVOTED',
+            'DEVOTED HEALTH',
+            'MEDICARE',
+            'DUAL'
+        ]
+    },
+    {
+        id: '20513',
+        name: 'BL CHOICE PRF PPO IL',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'PPO',
+        financialClass: 'Commercial',
+        synonyms: [
+            'BCBS',
+            'BLUE CROSS',
+            'BLUE CHOICE PREFERRED',
+            'QME',
+            'QMF',
+            'QMG',
+            'VCH',
+            'YCV',
+            'BCE'
+        ]
+    },
+    {
+        id: '20510',
+        name: 'BLUE ACCESS CHOICE IL',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'PPO',
+        financialClass: 'Commercial',
+        synonyms: [
+            'BCBS',
+            'BLUE CROSS',
+            'ACCESS CHOICE',
+            'CHOICE',
+            'PPO',
+            'ILLINOIS'
+        ]
+    },
+    {
+        id: '20517',
+        name: 'BCBS FEDERAL',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'BCBS',
+            'BLUE CROSS',
+            'FEDERAL',
+            'R'
+        ]
+    },
+    {
+        id: '79806',
+        name: 'BLUE PATHWAYS EXCHANGE NC',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Exchange',
+        financialClass: 'Commercial',
+        synonyms: [
+            'ANTHEM',
+            'BCBS',
+            'BLUE CROSS',
+            'PATHWAY',
+            'PATHWAYS EXCHANGE'
+        ]
+    },
+    {
+        id: '60701',
+        name: 'BLUE ACC CHOICE OOS',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'PPO',
+        financialClass: 'Commercial',
+        synonyms: [
+            'BCBS',
+            'BLUE CROSS',
+            'ACCESS CHOICE',
+            'CHOICE',
+            'PPO',
+            'OOS'
+        ]
+    },
+    {
+        id: '60702',
+        name: 'BLUE ACCESS OOS',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'PPO',
+        financialClass: 'Commercial',
+        synonyms: [
+            'BCBS',
+            'BLUE CROSS',
+            'BLUE ACCESS',
+            'PPO',
+            'OOS'
+        ]
+    },
+    {
+        id: '55102',
+        name: 'STARBRIDGE BEECHSTREET',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'ADMINISTRATIVE CONCEPTS',
+            'ADMINISTRATIVE CONCEPTS INC',
+            'STARBRIDGE',
+            'BEECHSTREET'
+        ]
+    },
+    {
+        id: '21301',
+        name: 'AETNA SENIOR SUPPLEMENT',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Supplement',
+        financialClass: 'Medicare',
+        synonyms: [
+            'AETNA',
+            'AETNA SENIOR',
+            'AETNA SENIOR SUPPLEMENT',
+            'AETNA SENIOR SUPPLEMENTAL INSURANCE',
+            'AESSI'
+        ]
+    },
+    {
+        id: '54801',
+        name: 'AFLAC',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'AFLAC'
+        ]
+    },
+    {
+        id: '77504',
+        name: 'UHC CORE ALLSAVERS NC',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'ALL SAVERS',
+            'ALLSAVERS',
+            'UHC',
+            'UNITED HEALTHCARE',
+            'UHC CORE'
+        ]
+    },
+    {
+        id: '60401',
+        name: 'WELLCARE MEDICARE 68069',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Advantage',
+        financialClass: 'Medicare',
+        synonyms: [
+            'ALLWELL',
+            'ALLWELL MEDICARE',
+            'WELLCARE',
+            'WELLCARE MEDICARE',
+            '68069'
+        ]
+    },
+    {
+        id: '64402',
+        name: 'AMBETTER OF ILLINOIS',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'AMBETTER',
+            'AMBETTER OF ILLINOIS',
+            'ILLINOIS'
+        ]
+    },
+    {
+        id: '81901',
+        name: 'ACE OR INA MEDICARE SUPPLEMENT',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Supplement',
+        financialClass: 'Medicare',
+        synonyms: [
+            'ACE',
+            'INA',
+            'ACE MEDICARE SUPPLEMENT',
+            'INA MEDICARE SUPPLEMENT'
+        ]
+    },
+    {
+        id: '55401',
+        name: 'CIGNA MEDICARE SUPPLEMENT INSURANCE',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Supplement',
+        financialClass: 'Medicare',
+        synonyms: [
+            'CIGNA',
+            'CIGNA STERLING',
+            'STERLING LIFE',
+            'MEDICARE SUPPLEMENT'
+        ]
+    },
+    {
+        id: '86101',
+        name: 'LINECO BENEFIT FUND',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'LINECO',
+            'LINECO BENEFIT FUND',
+            'LINE CONSTRUCTION BENEFIT FUND'
+        ]
+    },
+    {
+        id: '65701',
+        name: 'PAN AMERICAN LIFE',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'PAN AMERICAN',
+            'PAN AMERICAN LIFE',
+            'PAN AMERICAN LIFE INSURANCE'
+        ]
+    },
+    {
+        id: '47501',
+        name: 'PEKIN LIFE INSURANCE COMPANY',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'PEKIN',
+            'PEKIN LIFE',
+            'PEKIN LIFE INSURANCE'
+        ]
+    },
+    {
+        id: '23501',
+        name: 'MEDICO INSURANCE COMPANY',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Supplement',
+        financialClass: 'Medicare',
+        synonyms: [
+            'MEDICO',
+            'MEDICO INSURANCE',
+            'MEDICO CORP LIFE'
+        ]
+    },
+    {
+        id: '24101',
+        name: 'MUTUAL OF OMAHA',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Supplement',
+        financialClass: 'Medicare',
+        synonyms: [
+            'MUTUAL OF OMAHA',
+            'UNITED WORLD LIFE',
+            'UNITED WORLD LIFE INSURANCE'
+        ]
+    },
+    {
+        id: '25301',
+        name: 'USAA LIFE INSURANCE COMPANY',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'USAA',
+            'USAA LIFE',
+            'USAA LIFE INSURANCE'
+        ]
+    },
+    {
+        id: '23801',
+        name: 'WELLCARE MEDICARE HMO',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'HMO',
+        financialClass: 'Medicare',
+        synonyms: [
+            'WELLCARE',
+            'WELLCARE MEDICARE',
+            'MEDICARE HMO'
+        ]
+    },
+    {
+        id: '66201',
+        name: 'MEDICA MEDICARE',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Advantage',
+        financialClass: 'Medicare',
+        synonyms: [
+            'MEDICA',
+            'MEDICA MEDICARE',
+            'WELLFIRST',
+            'SSM',
+            'WELLFIRST SSM'
+        ]
+    },
+    {
+        id: '86901',
+        name: 'COLLABRIOS HEALTH NC',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'COLLABRIOS',
+            'COLLABRIOS HEALTH',
+            'NEW HORIZON PACE'
+        ]
+    },
+    {
+        id: '77502',
+        name: 'UHC OXFORD',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'UHC',
+            'UNITED HEALTHCARE',
+            'OXFORD',
+            'OXFORD HEALTH',
+            'OXFORD HEALTH PLANS'
+        ]
+    },
+    {
+        id: '20604',
+        name: 'MEDICARE RAILROAD',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Railroad Medicare',
+        financialClass: 'Medicare',
+        synonyms: [
+            'MEDICARE',
+            'RAILROAD',
+            'RAILROAD MEDICARE',
+            'PALMETTO GBA'
+        ]
+    },
+    {
+        id: '20133',
+        name: 'UHC STUDENT RESOURCES',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Student',
+        financialClass: 'Commercial',
+        synonyms: [
+            'UHC',
+            'UNITED HEALTHCARE',
+            'UNITEDHEALTHCARE',
+            'STUDENT RESOURCES',
+            'UHC STUDENT'
+        ]
+    },
+    {
+        id: '57601',
+        name: 'OPTUM HEALTH BEHAVIORAL HEALTH',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Behavioral Health',
+        financialClass: 'Commercial',
+        synonyms: [
+            'OPTUM',
+            'OPTUM HEALTH',
+            'BEHAVIORAL HEALTH',
+            'UNITED BEHAVIORAL HEALTH',
+            'UBH',
+            'UHC',
+            'UMR'
+        ]
+    },
+    {
+        id: '57602',
+        name: 'WUSM OPTUM EMP',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Behavioral Health',
+        financialClass: 'Commercial',
+        synonyms: [
+            'OPTUM',
+            'WUSM',
+            'WASHU',
+            'WASHINGTON UNIVERSITY',
+            'WASHU EMPLOYEES'
+        ]
+    },
+    {
+        id: '20110',
+        name: 'UHC CHOICE PLUS',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Choice Plus',
+        financialClass: 'Commercial',
+        synonyms: [
+            'UHC',
+            'UNITED HEALTHCARE',
+            'UNITEDHEALTHCARE',
+            'CHOICE PLUS',
+            '87726'
+        ]
+    },
+    {
+        id: '20104',
+        name: 'UHC OPTIONS PPO',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'PPO',
+        financialClass: 'Commercial',
+        synonyms: [
+            'UHC',
+            'UNITED HEALTHCARE',
+            'UNITEDHEALTHCARE',
+            'OPTIONS PPO',
+            '87726'
+        ]
+    },
+    {
+        id: '20132',
+        name: 'UHC WUSM',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'UHC',
+            'UNITED HEALTHCARE',
+            'WUSM',
+            'WASHU',
+            'WASHINGTON UNIVERSITY'
+        ]
+    },
+    {
+        id: '20076',
+        name: 'AETNA SIG GRV01',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'AETNA',
+            'AETNA SIGNATURE',
+            'GRV01',
+            'GRAVIE',
+            'GRAVIE ADMINISTRATION SERVICES'
+        ]
+    },
+    {
+        id: '79803',
+        name: 'BLUE CROSS MEDICARE SUPPLEMENT',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Supplement',
+        financialClass: 'Medicare',
+        synonyms: [
+            'ANTHEM',
+            'BCBS',
+            'BLUE CROSS',
+            'MEDICARE SUPPLEMENT',
+            'MISSOURI'
+        ]
+    },
+    {
+        id: '79804',
+        name: 'ANTHEM MEDICARE SUPPLEMENT',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Supplement',
+        financialClass: 'Medicare',
+        synonyms: [
+            'ANTHEM',
+            'BCBS',
+            'BLUE CROSS',
+            'MEDICARE SUPPLEMENT',
+            'MISSOURI'
+        ]
+    },
+    {
+        id: '22101',
+        name: 'ESSENCE HEALTHCARE',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Medicare Advantage',
+        financialClass: 'Medicare',
+        synonyms: [
+            'ESSENCE',
+            'ESSENCE HEALTHCARE',
+            'MEDICARE ADVANTAGE'
+        ]
+    },
+    {
+        id: '22102',
+        name: 'ESSENCE DUAL MCR',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Dual',
+        financialClass: 'Medicare',
+        synonyms: [
+            'ESSENCE',
+            'ESSENCE HEALTHCARE',
+            'ESSENCE DUAL',
+            'DUAL',
+            'MEDICARE'
+        ]
+    },
+    {
+        id: '22104',
+        name: 'ESSENCE ADVANTAGE CHOICE PPO',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'PPO',
+        financialClass: 'Medicare',
+        synonyms: [
+            'ESSENCE',
+            'ESSENCE HEALTHCARE',
+            'ADVANTAGE CHOICE',
+            'PPO',
+            'MEDICARE'
+        ]
+    },
+    {
+        id: '22501',
+        name: 'HEALTHLINK HMO',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'HMO',
+        financialClass: 'Commercial',
+        synonyms: [
+            'HEALTHLINK',
+            'HMO',
+            '90001'
+        ]
+    },
+    {
+        id: '22502',
+        name: 'HEALTHLINK OPEN ACCESS',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Open Access',
+        financialClass: 'Commercial',
+        synonyms: [
+            'HEALTHLINK',
+            'OPEN ACCESS',
+            '90001'
+        ]
+    },
+    {
+        id: '22506',
+        name: 'HLTHLINK ST IL 90001',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'HEALTHLINK',
+            'STATE OF ILLINOIS',
+            'ILLINOIS',
+            'ST IL',
+            '90001'
+        ]
+    },
+    {
+ id: '25102',
+    name: 'UHC DUAL COMPLETE HMO REF 86050',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'HMO Dual',
+    financialClass: 'Medicare',
+    synonyms: [
+        'UHC',
+        'UNITED HEALTHCARE',
+        'UNITEDHEALTHCARE',
+        'UHC DUAL COMPLETE',
+        'DUAL COMPLETE',
+        'HMO',
+        'REF',
+        '86050',
+        'UHC MEDICARE COMMUNITY PLAN'
+    ]
+    },
+    {
+        id: '25109',
+        name: 'UHC DUAL COMPLETE 87726',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'Dual',
+        financialClass: 'Medicare',
+        synonyms: [
+            'UHC',
+            'UNITED HEALTHCARE',
+            'UNITEDHEALTHCARE',
+            'DUAL COMPLETE',
+            '87726'
+        ]
+    },
+    {
+        id: '20407',
+        name: 'TRICARE EAST REGION CLAIMS',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'TRICARE',
+        financialClass: 'Other Government',
+        synonyms: [
+            'TRICARE',
+            'TRICARE EAST',
+            'EAST REGION',
+            'MILITARY'
+        ]
+    },
+    {
+        id: '20409',
+        name: 'TRICARE EAST PRIME',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'TRICARE Prime',
+        financialClass: 'Other Government',
+        synonyms: [
+            'TRICARE',
+            'TRICARE EAST',
+            'TRICARE PRIME',
+            'EAST PRIME',
+            'MILITARY'
+        ]
+    },
+    {
+        id: '20406',
+        name: 'TRICARE WEST CLAIMS',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'TRICARE',
+        financialClass: 'Other Government',
+        synonyms: [
+            'TRICARE',
+            'TRICARE WEST',
+            'WEST REGION',
+            'MILITARY'
+        ]
+    },
+    {
+        id: '20410',
+        name: 'TRICARE WEST PRIME',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'TRICARE Prime',
+        financialClass: 'Other Government',
+        synonyms: [
+            'TRICARE',
+            'TRICARE WEST',
+            'TRICARE PRIME',
+            'WEST PRIME',
+            'MILITARY'
+        ]
+    },
+    {
+        id: '20403',
+        name: 'TRICARE FOR LIFE',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'TRICARE for Life',
+        financialClass: 'Other Government',
+        synonyms: [
+            'TRICARE',
+            'TRICARE FOR LIFE',
+            'TFL',
+            'MEDICARE',
+            'MILITARY'
+        ]
+    },
+    {
+        id: '20201',
+        name: 'CIGNA HEALTHCARE',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'CIGNA',
+            'CIGNA HEALTHCARE',
+            '62308'
+        ]
+    },
+    {
+        id: '20202',
+        name: 'CIGNA HEALTHCARE PPO',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'PPO',
+        financialClass: 'Commercial',
+        synonyms: [
+            'CIGNA',
+            'CIGNA HEALTHCARE',
+            'PPO',
+            '62308'
+        ]
+    },
+    {
+        id: '20206',
+        name: 'CIGNA C-7',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'CIGNA',
+            'C-7',
+            'C7',
+            '62308'
+        ]
+    },
+    {
+        id: '20208',
+        name: 'MH CIGNA BJC FLEX OR HDHP',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: 'HDHP',
+        financialClass: 'Commercial',
+        synonyms: [
+            'CIGNA',
+            'BJC',
+            'BJC HEALTHCARE',
+            'FLEX',
+            'HDHP',
+            '62308'
+        ]
+    },
+    {
+        id: '20219',
+        name: 'MH BJC SELECT',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'CIGNA',
+            'BJC',
+            'BJC HEALTHCARE',
+            'BJC SELECT',
+            'SELECT',
+            '62308'
+        ]
+    },
+    {
+        id: '20044',
+        name: 'AETNA SIG 75261',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'AETNA',
+            'AETNA SIGNATURE',
+            'WEBTPA',
+            '75261'
+        ]
+    },
+    {
+        id: '20226',
+        name: 'CIGNA 75261',
+        address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+        productType: '',
+        financialClass: 'Commercial',
+        synonyms: [
+            'CIGNA',
+            'WEBTPA',
+            '75261'
+        ]
+    },
+	{
+    id: '25106',
+    name: 'UHC DUAL COMPLETE OOS 87726 NC',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Dual',
+    financialClass: 'Medicare',
+    synonyms: [
+        'UHC',
+        'UNITED HEALTHCARE',
+        'UNITEDHEALTHCARE',
+        'UHC DUAL COMPLETE',
+        'DUAL COMPLETE',
+        'OOS',
+        'OUT OF STATE',
+        '87726',
+        'NC',
+        'UHC SECURE HORIZONS'
+    ]
+},
+{
+    id: '25107',
+    name: 'UHC MDCR HMO REF',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'HMO',
+    financialClass: 'Medicare',
+    synonyms: ['UHC', 'UNITED HEALTHCARE', 'MEDICARE', 'HMO', 'REF']
+},
+{
+    id: '89001',
+    name: 'HEALTHSPRING MEDICARE SUPPLEMENT',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicare Supplement',
+    financialClass: 'Medicare',
+    synonyms: ['HEALTHSPRING', 'MEDICARE SUPPLEMENT']
+},
+{
+    id: '84502',
+    name: 'CHAMPVA',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'CHAMPVA',
+    financialClass: 'Other Government',
+    synonyms: ['CHAMPVA', 'VA', 'VETERANS']
+},
+{
+    id: '26301',
+    name: 'BCBS MEDICARE IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicare Advantage',
+    financialClass: 'Medicare',
+    synonyms: ['BCBS', 'BLUE CROSS', 'BLUE SHIELD', 'ILLINOIS', 'MEDICARE ADVANTAGE']
+},
+{
+    id: '26302',
+    name: 'BLUE CROSS COMM MMAI',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'MMAI',
+    financialClass: 'Medicare',
+    synonyms: ['BCBS', 'BLUE CROSS', 'ILLINOIS', 'COMMUNITY', 'MMAI']
+},
+{
+    id: '58201',
+    name: 'BLUE CROSS COMMUNITY HEALTH PLAN',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Medicaid',
+    synonyms: ['BCBS', 'BLUE CROSS', 'COMMUNITY HEALTH PLAN', 'XOG', 'XXL']
+},
+{
+    id: '20516',
+    name: 'BLUE SOUTHN IL HLTH (SIHCA)',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: ['BCBS', 'BLUE CROSS', 'SOUTHERN ILLINOIS', 'SIHCA', 'XOH', '351']
+},
+{
+    id: '47901',
+    name: 'PHYSICIANS HEALTH ASSOC IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'HMO',
+    financialClass: 'Commercial',
+    synonyms: ['BCBS', 'BLUE CROSS', 'PHYSICIANS HEALTH', 'BLUE ADVANTAGE HMO', 'XOH', '314']
+},
+{
+    id: '20511',
+    name: 'BLUE TRADITIONAL IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Traditional',
+    financialClass: 'Commercial',
+    synonyms: ['BCBS', 'BLUE CROSS', 'ILLINOIS', 'TRADITIONAL', 'EMPTY SUITCASE']
+},
+{
+    id: '61101',
+    name: 'BCBS MEDICARE OOS',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicare',
+    financialClass: 'Medicare',
+    synonyms: [
+        'BCBS', 'BLUE CROSS', 'MEDICARE', 'OOS',
+        'CBH', 'HRF', 'HRT', 'JQF', 'MBL', 'RKN', 'RKQ',
+        'VAY', 'VOE', 'VYU', 'WSP', 'XBU', 'XLL', 'XPF',
+        'XYL', 'YPW', 'ZXD'
+    ]
+},
+{
+    id: '60704',
+    name: 'BLUE HPN OOS',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'HPN',
+    financialClass: 'Commercial',
+    synonyms: ['BCBS', 'BLUE CROSS', 'HPN', 'OOS', 'ASW', 'CHX', 'H7W', 'M8Y', 'R9A']
+},
+{
+    id: '75201',
+    name: 'BCBS MEDICAID OOS',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['BCBS', 'BLUE CROSS', 'MEDICAID', 'OOS']
+},
+{
+    id: '60703',
+    name: 'BLUE TRADITIONAL OOS',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Traditional',
+    financialClass: 'Commercial',
+    synonyms: ['BCBS', 'BLUE CROSS', 'TRADITIONAL', 'OOS']
+},
+{
+    id: '22018',
+    name: 'COX MED-PAY',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medical Payments',
+    financialClass: 'Commercial',
+    synonyms: ['COX', 'COXHEALTH', 'MED-PAY', 'MED PAY']
+},
+{
+    id: '22512',
+    name: 'HEALTHLINK EDISON HEALTH 66456',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: ['HEALTHLINK', 'EDISON HEALTH', '66456']
+},
+{
+    id: '60302',
+    name: 'HEALTHY INDIANA PLAN',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Medicaid',
+    synonyms: ['HEALTHY INDIANA', 'HEALTHY INDIANA PLAN', 'INDIANA', 'HIP']
+},
+{
+    id: '87401',
+    name: 'MEDICA CHOICE NATIONAL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: ['MEDICA', 'MEDICA CHOICE', 'CHOICE NATIONAL']
+},
+{
+    id: '87501',
+    name: 'MOLINA MARKETPLACE FL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Marketplace',
+    financialClass: 'Commercial',
+    synonyms: ['MOLINA', 'MOLINA MARKETPLACE', 'FL', 'FLORIDA']
+},
+{
+    id: '24412',
+    name: 'PHCS BENEFIT HEALTH PLAN 52682',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: ['PHCS', 'BENEFIT HEALTH PLAN', '52682']
+},
+{
+    id: '77507',
+    name: 'UNITEDHEALTHCAREONE NC',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: ['UHC', 'UNITED HEALTHCARE', 'UNITEDHEALTHCARE', 'UNITEDHEALTHCAREONE', 'UHC ONE', 'NC']
+},
+{
+    id: '89601',
+    name: 'GMP EMPLOYERS RETIREE TRUST',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Retiree',
+    financialClass: 'Commercial',
+    synonyms: [
+        'GMP',
+        'GMP EMPLOYERS',
+        'GMP EMPLOYERS RETIREE TRUST',
+        'EMPLOYERS RETIREE TRUST',
+        'RETIREE TRUST'
+    ]
+},
+{
+    id: '77304',
+    name: 'AMERIHEALTH CARITAS DE',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'AMERIHEALTH',
+        'AMERIHEALTH CARITAS',
+        'AMERIHEALTH CARITAS DE',
+        'CARITAS',
+        'DE',
+        'DELAWARE'
+    ]
+},
+{
+    id: '89701',
+    name: 'MODA HEALTH MEDICARE SUPPLEMENT',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicare Supplement',
+    financialClass: 'Medicare',
+    synonyms: [
+        'MODA',
+        'MODA HEALTH',
+        'MODA MEDICARE',
+        'MEDICARE SUPPLEMENT'
+    ]
+},
+{
+    id: '22510',
+    name: 'HEALTHLINK S & S HEALTH 31441',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'HEALTHLINK',
+        'S & S HEALTH',
+        'S AND S HEALTH',
+        'S&S HEALTH',
+        '31441'
+    ]
+},
+{
+    id: '89401',
+    name: 'ALLIANCE COAL HEALTH PLAN',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'ALLIANCE COAL',
+        'ALLIANCE COAL HEALTH PLAN',
+        'COAL HEALTH PLAN'
+    ]
+},
+{
+    id: '89501',
+    name: 'ANTHEM MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'ANTHEM',
+        'ANTHEM MEDICAID',
+        'ANTHEM OHIO MEDICAID',
+        'BCBS',
+        'JQC',
+        'VNV',
+        'XTF',
+        'YRK',
+        'YTD',
+        'ZRA'
+    ]
+},
+{
+    id: '47806',
+    name: 'BJC HEALTHSOLUTIONS YUZU IHS15',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'BJC',
+        'BJC HEALTHSOLUTIONS',
+        'HEALTHSOLUTIONS',
+        'YUZU',
+        'IHS15'
+    ]
+},
+{
+    id: '89301',
+    name: 'KAISER PERMANENTE PLAN NO CAL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'KAISER',
+        'KAISER PERMANENTE',
+        'NORTHERN CALIFORNIA',
+        'NO CAL',
+        'NORCAL'
+    ]
+},
+{
+    id: '25116',
+    name: 'UHC DUAL COMPLETE PPO REF 86050',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'PPO Dual',
+    financialClass: 'Medicare',
+    synonyms: [
+        'UHC',
+        'UNITED HEALTHCARE',
+        'UNITEDHEALTHCARE',
+        'DUAL COMPLETE',
+        'PPO',
+        'REF',
+        '86050'
+    ]
+},
+{
+    id: '21105',
+    name: 'AETNA MCR ADVANTRA',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicare Advantage',
+    financialClass: 'Medicare',
+    synonyms: [
+        'AETNA',
+        'AETNA MEDICARE',
+        'AETNA MCR ADVANTRA',
+        'ADVANTRA',
+        'MEDICARE ADVANTAGE',
+        'AETNA MEDICARE ENHANCED',
+        'AETNA MEDICARE PREMIER',
+        'AETNA MEDICARE PREMIER PLUS',
+        'AETNA MEDICARE ELITE',
+        'AETNA MEDICARE SIGNATURE',
+        'H1608 001',
+        'H1608 013',
+        'H1608 018',
+        'H1608 024',
+        'H1608 050',
+        'H1608 051',
+        'H1608 067',
+        'H1608 071',
+        'H1608 073',
+        'H1608 076',
+        '60054'
+    ]
+},
+{
+    id: '21110',
+    name: 'ABH MCR DUAL IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'MMAI Dual',
+    financialClass: 'Medicare',
+    synonyms: [
+        'AETNA',
+        'AETNA BETTER HEALTH',
+        'AETNA BETTER HEALTH PREMIER PLAN',
+        'ABH',
+        'ABH MCR DUAL IL',
+        'MMAI',
+        'DUAL',
+        'ILLINOIS',
+        'H2506 001',
+        '26337'
+    ]
+},
+{
+    id: '20203',
+    name: 'HEALTHPARTNERS',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'HEALTHPARTNERS',
+        'HEALTH PARTNERS',
+        'HEALTHPARTNERS CLAIMS',
+        'CIGNA'
+    ]
+},
+{
+    id: '21106',
+    name: 'AETNA MEDICARE GOLD',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicare Advantage HMO-POS',
+    financialClass: 'Medicare',
+    synonyms: [
+        'AETNA',
+        'AETNA MEDICARE',
+        'AETNA MEDICARE GOLD',
+        'AETNA MEDICARE GOLD ADVANTAGE',
+        'GOLD ADVANTAGE',
+        'HMO-POS',
+        'H2663 005',
+        'H7301 011'
+    ]
+},
+{
+    id: '63501',
+    name: 'AETNA BETTER HLTH IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Managed Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'AETNA',
+        'AETNA BETTER HEALTH',
+        'AETNA BETTER HEALTH IL',
+        'AETNA BETTER HLTH IL',
+        'ABH IL',
+        'ILLINOIS MEDICAID',
+        'MEDICAID'
+    ]
+},
+{
+    id: '65401',
+    name: 'WELLCARE MERIDIAN DUAL ALIGN IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Dual Medicare',
+    financialClass: 'Medicare',
+    synonyms: [
+        'WELLCARE',
+        'MERIDIAN',
+        'WELLCARE MERIDIAN',
+        'WELLCARE MERIDIAN DUAL ALIGN IL',
+        'MERIDIAN COMPLETE DUAL IL',
+        'MERIDIAN MCR DUAL IL',
+        'DUAL ALIGN',
+        'H6971 001',
+        'MHPIL'
+    ]
+},
+{
+    id: '23602',
+    name: 'MERIDIAN HEALTH IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Managed Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'MERIDIAN',
+        'MERIDIAN HEALTH',
+        'MERIDIAN HEALTH IL',
+        'ILLINOIS MEDICAID',
+        'MEDICAID',
+        'MHPIL'
+    ]
+},
+{
+    id: '64302',
+    name: 'MOLINA MCR DUAL IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'HMO D-SNP',
+    financialClass: 'Medicare',
+    synonyms: [
+        'MOLINA',
+        'MOLINA MEDICARE',
+        'MOLINA MCR DUAL IL',
+        'MOLINA DUAL OPTIONS',
+        'MOLINA MEDICARE COMPLETE CORE PLUS',
+        'DUAL OPTIONS',
+        'HMO D-SNP',
+        'ILLINOIS'
+    ]
+},
+{
+    id: '23901',
+    name: 'MOLINA HEALTHCARE OF IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Managed Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'MOLINA',
+        'MOLINA HEALTHCARE',
+        'MOLINA HEALTHCARE OF IL',
+        'ILLINOIS MEDICAID',
+        'MEDICAID'
+    ]
+},
+{
+    id: '22901',
+    name: 'IDPA',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Illinois Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'IDPA',
+        'ILLINOIS DEPARTMENT OF PUBLIC AID',
+        'ILLINOIS MEDICAID',
+        'STATE OF ILLINOIS MEDICAID',
+        'MEDICAID'
+    ]
+},
+{
+    id: '20501',
+    name: 'ANTHEM TRADITIONAL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Traditional',
+    financialClass: 'Commercial',
+    synonyms: [
+        'ANTHEM',
+        'BCBS',
+        'BLUE CROSS',
+        'ANTHEM TRADITIONAL',
+        'MISSOURI',
+        'A7Y',
+        'IQJ',
+        'M7V',
+        'UEH',
+        'JTL',
+        'RWV',
+        'VNH',
+        'GJL',
+        'SIY',
+        'WAS',
+        'P3R'
+    ]
+},
+{
+    id: '20502',
+    name: 'ANTHEM ACCESS',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'PPO',
+    financialClass: 'Commercial',
+    synonyms: [
+        'ANTHEM',
+        'BCBS',
+        'BLUE CROSS',
+        'ANTHEM ACCESS',
+        'ACCESS PPO',
+        'MISSOURI',
+        'IMF',
+        'FGL',
+        'G9Q',
+        'X5H',
+        'RLL',
+        'V8B',
+        'ZWP',
+        'NRT',
+        'GXL',
+        'TWA'
+    ]
+},
+{
+    id: '20504',
+    name: 'ANTHEM ACCESS CHOICE',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'PPO',
+    financialClass: 'Commercial',
+    synonyms: [
+        'ANTHEM',
+        'BCBS',
+        'BLUE CROSS',
+        'ANTHEM ACCESS CHOICE',
+        'ACCESS CHOICE',
+        'CHOICE PPO',
+        'MISSOURI',
+        'RMX'
+    ]
+},
+{
+    id: '20507',
+    name: 'ANTHEM PREFERRED',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'POS',
+    financialClass: 'Commercial',
+    synonyms: [
+        'ANTHEM',
+        'BCBS',
+        'BLUE CROSS',
+        'ANTHEM PREFERRED',
+        'PREFERRED POS',
+        'MISSOURI',
+        'ADB',
+        'EVM',
+        'IKR',
+        'MBT',
+        'YCF',
+        'B8S',
+        'FEJ',
+        'JWA',
+        'RCI',
+        'VKJ',
+        'ZYY',
+        'KPH',
+        'OZA',
+        'SHZ',
+        'D4T',
+        'HEH',
+        'LRWCM',
+        'T8D',
+        'X6U',
+        'HXF'
+    ]
+},
+{
+    id: '20508',
+    name: 'ANTHEM ALLIANCE MERCY EPO',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'EPO',
+    financialClass: 'Commercial',
+    synonyms: [
+        'ANTHEM',
+        'BCBS',
+        'BLUE CROSS',
+        'ANTHEM ALLIANCE',
+        'ALLIANCE MERCY',
+        'ALLIANCE MERCY EPO',
+        'EPO',
+        'ZFA'
+    ]
+},
+{
+    id: '20514',
+    name: 'ANTHEM PREF OPTIONS MO',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'ANTHEM',
+        'BCBS',
+        'BLUE CROSS',
+        'ANTHEM PREFERRED OPTIONS',
+        'ANTHEM PREF OPTIONS',
+        'PREFERRED OPTIONS',
+        'MISSOURI',
+        'MO',
+        'ADZ',
+        'JWA'
+    ]
+},
+{
+    id: '79805',
+    name: 'ANTHEM NC',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'ANTHEM',
+        'BCBS',
+        'BLUE CROSS',
+        'ANTHEM NC',
+        'NC',
+        'GLP',
+        'KZK',
+        'WNP',
+        'LRA'
+    ]
+},
+{
+    id: '64601',
+    name: 'HLTHY BLUE DUAL MCR',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Dual Medicare',
+    financialClass: 'Medicare',
+    synonyms: [
+        'HEALTHY BLUE',
+        'HLTHY BLUE',
+        'HEALTHY BLUE DUAL',
+        'HEALTHY BLUE DUAL MCR',
+        'HLTHY BLUE DUAL MCR',
+        'DUAL',
+        'MEDICARE',
+        'L9M',
+        'MOMCRWP0'
+    ]
+},
+{
+    id: '20518',
+    name: 'BLUE HPN IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'HPN',
+    financialClass: 'Commercial',
+    synonyms: [
+        'BCBS',
+        'BLUE CROSS',
+        'BLUE HPN',
+        'BLUE HPN IL',
+        'ILLINOIS',
+        'HPN',
+        'H4U'
+    ]
+},
+{
+    id: '57301',
+    name: 'MERCY BEHAVIORAL HEALTH',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Behavioral Health',
+    financialClass: 'Commercial',
+    synonyms: [
+        'MERCY',
+        'MERCY BEHAVIORAL HEALTH',
+        'ESSENCE',
+        'ESSENCE HEALTHCARE',
+        'BEHAVIORAL HEALTH'
+    ]
+},
+{
+    id: '59301',
+    name: 'MH HOME ST SMHK CENPATICO',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Behavioral Health',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'HOME STATE',
+        'HOME STATE HEALTH',
+        'SHOW ME HEALTHY KIDS',
+        'SMHK',
+        'CENPATICO',
+        'MH HOME ST CENPATICO',
+        'MH HOME ST SMHK CENPATICO',
+        'MC+'
+    ]
+},
+{
+    id: '57401',
+    name: 'OPTUM BEHAVIORAL HEALTH MEDICARE',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Behavioral Health',
+    financialClass: 'Medicare',
+    synonyms: [
+        'OPTUM',
+        'OPTUM BEHAVIORAL HEALTH',
+        'OPTUM BEHAVIORAL HEALTH MEDICARE',
+        'UHC',
+        'UNITED HEALTHCARE',
+        'UHC DUAL COMPLETE',
+        'MEDICARE',
+        'BEHAVIORAL HEALTH'
+    ]
+},
+{
+    id: '57501',
+    name: 'OPTUM BEHAVIORAL HEALTH MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Behavioral Health',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'OPTUM',
+        'OPTUM BEHAVIORAL HEALTH',
+        'OPTUM BEHAVIORAL HEALTH MEDICAID',
+        'UHC',
+        'UNITED HEALTHCARE',
+        'UNITEDHEALTHCARE COMMUNITY PLAN',
+        'COMMUNITY PLAN',
+        'MISSOURI',
+        'MEDICAID',
+        'MC+'
+    ]
+},
+{
+    id: '57403',
+    name: 'OPTUM BEHAVIORAL HEALTH MEDICARE 87726',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Behavioral Health',
+    financialClass: 'Medicare',
+    synonyms: [
+        'OPTUM',
+        'OPTUM BEHAVIORAL HEALTH',
+        'OPTUM BEHAVIORAL HEALTH MEDICARE',
+        'UHC',
+        'UNITED HEALTHCARE',
+        'UNITEDHEALTHCARE MEDICARE ADVANTAGE',
+        'MEDICARE ADVANTAGE',
+        '87726'
+    ]
+},
+{
+    id: '25405',
+    name: 'VA COMMUNITY CARE',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'VA Community Care',
+    financialClass: 'Other Government',
+    synonyms: [
+        'VA',
+        'VETERANS',
+        'VETERANS AFFAIRS',
+        'VA COMMUNITY CARE',
+        'COMMUNITY CARE'
+    ]
+},
+{
+    id: '20530',
+    name: 'BLUE IL HMO',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'HMO',
+    financialClass: 'Commercial',
+    synonyms: [
+        'BCBS',
+        'BLUE CROSS',
+        'BLUE SHIELD',
+        'BLUE IL HMO',
+        'ILLINOIS',
+        'HMO',
+        'XOH'
+    ]
+},
+{
+    id: '74804',
+    name: 'AETNA SHORT TERM MEDICAL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Short Term Medical',
+    financialClass: 'Commercial',
+    synonyms: [
+        'AETNA',
+        'AETNA SHORT TERM',
+        'AETNA SHORT TERM MEDICAL',
+        'MERITAIN',
+        'MERITAIN SHORT TERM MEDICAL',
+        '41124'
+    ]
+},
+{
+    id: '64403',
+    name: 'AMBETTER OF AR NC',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'AMBETTER',
+        'AMBETTER OF AR',
+        'ARKANSAS',
+        'AR',
+        'NC'
+    ]
+},
+{
+    id: '58301',
+    name: 'AMBETTER HOME ST HEALTH',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'AMBETTER',
+        'HOME STATE',
+        'HOME STATE HEALTH',
+        'AMBETTER HOME STATE',
+        'AMBETTER HOME ST HEALTH'
+    ]
+},
+{
+    id: '66101',
+    name: 'MEDICA SSM FIRST HEALTH',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'MEDICA',
+        'SSM',
+        'FIRST HEALTH',
+        'MEDICA SSM',
+        'MEDICA SSM FIRST HEALTH',
+        '71890'
+    ]
+},
+{
+    id: '48001',
+    name: 'POINT C MERCY',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'POINT C',
+        'POINT C MERCY',
+        'MEDPAY',
+        'MED-PAY',
+        'ST JOHNS HEALTH SYSTEM',
+        "ST JOHN'S HEALTH SYSTEM",
+        'IHS29'
+    ]
+},
+{
+    id: '20205',
+    name: 'CIGNA BJC FLEX OR HDHP',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Open Access Plus',
+    financialClass: 'Commercial',
+    synonyms: [
+        'CIGNA',
+        'BJC',
+        'BJC HEALTHCARE',
+        'CIGNA BJC',
+        'CIGNA BJC EMPLOYEE',
+        'CIGNA BJC FLEX',
+        'CIGNA BJC FLEX OR HDHP',
+        'FLEX',
+        'HDHP',
+        'OPEN ACCESS PLUS'
+    ]
+},
+{
+    id: '20218',
+    name: 'CIGNA BJC SELECT PLAN',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Open Access Plus',
+    financialClass: 'Commercial',
+    synonyms: [
+        'CIGNA',
+        'BJC',
+        'BJC HEALTHCARE',
+        'CIGNA BJC',
+        'CIGNA BJC SELECT',
+        'CIGNA BJC SELECT PLAN',
+        'CIGNA BJC SIGNATURE',
+        'SELECT',
+        'OPEN ACCESS PLUS',
+        'OPEN ACCESS PLUS IN NETWORK'
+    ]
+},
+{
+    id: '67901',
+    name: 'AITHER HEALTH PHCS',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'PHCS',
+    financialClass: 'Commercial',
+    synonyms: [
+        'AITHER',
+        'AITHER HEALTH',
+        'AITHER HEALTH PHCS',
+        'PHCS',
+        '64884',
+        'FIRST HEALTH'
+    ]
+},
+{
+    id: '86401',
+    name: 'AMERICAN HEALTH ADVANTAGE MISSOURI MDCR',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicare',
+    financialClass: 'Medicare',
+    synonyms: [
+        'AMERICAN HEALTH ADVANTAGE',
+        'AMERICAN HEALTH ADVANTAGE MISSOURI',
+        'MISSOURI',
+        'MO',
+        'MDCR',
+        'MEDICARE'
+    ]
+},
+{
+    id: '86501',
+    name: 'OSCAR HEALTH NC',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'OSCAR',
+        'OSCAR HEALTH',
+        'OSCAR HEALTH NC',
+        'NC'
+    ]
+},
+{
+    id: '87701',
+    name: 'HEALTHSPRING MEDICARE',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicare Advantage',
+    financialClass: 'Medicare',
+    synonyms: [
+        'HEALTHSPRING',
+        'HEALTHSPRING MEDICARE',
+        'HEALTHSPRING MEDICARE ADVANTAGE',
+        'MEDICARE ADVANTAGE'
+    ]
+},
+{
+    id: '20006',
+    name: 'AETNA COVENTRY STATE OF IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'AETNA',
+        'AETNA LOCAL BEST',
+        'LOCAL BEST',
+        'STATE OF ILLINOIS',
+        'STATE OF IL',
+        'AETNA COVENTRY',
+        'AETNA COVENTRY STATE OF IL',
+        'LGHP',
+        'LCHP',
+        'CIP',
+        'CCHP',
+        'QCHP',
+        '285662',
+        '285650',
+        '285658',
+        '285654',
+        '60054'
+    ]
+},
+{
+    id: '23401',
+    name: 'MEDICAID GENERIC',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'MEDICAID',
+        'MEDICAID GENERIC',
+        'GENERIC MEDICAID',
+        'STATE MEDICAID',
+        'MEDICAID NOT LISTED'
+    ]
+},
+{
+    id: '56401',
+    name: 'MANAGED MEDICAID GENERIC',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Managed Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'MEDICAID',
+        'MANAGED MEDICAID',
+        'MANAGED MEDICAID GENERIC',
+        'GENERIC MANAGED MEDICAID',
+        'MANAGED CARE MEDICAID NOT LISTED'
+    ]
+},
+{
+    id: '52701',
+    name: 'ALABAMA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['ALABAMA MEDICAID', 'AL MEDICAID', 'ALABAMA', 'AL']
+},
+{
+    id: '48901',
+    name: 'ARKANSAS MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['ARKANSAS MEDICAID', 'AR MEDICAID', 'ARKANSAS', 'AR']
+},
+{
+    id: '53001',
+    name: 'ARIZONA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['ARIZONA MEDICAID', 'AZ MEDICAID', 'ARIZONA', 'AZ', 'AHCCCS']
+},
+{
+    id: '48301',
+    name: 'CALIFORNIA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['CALIFORNIA MEDICAID', 'CA MEDICAID', 'CALIFORNIA', 'CA', 'MEDI-CAL']
+},
+{
+    id: '48401',
+    name: 'COLORADO MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['COLORADO MEDICAID', 'CO MEDICAID', 'COLORADO', 'CO']
+},
+{
+    id: '48501',
+    name: 'FLORIDA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['FLORIDA MEDICAID', 'FL MEDICAID', 'FLORIDA', 'FL']
+},
+{
+    id: '48601',
+    name: 'GEORGIA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['GEORGIA MEDICAID', 'GA MEDICAID', 'GEORGIA', 'GA']
+},
+{
+    id: '58401',
+    name: 'IDAHO MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['IDAHO MEDICAID', 'ID MEDICAID', 'IDAHO', 'ID']
+},
+{
+    id: '49001',
+    name: 'INDIANA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['INDIANA MEDICAID', 'IN MEDICAID', 'INDIANA', 'IN']
+},
+{
+    id: '48701',
+    name: 'IOWA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['IOWA MEDICAID', 'IA MEDICAID', 'IOWA', 'IA']
+},
+{
+    id: '49101',
+    name: 'KANSAS MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['KANSAS MEDICAID', 'KS MEDICAID', 'KANSAS', 'KS', 'KANCARE']
+},
+{
+    id: '52801',
+    name: 'KENTUCKY MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['KENTUCKY MEDICAID', 'KY MEDICAID', 'KENTUCKY', 'KY']
+},
+{
+    id: '52901',
+    name: 'LOUISIANA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['LOUISIANA MEDICAID', 'LA MEDICAID', 'LOUISIANA', 'LA']
+},
+{
+    id: '53101',
+    name: 'MAINE MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['MAINE MEDICAID', 'ME MEDICAID', 'MAINE', 'ME', 'MAINECARE']
+},
+{
+    id: '54101',
+    name: 'MICHIGAN MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['MICHIGAN MEDICAID', 'MI MEDICAID', 'MICHIGAN', 'MI']
+},
+{
+    id: '54201',
+    name: 'MINNESOTA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['MINNESOTA MEDICAID', 'MN MEDICAID', 'MINNESOTA', 'MN']
+},
+{
+    id: '48801',
+    name: 'MISSISSIPPI MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['MISSISSIPPI MEDICAID', 'MS MEDICAID', 'MISSISSIPPI', 'MS']
+},
+{
+    id: '53201',
+    name: 'MONTANA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['MONTANA MEDICAID', 'MT MEDICAID', 'MONTANA', 'MT']
+},
+{
+    id: '54301',
+    name: 'NEBRASKA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['NEBRASKA MEDICAID', 'NE MEDICAID', 'NEBRASKA', 'NE']
+},
+{
+    id: '53301',
+    name: 'NEVADA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['NEVADA MEDICAID', 'NV MEDICAID', 'NEVADA', 'NV']
+},
+{
+    id: '53401',
+    name: 'NEW JERSEY MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['NEW JERSEY MEDICAID', 'NJ MEDICAID', 'NEW JERSEY', 'NJ']
+},
+{
+    id: '53501',
+    name: 'NEW MEXICO MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['NEW MEXICO MEDICAID', 'NM MEDICAID', 'NEW MEXICO', 'NM']
+},
+{
+    id: '54401',
+    name: 'NEW YORK MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['NEW YORK MEDICAID', 'NY MEDICAID', 'NEW YORK', 'NY']
+},
+{
+    id: '53601',
+    name: 'NORTH CAROLINA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['NORTH CAROLINA MEDICAID', 'NC MEDICAID', 'NORTH CAROLINA', 'NC']
+},
+{
+    id: '65101',
+    name: 'NORTH DAKOTA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['NORTH DAKOTA MEDICAID', 'ND MEDICAID', 'NORTH DAKOTA', 'ND']
+},
+{
+    id: '49201',
+    name: 'OHIO MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['OHIO MEDICAID', 'OH MEDICAID', 'OHIO', 'OH']
+},
+{
+    id: '49301',
+    name: 'OKLAHOMA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['OKLAHOMA MEDICAID', 'OK MEDICAID', 'OKLAHOMA', 'OK', 'SOONERCARE']
+},
+{
+    id: '76401',
+    name: 'OREGON MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['OREGON MEDICAID', 'OR MEDICAID', 'OREGON', 'OR']
+},
+{
+    id: '58501',
+    name: 'PENNSYLVANIA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['PENNSYLVANIA MEDICAID', 'PA MEDICAID', 'PENNSYLVANIA', 'PA']
+},
+{
+    id: '53701',
+    name: 'SOUTH CAROLINA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['SOUTH CAROLINA MEDICAID', 'SC MEDICAID', 'SOUTH CAROLINA', 'SC']
+},
+{
+    id: '76301',
+    name: 'SOUTH DAKOTA MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['SOUTH DAKOTA MEDICAID', 'SD MEDICAID', 'SOUTH DAKOTA', 'SD']
+},
+{
+    id: '54501',
+    name: 'TEXAS MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['TEXAS MEDICAID', 'TX MEDICAID', 'TEXAS', 'TX']
+},
+{
+    id: '58601',
+    name: 'UTAH MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['UTAH MEDICAID', 'UT MEDICAID', 'UTAH', 'UT']
+},
+{
+    id: '79201',
+    name: 'VERMONT MEDICAID',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: ['VERMONT MEDICAID', 'VT MEDICAID', 'VERMONT', 'VT']
+},
+{
+    id: '68601',
+    name: 'HUMANA MEDICAID IL',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Managed Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'HUMANA',
+        'HUMANA MEDICAID',
+        'HUMANA MEDICAID IL',
+        'HUMANA MEDICAID MMAI',
+        'ILLINOIS',
+        'IL'
+    ]
+},
+{
+    id: '22513',
+    name: 'HEALTHLINK YUZU HEALTH IHS15',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: '',
+    financialClass: 'Commercial',
+    synonyms: [
+        'HEALTHLINK',
+        'YUZU',
+        'YUZU HEALTH',
+        'HEALTHLINK YUZU HEALTH',
+        'IHS15'
+    ]
+},
+{
+    id: '21202',
+    name: 'UHC MEDICAID OOS',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Managed Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'UHC',
+        'UNITED HEALTHCARE',
+        'UNITEDHEALTHCARE',
+        'UHC MEDICAID',
+        'UHC MEDICAID OOS',
+        'COMMUNITY PLAN',
+        'OUT OF STATE',
+        'OOS',
+        '87726',
+        'AZHCCCS',
+        'FLMMA',
+        'IAQHP',
+        'KYCD',
+        'MIPHCP',
+        'NESHAD',
+        'TXSTPL'
+    ]
+},
+{
+    id: '60002',
+    name: 'UHC COMM PLAN KS',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Managed Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'UHC',
+        'UNITED HEALTHCARE',
+        'UNITEDHEALTHCARE',
+        'UHC COMMUNITY PLAN',
+        'UHC COMM PLAN KS',
+        'KANSAS',
+        'KS',
+        'KANCARE',
+        '96385',
+        'KSKCMD'
+    ]
+},
+{
+    id: '21204',
+    name: 'UHC MEDICAID COMMUNITY CARE OH',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Managed Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'UHC',
+        'UNITED HEALTHCARE',
+        'UNITEDHEALTHCARE',
+        'UHC MEDICAID',
+        'COMMUNITY CARE',
+        'OHIO',
+        'OH',
+        '87726',
+        'OHPHCP'
+    ]
+},
+{
+    id: '59802',
+    name: 'UHC COMM PLAN TN',
+    address: 'PO BOX 981107, EL PASO, TX 79998-1107',
+    productType: 'Managed Medicaid',
+    financialClass: 'Medicaid',
+    synonyms: [
+        'UHC',
+        'UNITED HEALTHCARE',
+        'UNITEDHEALTHCARE',
+        'UHC COMMUNITY PLAN',
+        'UHC COMM PLAN TN',
+        'TENNESSEE',
+        'TN',
+        'TENNCARE',
+        '95378',
+        'TNTNCARE'
+    ]
+}
+];

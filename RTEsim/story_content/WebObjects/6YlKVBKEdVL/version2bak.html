@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Coverage Search</title>
+      <style>
+      body{
+    font-family:Segoe UI,Tahoma,sans-serif;
+    background:#dfe7e5;
+    margin:0;
+    padding:0;
+    color:#333;
+    font-size:12px;
+}
+
+.coverage-window{
+    width:800px;
+    height:450px;
+    background:#eef4f2;
+    border:1px solid #148474;
+    display:flex;
+    flex-direction:column;
+    margin:0 auto;
+}
+
+.titlebar{
+    height:32px;
+    background:#eeeeee;
+    border-bottom:1px solid #c8d2cf;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+    font-size:14px;
+    color:#13766f;
+    font-weight:500;
+}
+
+.search-section{
+    padding:6px 14px;
+}
+
+.search-section h2{
+    color:#13766f;
+    font-size:14px;
+    font-weight:600;
+    margin:0 0 6px 0;
+    border-bottom:1px solid #bcc9c6;
+    padding-bottom:4px;
+}
+
+.search-modes{
+    margin-bottom:6px;
+}
+
+.search-modes label{
+    margin-right:14px;
+    font-size:12px;
+}
+
+.search-row{
+    display:flex;
+    align-items:center;
+    gap:0;
+}
+
+.search-row input{
+    height:22px;
+    border:1px solid #7aa7d8;
+    box-shadow:0 0 3px rgba(90,140,210,.5);
+    font-size:12px;
+    padding:0 6px;
+    flex:1;
+}
+
+.search-row input::placeholder{
+    color:#8a97a3;
+    font-style:normal;
+}
+
+#searchBtn{
+    width:26px;
+    height:24px;
+    border:1px solid #b5bfbc;
+    background:#edf1f0;
+    cursor:pointer;
+}
+
+.search-hint{
+    color:#13766f;
+    font-size:11px;
+    font-weight:600;
+    margin:4px 0 0 2px;
+}
+
+.help-block{
+    margin:8px 14px 0;
+}
+
+.help-block .help-title{
+    color:#355668;
+    font-size:13px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.help-block .help-body{
+    color:#667;
+    font-size:11px;
+    margin:3px 0 0 18px;
+}
+
+.filters{
+    margin:5px 14px 8px;
+    background:white;
+    border:1px solid #c7d1cf;
+    height:30px;
+    display:flex;
+    align-items:center;
+    padding:0 12px;
+    font-size:12px;
+    font-weight:600;
+    color:#355668;
+}
+
+.column-header{
+    display:grid;
+    grid-template-columns:2.2fr 1fr 1fr 1fr;
+    font-size:12px;
+    font-weight:700;
+    padding:0 18px 5px;
+    border-bottom:1px solid #c2cbc9;
+}
+
+.results{
+    overflow-y:auto;
+    flex:1;
+    padding:0 8px;
+}
+
+.empty-state{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#13766f;
+    padding:14px;
+}
+
+.empty-state svg{
+    width:70px;
+    height:70px;
+    opacity:.5;
+    margin-bottom:12px;
+}
+
+.empty-state .empty-msg{
+    font-size:13px;
+    max-width:460px;
+}
+
+.coverage-card{
+    background:#f7f7f7;
+    border:1px solid #cbd3d1;
+    border-radius:4px;
+    margin-bottom:4px;
+    box-shadow:none;
+}
+
+.coverage-card.selected{
+    background:#b6dfd5;
+    border-color:#78bdb0;
+}
+
+.coverage-grid{
+    display:grid;
+    grid-template-columns:2.2fr 1fr 1fr 1fr;
+    padding:6px 12px;
+    align-items:start;
+}
+
+.payer-name{
+    color:#13766f;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:2px;
+}
+
+.plan-section{
+    padding:4px 12px 6px;
+    border-top:1px solid #cfd7d5;
+}
+
+.plan-section::before{
+    content:"Relevant Plans";
+    display:block;
+    color:#13766f;
+    margin-bottom:4px;
+    font-size:11px;
+}
+
+.plan-pill{
+    display:inline-block;
+    background:#dde8e5;
+    border:1px solid #b7c3bf;
+    border-radius:16px;
+    padding:2px 10px;
+    margin-right:4px;
+    margin-bottom:3px;
+    font-size:11px;
+}
+
+.scan-btn{
+    height:24px;
+    margin-left:8px;
+    border:1px solid #b7c2c0;
+    background:#f5f5f5;
+    padding:0 8px;
+    cursor:pointer;
+    font-size:11px;
+}
+
+.info-icon{
+    margin-left:8px;
+    color:#667;
+    font-size:13px;
+}
+
+.footer-bar{
+    height:40px;
+    border-top:1px solid #c7d1cf;
+    background:#dfe7e5;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+}
+
+.footer-right{
+    display:flex;
+    gap:8px;
+}
+
+.footer-btn{
+    height:26px;
+    min-width:90px;
+    border:1px solid #b9c3c1;
+    background:#f4f4f4;
+    color:#444;
+    font-size:12px;
+    cursor:pointer;
+}
+
+.footer-btn:hover{
+    background:#fafafa;
+}
+
+.footer-btn.accept{
+    color:#1f7a40;
+    font-weight:600;
+}
+
+.footer-btn.cancel{
+    color:#b13a32;
+    font-weight:600;
+}
+
+.footer-btn.secondary{
+    min-width:160px;
+}
+
+.footer-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+    </style>
+</head>
+
+<body>
+
+    <div class="coverage-window">
+
+        <div class="titlebar">
+            <span>Add a New or Existing Coverage</span>
+            <span>&#10005;</span>
+        </div>
+
+        <div class="search-section">
+            <h2>&#10037; Create New Coverage</h2>
+<div class="search-section">
+
+     <div class="search-modes">
+        <label>
+            <input type="radio" name="searchType" value="payer" checked>
+            Payer Search
+        </label>
+
+        <label>
+            <input type="radio" name="searchType" value="plan">
+            Plan Search
+        </label>
+    </div>
+
+<div class="search-row">
+    <input id="searchBox" placeholder="Search by payer, plan, employer group, or synonym">
+    <button id="searchBtn">&#128269;</button>
+    <button class="scan-btn">&#11013; Go Back to Scan Instead</button>
+    <span class="info-icon">&#9432;</span>
+</div>
+
+<div class="search-hint">
+    Scan insurance barcode, or swipe insurance card, or enter a search term
+</div>
+
+<div class="help-block">
+    <div class="help-title">&#9432; Help</div>
+    <div class="help-body">
+        Enter a payor name, plan name, or keyword. Example: "UHC"
+    </div>
+</div>
+
+</div>
+        </div>
+
+        <div id="columnHeader" class="column-header" style="display:none;">
+            <div>Address</div>
+            <div>Product Type</div>
+            <div>Financial Class</div>
+            <div>Synonym</div>
+        </div>
+
+        <div id="resultsContainer" class="results"></div>
+
+		<div class="footer-bar">
+
+    <button id="showExistingBtn" class="footer-btn secondary">
+        &#11013; Show Existing Coverages
+    </button>
+
+    <div class="footer-right">
+
+		<button id="acceptBtn" class="footer-btn accept" disabled>
+				&#10003; Accept
+		</button>
+        <button id="cancelBtn" class="footer-btn cancel">
+            &#10005; Cancel
+        </button>
+
+    </div>
+
+</div>
+
+    </div>
+
+    <script>
+
+const coverageData = 
+[
+  {
+    "id": "10001",
+    "name": "AETNA",
+    "payerId": "100",
+    "payerName": "AETNA",
+    "planNumber": "10001",
+    "planName": "AETNA",
+    "address": "PO BOX 981107, EL PASO, TX 79998-1107",
+    "productType": "BC OTHER",
+    "financialClass": "Commercial",
+    "synonyms": ["AET", "ZZZE-VERIFIED", "ZZZEVERIFIED"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "10002",
+    "name": "AETNA MEDICARE ADVANTAGE",
+    "payerId": "100",
+    "payerName": "AETNA",
+    "planNumber": "10002",
+    "planName": "AETNA MEDICARE ADVANTAGE",
+    "address": "PO BOX 981107, EL PASO, TX 79998-1107",
+    "productType": "CIGNA HMO/PPO",
+    "financialClass": "Commercial",
+    "synonyms": ["AET", "ZZZE-VERIFIED", "ZZZEVERIFIED"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "10003",
+    "name": "AETNA - GENERIC",
+    "payerId": "100",
+    "payerName": "AETNA",
+    "planNumber": "10003",
+    "planName": "AETNA - GENERIC",
+    "address": "PO BOX 981107, EL PASO, TX 79998-1107",
+    "productType": "BC OTHER",
+    "financialClass": "Commercial",
+    "synonyms": ["AET", "ZZZE-VERIFIED", "ZZZEVERIFIED"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "10004",
+    "name": "MEDICARE RX ESSENTIALS",
+    "payerId": "100",
+    "payerName": "AETNA",
+    "planNumber": "10004",
+    "planName": "MEDICARE RX ESSENTIALS",
+    "address": "",
+    "productType": "CIGNA HMO/PPO",
+    "financialClass": "Commercial",
+    "synonyms": ["AET", "ZZZE-VERIFIED", "ZZZEVERIFIED"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "10005",
+    "name": "MEDICARE RX PLUS",
+    "payerId": "100",
+    "payerName": "AETNA",
+    "planNumber": "10005",
+    "planName": "MEDICARE RX PLUS",
+    "address": "PO BOX 981107, EL PASO, TX 79998-1107",
+    "productType": "CIGNA HMO/PPO",
+    "financialClass": "Commercial",
+    "synonyms": ["AET", "ZZZE-VERIFIED", "ZZZEVERIFIED"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "10006",
+    "name": "MEDICARE RX PREMIER",
+    "payerId": "100",
+    "payerName": "AETNA",
+    "planNumber": "10006",
+    "planName": "MEDICARE RX PREMIER",
+    "address": "PO BOX 981107, EL PASO, TX 79998-1107",
+    "productType": "CIGNA HMO/PPO",
+    "financialClass": "Commercial",
+    "synonyms": ["AET", "ZZZE-VERIFIED", "ZZZEVERIFIED"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "19",
+    "name": "AETNA GENERIC",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "19",
+    "planName": "AETNA GENERIC",
+    "address": "",
+    "productType": "COMMERCIAL",
+    "financialClass": "Managed Care",
+    "synonyms": ["GENERIC", "AETNA CONTRACTED GEN"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20001",
+    "name": "AETNA US HEALTHCARE PPO",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20001",
+    "planName": "AETNA US HEALTHCARE PPO",
+    "address": "PO BOX 981106, EL PASO, TX 79998-1106",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["60054", "PO BOX 981106", "981106", "AETNA"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20002",
+    "name": "AETNA MC NAP",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20002",
+    "planName": "AETNA MC NAP",
+    "address": "PO BOX 981106, EL PASO, TX 79998-1106",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["60054", "PO BOX 981106", "981106", "AETNA"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20003",
+    "name": "AETNA US HEALTHCARE HMO",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20003",
+    "planName": "AETNA US HEALTHCARE HMO",
+    "address": "PO BOX 981106, EL PASO, TX 79998-1106",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["60054", "PO BOX 981106", "981106", "AETNA"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20005",
+    "name": "ASSURANT HEALTH",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20005",
+    "planName": "ASSURANT HEALTH",
+    "address": "PO BOX 91604, LUBBOCK, TX 79490-0000",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["60054", "AETNA STUDENT HEALTH"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20006",
+    "name": "AETNA COVENTRY STATE OF IL",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20006",
+    "planName": "AETNA COVENTRY STATE OF IL",
+    "address": "PO BOX 981106, EL PASO, TX 79998-1106",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 981106", "981106", "60054", "ACCES"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20020",
+    "name": "AETNA COVENTRY PPO",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20020",
+    "planName": "AETNA COVENTRY PPO",
+    "address": "PO BOX 14079, LEXINGTON, KY 40512-4079",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["60054", "PO BOX 14079", "14079", "COVENTRY"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20021",
+    "name": "TRANSPLANT AETNA",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20021",
+    "planName": "TRANSPLANT AETNA",
+    "address": "PO BOX 981291 ATTN SPECIAL CASE CUSTOMER",
+    "productType": "GLOBAL/TRANSPLANT",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 981291", "981291", "ATTN SPECIAL CASE CUSTOMER"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20026",
+    "name": "AETNA SARAH B LINCOLN",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20026",
+    "planName": "AETNA SARAH B LINCOLN",
+    "address": "PO BOX 981106, EL PASO, TX 79998-1106",
+    "productType": "BJC EMPLOYEE HEALTH PLANS",
+    "financialClass": "Managed Care",
+    "synonyms": ["TERM 12/31/2018", "981106", "60054", "SARAH B LINCOLN"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20027",
+    "name": "AETNA SIGNATURE CORESOURCE",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20027",
+    "planName": "AETNA SIGNATURE CORESOURCE",
+    "address": "PO BOX 767, SAINT CLAIR SHORES, MI 48080",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 767", "767", "38225", "CORESOURCE"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20028",
+    "name": "AETNA SIG 61425",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20028",
+    "planName": "AETNA SIG 61425",
+    "address": "PO BOX 2942, CLINTON, IA 52733-2942",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 2942", "2942", "61425", "STARMARK"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20029",
+    "name": "AETNA SIGNATURE HEALTHSCOPE",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20029",
+    "planName": "AETNA SIGNATURE HEALTHSCOPE",
+    "address": "PO BOX 16203, LUBBOCK, TX 79490-6203",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 16203", "16203", "71063", "HEALTHSCOPE"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20030",
+    "name": "AETNA SIGNATURE",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20030",
+    "planName": "AETNA SIGNATURE",
+    "address": "",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": [],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20032",
+    "name": "FIRST HEALTH GENERIC",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20032",
+    "planName": "FIRST HEALTH GENERIC",
+    "address": "",
+    "productType": "MANAGED CARE OTHER",
+    "financialClass": "Managed Care",
+    "synonyms": ["GENERIC", "AETNA FIRST HEALTH GENERIC"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20033",
+    "name": "FOREIGN SERVICES BENEFIT PLAN",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20033",
+    "planName": "FOREIGN SERVICES BENEFIT PLAN",
+    "address": "1620 L STREET NW SUITE 800, WASHINGTON, DC",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["1716 N STREET NW", "1716", "60054", "FSBP"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20036",
+    "name": "TRANSPLANT COVENTRY AFFILIATE",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20036",
+    "planName": "TRANSPLANT COVENTRY AFFILIATE",
+    "address": "PO BOX 7109, CORBIN, KY 40742-7109",
+    "productType": "GLOBAL/TRANSPLANT",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 7109", "7109", "25133", "LOCAL BEST"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20037",
+    "name": "TRANSPLANT AETNA MERITAIN",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20037",
+    "planName": "TRANSPLANT AETNA MERITAIN",
+    "address": "PO BOX 981291 ATTN SPECIAL CASE, EL PASO, TX",
+    "productType": "GLOBAL/TRANSPLANT",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 981291", "981291", "ATTN SPECIAL CASE", "MERITAIN"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20038",
+    "name": "TRANSPLANT AETNA COFINITY IOE",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20038",
+    "planName": "TRANSPLANT AETNA COFINITY IOE",
+    "address": "PO BOX 981291 ATTN SPECIAL CASES, EL PASO, TX",
+    "productType": "GLOBAL/TRANSPLANT",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 981291", "981291", "ATTN SPECIAL CASES", "COFINITY"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20039",
+    "name": "TRANSPLANT AETNA SIGNATURE",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20039",
+    "planName": "TRANSPLANT AETNA SIGNATURE",
+    "address": "PO BOX 981291 ATTN SPECIAL CASE CUSTOMER",
+    "productType": "GLOBAL/TRANSPLANT",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 981291", "981291", "ATTN SPECIAL CASE CUSTOMER", "SIGNATURE"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20041",
+    "name": "AETNA SIG 38308",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20041",
+    "planName": "AETNA SIG 38308",
+    "address": "1205 WINDHAM PARKWAY, ROMEOVILLE, IL 60446",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["1205 WINDHAM PARKWAY", "38308", "CHR"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20042",
+    "name": "AETNA SIG 36149",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20042",
+    "planName": "AETNA SIG 36149",
+    "address": "PO BOX 2920, MILWAUKEE, WI 53201-0582",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 2920", "2920", "36149", "AETNA SIG"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20043",
+    "name": "AETNA SIG 75068",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20043",
+    "planName": "AETNA SIG 75068",
+    "address": "PO BOX 909786, CHICAGO, IL 60690",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 909786", "909786", "75068", "PPO", "AETNA"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20044",
+    "name": "AETNA SIG 75261",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20044",
+    "planName": "AETNA SIG 75261",
+    "address": "WEBTPA PO BOX 99906, GRAPEVINE, TX 76099-9706",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["WEBTPA", "PO BOX 99906", "99906", "75261"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20045",
+    "name": "AETNA WHOLE NCON",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20045",
+    "planName": "AETNA WHOLE NCON",
+    "address": "PO BOX 981106, EL PASO, TX 79998-1106",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 981106", "981106", "60054", "COXHEALTH"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20046",
+    "name": "AETNA SIG 41147",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20046",
+    "planName": "AETNA SIG 41147",
+    "address": "GRAVIE ADMINISTRATIVE SERVICES PO BOX 59212",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 59212", "59212", "41147", "GRAVIE"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20047",
+    "name": "AETNA SIG 74238",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20047",
+    "planName": "AETNA SIG 74238",
+    "address": "BOON-CHAPMAN PO BOX 9201, AUSTIN, TX 78766",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["BOON-CHAPMAN", "PO BOX 9201", "9201", "74238"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20049",
+    "name": "AITHER FIRST HEALTH",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20049",
+    "planName": "AITHER FIRST HEALTH",
+    "address": "PO BOX 211440, EAGAN, MN 55121",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["211440", "PO BOX 211440", "64884", "FIRST HEALTH"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20050",
+    "name": "MEDCOST FIRST HEALTH",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20050",
+    "planName": "MEDCOST FIRST HEALTH",
+    "address": "PO BOX 25307, WINSTON SALEM, NC 27114-5307",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["25307", "PO BOX 25307", "56162", "MEDCOST"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20051",
+    "name": "FIRST HEALTH QUAL CHOICE",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20051",
+    "planName": "FIRST HEALTH QUAL CHOICE",
+    "address": "PO BOX 25610, LITTLE ROCK, AR 72221",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 25610", "25610", "35174", "QUALCHOICE"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20052",
+    "name": "FIRST HEALTH COORD BENEFIT PLAN",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20052",
+    "planName": "FIRST HEALTH COORD BENEFIT PLAN",
+    "address": "PO BOX 21474, EAGAN, MN 55121",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 21474", "21474", "14829", "COORDINATED BENEFIT PLAN"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20053",
+    "name": "MERITAIN DISTRICT 9",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20053",
+    "planName": "MERITAIN DISTRICT 9",
+    "address": "PO BOX 853921, RICHARDSON, TX 75085-3921",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 853921", "853921", "41124", "DISTRICT 9", "MERITAIN"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20054",
+    "name": "FIRST HEALTH COX HEALTH PLAN",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20054",
+    "planName": "FIRST HEALTH COX HEALTH PLAN",
+    "address": "PO BOX 5750, SPRINGFIELD, MO 65801",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 5750", "5750", "00019", "COX", "COX HEALTH PLAN"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20056",
+    "name": "FIRST HEALTH HEALTHSMART",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20056",
+    "planName": "FIRST HEALTH HEALTHSMART",
+    "address": "PO BOX 93670, LUBBOCK, TX 79493",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 93670", "93670", "37283", "HEALTHSMART"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20057",
+    "name": "FIRST HEALTH IMG GLOBAL",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20057",
+    "planName": "FIRST HEALTH IMG GLOBAL",
+    "address": "PO BOX 550, FARMINGTON HILLS, MI 48332-0500",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 550", "550", "IMGIN", "AMERICORP", "IMG GLOBAL"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20058",
+    "name": "FIRST HEALTH MERCY BENEFITS ADMIN",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20058",
+    "planName": "FIRST HEALTH MERCY BENEFITS ADMIN",
+    "address": "PO BOX 211197, EAGAN, MN 55121",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 211197", "211197", "73067", "QT", "QUALCHOICE", "MERCY BENEFITS ADMIN"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20060",
+    "name": "AETNA SIG 06603",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20060",
+    "planName": "AETNA SIG 06603",
+    "address": "GEHA-ASA PO BOX 981707, EL PASO, TX 79998-1707",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 981707", "981707", "06603", "GEHA-ASA"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20076",
+    "name": "AETNA SIG GRV01",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20076",
+    "planName": "AETNA SIG GRV01",
+    "address": "PO BOX 211543, EAGAN, MN 55121",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 211543", "211543", "GRV01", "GRAVIE"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20083",
+    "name": "FIRST HLTH KAISER 91051",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20083",
+    "planName": "FIRST HLTH KAISER 91051",
+    "address": "PO BOX 30766, SALT LAKE CITY, UT 84130-0766",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 30766", "30766", "91051", "KAISER"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20085",
+    "name": "AETNA SIG CAPHP",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20085",
+    "planName": "AETNA SIG CAPHP",
+    "address": "PO BOX 21548, EAGAN, MN 55121",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 21548", "21548", "CAPHP", "SHOW ME"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20087",
+    "name": "AETNA SIG 13162",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20087",
+    "planName": "AETNA SIG 13162",
+    "address": "PO BOX 1007, NEW YORK, NY 10108-1007",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 1007", "1007", "13162", "1199SEIU"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20080",
+    "name": "FIRST HEALTH ULTRABENEFITS 41206",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20080",
+    "planName": "FIRST HEALTH ULTRABENEFITS 41206",
+    "address": "22 ELM ST STE 110, WORCESTER, MA 01608",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["22 ELM", "41206", "ULTRABENEFITS"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20097",
+    "name": "AETNA HEALTH 2 BUSINESS 55213",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20097",
+    "planName": "AETNA HEALTH 2 BUSINESS 55213",
+    "address": "PO BOX 21599, EAGAN, MN 55121",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 21599", "21599", "HEALTH2BUSINESS", "55213"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "20099",
+    "name": "HIGH COST SVC AETNA",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "20099",
+    "planName": "HIGH COST SVC AETNA",
+    "address": "PO BOX 981291, EL PASO, TX 79998-1291",
+    "productType": "GLOBAL/TRANSPLANT",
+    "financialClass": "Managed Care",
+    "synonyms": [],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "200100",
+    "name": "FIRST HEALTH FIRST CHOICE HLTH 91131",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "200100",
+    "planName": "FIRST HEALTH FIRST CHOICE HLTH 91131",
+    "address": "PO BOX 12659, SEATTLE, WA 98111",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 12659", "12659", "91131", "FIRST CHOICE"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "200101",
+    "name": "AETNA SIG 31441",
+    "payerId": "200",
+    "payerName": "AETNA",
+    "planNumber": "200101",
+    "planName": "AETNA SIG 31441",
+    "address": "PO BOX 46511, CINCINNATI, OH 45246-0511",
+    "productType": "AETNA HMO/PPO",
+    "financialClass": "Managed Care",
+    "synonyms": ["PO BOX 46511", "46511", "31441", "S&S"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "8",
+    "name": "AETNA MEDICARE TRN",
+    "payerId": "211",
+    "payerName": "AETNA MEDICARE",
+    "planNumber": "8",
+    "planName": "AETNA MEDICARE TRN",
+    "address": "PO BOX 981106, EL PASO, TX 79998-1106",
+    "productType": "",
+    "financialClass": "Managed Medicare",
+    "synonyms": [],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna Medicare.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "21101",
+    "name": "AETNA MEDICARE",
+    "payerId": "211",
+    "payerName": "AETNA MEDICARE",
+    "planNumber": "21101",
+    "planName": "AETNA MEDICARE",
+    "address": "PO BOX 981106, EL PASO, TX 79998-1106",
+    "productType": "AETNA MEDICARE",
+    "financialClass": "Managed Medicare",
+    "synonyms": ["60054", "PO BOX 981106", "981106"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna Medicare.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+  {
+    "id": "21105",
+    "name": "AETNA MCR ADVANTRA",
+    "payerId": "211",
+    "payerName": "AETNA MEDICARE",
+    "planNumber": "21105",
+    "planName": "AETNA MCR ADVANTRA",
+    "address": "PO BOX 981106, EL PASO, TX 79998-1106",
+    "productType": "AETNA MEDICARE",
+    "financialClass": "Managed Medicare",
+    "synonyms": ["PO BOX 981106", "981106"],
+    "payerPrefix": "",
+    "ediNumber": "",
+    "page": "Aetna Medicare.aspx",
+    "pageUrl": "",
+    "possibleAlias": false
+  },
+]
+		
+		
+
+        const EMPTY_STATE_HTML = `
+            <div class="empty-state">
+                <svg viewBox="0 0 64 64" fill="none"
+                     stroke="#5b6472" stroke-width="3"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 6v10a10 10 0 0 0 20 0V6"/>
+                    <path d="M14 6h8M34 6h8"/>
+                    <path d="M28 26v8a14 14 0 0 0 28 0v-4"/>
+                    <circle cx="56" cy="26" r="5"/>
+                </svg>
+                <div class="empty-msg">
+                    There are no available existing coverages to add.
+                    Scan barcode, swipe card, or search for a new plan.
+                </div>
+            </div>
+        `;
+
+        function renderCards(data) {
+
+            const container = document.getElementById('resultsContainer');
+            const columnHeader = document.getElementById('columnHeader');
+
+            container.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                columnHeader.style.display = 'none';
+                container.innerHTML = EMPTY_STATE_HTML;
+                return;
+            }
+
+            columnHeader.style.display = 'grid';
+
+            data.forEach(item => {
+
+                const card = document.createElement('div');
+                card.className = 'coverage-card';
+
+                card.innerHTML = `
+                    <div class="coverage-grid">
+                        <div>
+							<div class="payer-name">
+								${item.payerName} [${item.payerId}]⚡
+							</div>
+
+							<div style="font-weight:bold;">
+								${item.planName} [${item.planNumber}]
+							</div>
+
+							<div>${item.address || '&mdash;'}</div>
+                        </div>
+                        <div>${item.productType || '&mdash;'}</div>
+                        <div>${item.financialClass || '&mdash;'}</div>
+                        <div>${item.synonyms?.join(', ') || '&mdash;'}</div>
+                    </div>
+                `;
+
+                if (item.plans) {
+
+                    const planSection = document.createElement('div');
+                    planSection.className = 'plan-section';
+                    planSection.innerHTML =
+                        item.plans
+                            .map(plan => `<span class="plan-pill">${plan}</span>`)
+                            .join('');
+                    card.appendChild(planSection);
+                }
+
+                card.onclick = () => {
+                    document.querySelectorAll('.coverage-card')
+                        .forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    window.selectedCoverage = item;
+					document.getElementById('acceptBtn').disabled = false;
+                };
+
+                container.appendChild(card);
+            });
+        }
+
+function searchCoverages(term) {
+
+    term = term.toLowerCase().trim();
+
+    const searchMode =
+        document.querySelector('input[name="searchType"]:checked').value;
+
+    if (!term) {
+        document.getElementById('acceptBtn').disabled = true;
+        renderCards([]);
+        return;
+    }
+
+    const results = coverageData
+        .map(item => {
+
+            let score = 0;
+
+            const payerName = (item.name || '').toLowerCase();
+            const payerId   = (item.id || '').toLowerCase();
+            const address   = (item.address || '').toLowerCase();
+            const synonyms  = (item.synonyms || []).map(x => x.toLowerCase());
+				const plans = [
+					item.planName || '',
+					item.planNumber || ''
+				].map(x => x.toLowerCase());
+
+            const blob = [
+                item.name,
+                item.id,
+                ...(item.synonyms || []),
+                ...(item.plans || [])
+            ].join(' ').toLowerCase();
+
+            if (searchMode === 'plan') {
+
+                if (payerId === term) score += 1000;
+                if (payerId.includes(term)) score += 500;
+                if (payerName === term) score += 800;
+                if (payerName.startsWith(term)) score += 400;
+                if (payerName.includes(term)) score += 200;
+                if (plans.some(x => x === term)) score += 300;
+                if (plans.some(x => x.includes(term))) score += 150;
+
+            } else {
+
+                if (payerId === term) score += 1000;
+                if (payerName === term) score += 500;
+                if (payerName.startsWith(term)) score += 250;
+                if (payerName.includes(term)) score += 100;
+                if (synonyms.some(x => x === term)) score += 175;
+                if (synonyms.some(x => x.includes(term))) score += 100;
+                if (plans.some(x => x === term)) score += 150;
+                if (plans.some(x => x.includes(term))) score += 75;
+                if (address.includes(term)) score += 25;
+            }
+
+            if (blob.includes(term)) score += 10;
+
+            return { ...item, score };
+
+        })
+        .filter(item => item.score > 0)
+        .sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return a.name.localeCompare(b.name);
+        });
+
+    renderCards(results);
+}
+
+        // Start blank -> shows empty state
+        searchCoverages('');
+
+		document.getElementById('searchBtn').addEventListener('click', () => {
+    searchCoverages(document.getElementById('searchBox').value);
+});
+
+document.getElementById('searchBox').addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+        searchCoverages(document.getElementById('searchBox').value);
+    }
+});
+
+document.getElementById('searchBox').addEventListener('input', e => {
+    searchCoverages(e.target.value);
+});
+
+document.querySelectorAll('input[name="searchType"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+        searchCoverages(document.getElementById('searchBox').value);
+    });
+});
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Member Coverage Screen</title>
+<style>
+:root {
+  --teal: #007f79;
+  --teal-line: #079b84;
+  --mint: #e5f5f2;
+  --pale: #f1faf8;
+
+  --text: #3d4143;
+  --blue: #176bea;
+  --icon: #7f949c;
+
+  --border: #c8cfce;
+  --border-input: #c7cecd;
+  --heading: #0b7c77;
+}
+
+
+/* =========================
+   BASE
+   ========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--text);
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+}
+
+body {
+  min-height: 100vh;
+}
+
+input,
+textarea {
+  border-radius: 0;
+}
+
+.screen {
+  width: 1205px;
+  min-height: 720px;
+  background: #fff;
+  border-top: 1px solid #f1f1f1;
+}
+
+
+/* =========================
+   SECTIONS
+   ========================= */
+
+.section {
+  position: relative;
+  padding-left: 10px;
+  border-left: 5px solid var(--teal-line);
+}
+
+.section-title {
+  display: flex;
+  align-items: flex-start;
+  height: 31px;
+  margin-left: -15px;
+  padding-left: 5px;
+  border-bottom: 1px solid #d5dad9;
+}
+
+.title-pill {
+  display: inline-block;
+  padding: 0 18px 0 5px;
+  border-radius: 0 22px 22px 0;
+  background: var(--mint);
+  color: #086c69;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 30px;
+}
+
+
+/* =========================
+   MEMBER HEADER
+   ========================= */
+
+.member-tab {
+  display: inline-block;
+  margin: 8px 0 0 5px;
+  padding: 7px 8px 6px;
+  color: #087a73;
+  font-weight: 600;
+  background: #fff;
+  border: 1px solid var(--border-input);
+  border-top: 3px solid #14947e;
+  border-bottom: 0;
+}
+
+.member-top {
+  display: grid;
+  grid-template-columns: 215px 1fr 240px;
+  align-items: start;
+  height: 75px;
+  padding: 12px 20px 0;
+  border-top: 1px solid #cdd2d1;
+  border-bottom: 1px solid #cdd2d1;
+}
+
+.label {
+  margin-bottom: 4px;
+  color: #4e5051;
+  font-size: 13px;
+}
+
+.plain-value {
+  color: #242627;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pencil {
+  margin-left: 4px;
+  color: var(--icon);
+  font-size: 12px;
+}
+
+.verified {
+  justify-self: end;
+  margin-top: 11px;
+  color: #7d8588;
+  font-size: 14px;
+}
+
+.verified .stamp {
+  margin-right: 7px;
+  color: #b9cfd4;
+  font-size: 18px;
+}
+
+.verified .info {
+  margin-left: 6px;
+  padding: 0 4px;
+  border: 1px solid #708892;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+
+/* =========================
+   EFFECTIVE DATES
+   ========================= */
+
+.effective {
+  padding: 0 20px 10px;
+}
+
+.effective-heading {
+  display: flex;
+  align-items: flex-start;
+  height: 23px;
+  padding-top: 8px;
+  color: #087c76;
+  font-size: 17px;
+}
+
+.add-range {
+  margin: 0 3px 10px 0;
+  text-align: right;
+  color: var(--blue);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.add-range .plus {
+  margin-right: 7px;
+  color: #25895c;
+  font-size: 22px;
+  vertical-align: -2px;
+}
+
+.eff-grid {
+  display: grid;
+  grid-template-columns:
+    30px 130px 130px 145px 190px 95px 126px 172px 28px;
+  align-items: end;
+}
+
+.eff-grid.headers {
+  height: 39px;
+  color: #55595a;
+  border-bottom: 1px solid #c9d0cf;
+}
+
+.eff-grid.headers > div {
+  padding-bottom: 8px;
+}
+
+.eff-grid.row {
+  align-items: center;
+  height: 33px;
+  color: #222;
+  border-bottom: 1px solid #c9d0cf;
+}
+
+.refresh {
+  position: relative;
+  width: 17px;
+  height: 17px;
+  border: 2px solid #3984e8;
+  border-radius: 50%;
+}
+
+.refresh::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  right: -2px;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-left: 5px solid #3984e8;
+  transform: rotate(-35deg);
+}
+
+.effective-input {
+  width: 116px;
+  height: 26px;
+  padding: 2px 3px;
+  background: #fff;
+  color: #222;
+  font: inherit;
+  outline: none;
+  border: 1px solid transparent;
+}
+
+.effective-input:focus {
+  border-color: #99bfc0;
+}
+
+.trash {
+  text-align: center;
+  color: #6e8a91;
+  font-size: 18px;
+}
+
+.divider {
+  height: 10px;
+  border-top: 1px solid #cad8d6;
+  border-bottom: 1px solid #cad8d6;
+  background: linear-gradient(#eef5f4, #dbe8e6, #f8fbfb);
+}
+
+
+/* =========================
+   SUBSCRIBER
+   ========================= */
+
+.subscriber {
+  padding-bottom: 15px;
+}
+
+.subscriber-body {
+  display: grid;
+  grid-template-columns: 500px 235px 235px;
+  column-gap: 30px;
+  padding: 12px 20px 0;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 235px 235px;
+  column-gap: 30px;
+}
+
+.field {
+  margin-bottom: 7px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 95px 1fr;
+  column-gap: 10px;
+}
+
+.input,
+.select,
+.box {
+  width: 100%;
+  height: 28px;
+  padding: 3px 5px;
+  color: #232526;
+  font: inherit;
+  background: var(--pale);
+  border: 1px solid var(--border-input);
+  box-shadow: inset 0 0 0 1px #edf3f2;
+}
+
+.input.white,
+.select.white,
+.box.white {
+  background: #fff;
+}
+
+.select {
+  position: relative;
+  padding-right: 24px;
+}
+
+.select .search {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  color: #a7b8bc;
+  font-size: 18px;
+}
+
+.text-area {
+  height: 79px;
+  resize: none;
+}
+
+.record-link {
+  margin-top: 7px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #126ff0;
+  font-weight: 600;
+}
+
+.info-dot {
+  display: inline-block;
+  margin-left: 3px;
+  padding: 0 3px;
+  color: #81949c;
+  font-size: 10px;
+  font-weight: bold;
+  border: 1px solid #81949c;
+  border-radius: 50%;
+}
+
+.remove {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 7px;
+  padding: 4px 10px;
+  color: #45484a;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  background: linear-gradient(#fff, #e9ebeb);
+}
+
+.remove::before {
+  content: "";
+  width: 12px;
+  height: 3px;
+  margin-right: 8px;
+  background: #df3c2f;
+}
+
+.subhead {
+  height: 27px;
+  margin-bottom: 9px;
+  padding-top: 3px;
+  color: var(--heading);
+  font-size: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.employment-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 5px;
+  color: var(--heading);
+  font-size: 16px;
+}
+
+.employment-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+
+/* =========================
+   SUBSCRIBER LAYOUT HELPERS
+   ========================= */
+
+.address-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 6px;
+}
+
+.statezip {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 6px;
+}
+
+.countycountry {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.member-row {
+  display: grid;
+  grid-template-columns: 95px 130px;
+  gap: 10px;
+}
+
+.name-row {
+  display: grid;
+  grid-column: 1;
+  grid-template-columns: 235px 235px;
+  gap: 30px;
+}
+
+.compact-label {
+  margin-bottom: 3px;
+}
+
+
+/* =========================
+   PAYER-RETURNED DEMOGRAPHICS
+   ========================= */
+
+.payer-returned-demographics {
+  margin-top: 20px;
+}
+
+/*
+   These styles are intentionally scoped to
+   Payer-Returned Demographics so they do not
+   alter the main section/title/field layouts.
+*/
+
+.payer-returned-demographics .section-title {
+  display: flex;
+  align-items: center;
+  height: auto;
+  margin: 0 0 6px;
+  padding: 0;
+  gap: 12px;
+  color: #007575;
+  font-size: 14px;
+  border-bottom: 0;
+}
+
+.payer-returned-demographics .section-line {
+  flex: 1;
+  height: 1px;
+  background: #c9c9c9;
+}
+
+.payer-returned-demographics .field-row {
+  display: flex;
+  gap: 30px;
+}
+
+.payer-returned-demographics .field {
+  width: 220px;
+  margin-bottom: 7px;
+}
+
+.payer-returned-demographics .field label {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 13px;
+}
+
+.payer-returned-demographics .input-wrapper {
+  position: relative;
+}
+
+.payer-returned-demographics .field input {
+  width: 100%;
+  height: 27px;
+  padding: 2px 28px 2px 5px;
+  color: #232526;
+  font: inherit;
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 0;
+}
+
+.payer-returned-demographics .warning-icon,
+.payer-returned-demographics .lookup-icon,
+.payer-returned-demographics .calendar-icon {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  transform: translateY(-50%);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.payer-returned-demographics .lookup-icon,
+.payer-returned-demographics .calendar-icon {
+  color: #b9c5ca;
+}
+
+
+/* =========================
+   POLICY / ADDITIONAL
+   ========================= */
+
+.policy-body,
+.additional-body {
+  padding: 12px 20px;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 360px 360px 1fr;
+  gap: 16px;
+}
+
+.mini-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  color: var(--heading);
+  font-size: 16px;
+}
+
+.mini-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  margin-left: 8px;
+  background: var(--border);
+}
+
+
+/* =========================
+   DOCUMENTS
+   ========================= */
+
+.documents-body {
+  padding: 18px 20px;
+}
+
+.document-drop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 340px;
+  height: 90px;
+  color: #444;
+  background: #fbfbfb;
+  border: 3px dashed #c3cbca;
+}
+
+
+/* =========================
+   CLAIMS
+   ========================= */
+
+.claim-grid {
+  display: grid;
+  grid-template-columns: 160px 300px;
+  gap: 25px;
+}
+
+.copay-grid {
+  margin-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.copay-header,
+.copay-row {
+  display: grid;
+  grid-template-columns: 260px 300px 90px 120px 50px;
+  align-items: center;
+}
+
+.copay-header {
+  height: 38px;
+  color: #555;
+  border-bottom: 1px solid #d8dddd;
+}
+
+.copay-row {
+  height: 34px;
+  border-bottom: 1px solid #d8dddd;
+}
+
+.default-row {
+  display: flex;
+  align-items: center;
+  height: 34px;
+  color: #0a7c77;
+  border-bottom: 1px solid #d8dddd;
+}
+
+.comments-box {
+  width: 100%;
+  height: 180px;
+  background: #fff;
+  border: 1px solid var(--border-input);
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1205px) {
+  .screen {
+    transform-origin: top left;
+    transform: scale(calc(100vw / 1205));
+  }
+}
+</style>
+</head>
+<body>
+<div class="screen">
+
+  <section class="section">
+  
+    <div class="section-title"><span class="title-pill">Members</span></div>
+    <div class="member-tab" id="member-tab">Addison-RCM Wilson</div>
+    <div class="member-top">
+      <div><div class="label">Relationship to Subscriber</div><div class="plain-value">Self <span class="pencil">◢</span></div></div>
+      <div><div class="label">Dependent Type</div><div class="plain-value">Non-Dependent</div></div>
+      <div class="verified"><span class="stamp">♟</span>Member Verified <span class="info">i</span></div>
+    </div>
+    <div class="effective">
+      <div class="effective-heading">Member Effective Dates</div>
+      <div class="add-range"><span class="plus">+</span>Add Effective Date Range</div>
+      <div class="eff-grid headers">
+        <div></div>
+		<div>Effective From</div>
+		<div>Effective To</div>
+		<div>Member ID</div>
+		<div>Payer Field Name</div>
+		<div>Payer Field<br>Sex</div>
+		<div>Payer Field DOB</div>
+		<div>Verification Status</div>
+		<div></div>
+      </div>
+      <div class="eff-grid row">
+        <div class="refresh"></div>
+        <div id="effectiveFrom">11/01/2006</div>
+        <div><input id="effectiveToDate" class="effective-input" type="text" aria-label="Effective To" autocomplete="off"></div>
+        <div id="memberID">R123456789</div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div>E-Verified</div>
+		<div class="trash">♜</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section subscriber">
+    <div class="section-title"><span class="title-pill">Subscriber</span></div>
+    <div class="subscriber-body">
+      <div>
+        <div class="two-col">
+			<div class="field">
+				<div class="label">Subscriber Name</div>
+					<input id="subscriberName" class="input" value="WILSON,ADDISON-RCM">
+				</div>
+			<div class="field"><div class="label">SSN 👁</div><input class="input" value="xxx-xx-1332"></div>
+        </div>
+        <div class="two-col">
+			<div class="field-row">
+				<div class="field"><div class="label">Sex</div>
+					<input class="input" value="Female">
+				</div>
+				<div class="field">
+					<div class="label">Date of Birth</div>
+					<input id="subscriberDOB" class="input" value="5/22/1998">
+				</div>
+			</div>
+			<div class="field">
+				<div class="label">Subscriber’s Patient Record <span class="info-dot">i</span></div>
+				<div id="subscriberLink" class="record-link">WILSON,ADDISON-RCM [200... ↗</div>
+				<button class="remove">Remove</button>
+			</div>
+        </div>
+        <div class="subhead">Demographics</div>
+        <div class="two-col">
+          <div>
+            <div class="field"><div class="label">Address Linked?</div><div class="select white">Yes <span class="search">⌕</span></div></div>
+            <div class="field"><div class="label">Address</div><textarea class="input white text-area">22 airy</textarea></div>
+            <div class="field"><div class="label">City (or ZIP)</div><input class="input white" value="Morse Mill"></div>
+            <div class="field-row"><div class="field"><div class="label">State</div><input class="input white"></div><div class="field"><div class="label">ZIP</div><input class="input white"></div></div>
+          </div>
+          <div>
+            <div class="field">
+				<div class="label">Subscriber ID</div>
+				<input id= "subscriberID" class="input white" value="R123456789"></div>
+				<div class="field"><div class="label">Rel to Guarantor</div>
+				<input class="input">
+			</div>
+            <div class="field"><div class="label">Home Phone</div><input class="input"></div>
+            <div class="field"><div class="label">Work Phone</div><input class="input"></div>
+            <div class="field"><div class="label">Fax</div><input class="input"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="employment-title">Employment</div>
+        <div class="field"><div class="label">Employment Status</div><div class="select white">Full Time <span class="search">⌕</span></div></div>
+        <div class="field"><div class="label">Employer</div><div class="select white">1ST ADVANTAGE BANK <span class="search">⌕</span></div></div>
+        <div class="field"><div class="label">Employment Date</div><input class="input"></div>
+        <div class="field"><div class="label">Employee ID</div><input class="input"></div>
+        <div class="field"><div class="label">Occupation</div><input class="input"></div>
+      </div>
+
+      <div>
+        <div class="field"><div class="label">Address</div><textarea class="input text-area">240 SALT LICK RD</textarea></div>
+        <div class="field"><div class="label">City (or ZIP)</div><input class="input" value="SAINT PETERS"></div>
+        <div class="statezip"><div class="field"><div class="label">State</div><input class="input" value="MO"></div><div class="field"><div class="label">ZIP</div><input class="input" value="63376"></div></div>
+        <div class="countycountry"><div class="field"><div class="label">County</div><input class="input"></div><div class="field"><div class="label">Country</div><input class="input"></div></div>
+        <div class="field"><div class="label">Phone</div><input class="input" value="636-970-0440"></div>
+        <div class="field"><div class="label">Fax</div><input class="input"></div>
+      </div>
+    </div>
+
+  <!-- Payer-Returned Demographics -->
+<div class="payer-returned-demographics">
+
+    <div class="section-title">
+        <span>Payer-Returned Demographics</span>
+        <div class="section-line"></div>
+    </div>
+
+    <div class="field-row">
+
+        <!-- Name -->
+        <div class="field">
+            <label for="payerReturnedName">Name</label>
+            <div class="input-wrapper">
+                <input type="text" id="payerReturnedName">
+                <span class="warning-icon">⚠️</span>
+            </div>
+        </div>
+
+        <!-- Sex -->
+        <div class="field">
+            <label for="payerReturnedSex">Sex</label>
+            <div class="input-wrapper">
+                <input type="text" id="payerReturnedSex">
+                <span class="lookup-icon">🔎</span>
+            </div>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="field">
+            <label for="payerReturnedDOB">Date of Birth</label>
+            <div class="input-wrapper">
+                <input type="text" id="payerReturnedDOB">
+                <span class="calendar-icon">▣</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+  </section>
+  
+<section class="section">
+  <div class="section-title">
+    <span class="title-pill">Policy</span>
+  </div>
+
+  <div class="policy-body">
+
+    <div class="three-col">
+
+      <div>
+        <div class="mini-title">Contact Info</div>
+
+        <div class="field">
+          <div class="label">Auth Phone</div>
+          <input class="input white">
+        </div>
+
+        <div class="field">
+          <div class="label">Payer Phone</div>
+          <input class="input white">
+        </div>
+      </div>
+
+      <div>
+        <div class="mini-title">Supplemental ID</div>
+
+        <div class="field">
+          <div class="label">Alt Subscriber #</div>
+          <input class="input white">
+        </div>
+      </div>
+
+      <div>
+        <div class="mini-title">Group Info</div>
+
+        <div class="field">
+          <div class="label">Group Number</div>
+          <input id="groupNumber" class="input white">
+        </div>
+
+        <div class="field">
+          <div class="label">Group Name</div>
+          <input class="input white">
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title">
+    <span class="title-pill">Documents</span>
+  </div>
+
+  <div class="documents-body">
+
+    <div class="document-drop">
+      ➕ Add a new document to this coverage
+    </div>
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title">
+    <span class="title-pill">Additional</span>
+  </div>
+
+  <div class="additional-body">
+
+    <div class="mini-title">Claim Address</div>
+
+    <div class="claim-grid">
+
+      <div>
+        <div class="label">Send Claim To Payer Plan</div>
+      </div>
+
+      <div>
+        PO BOX 105557<br>
+        Atlanta Georgia 30348<br>
+        ☎ 800-392-8043
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="mini-title">
+      Copay
+    </div>
+
+    <div class="add-range">
+      <span class="plus">+</span>
+      Add Copay
+    </div>
+
+    <div class="copay-grid">
+
+      <div class="copay-header">
+        <div>Dept Specialty</div>
+        <div>Service Type</div>
+        <div>Copay</div>
+        <div>Coinsurance (%)</div>
+        <div></div>
+      </div>
+
+      <div class="copay-row">
+        <div></div>
+        <div>PRIMARY CARE</div>
+        <div>—</div>
+        <div>—</div>
+        <div>🗑</div>
+      </div>
+
+      <div class="default-row">
+        Default Copay/Coinsurance (No Defaults Set)
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="mini-title">Additional Items</div>
+
+    <div class="three-col">
+
+      <div>
+        <div class="label">Contact Person</div>
+        <input class="input white">
+      </div>
+
+      <div style="grid-column:span 2">
+        <div class="label">Coverage Comments</div>
+        <textarea class="comments-box"></textarea>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // Get Storyline only when the app is running inside Storyline.
+  let player = null;
+
+  try {
+    if (typeof window.parent.GetPlayer === "function") {
+      player = window.parent.GetPlayer();
+    }
+  } catch (error) {
+    console.warn("Storyline player is unavailable.", error);
+  }
+
+  // Read values from Storyline.
+  
+let patientFname = "";
+let patientLname = "";
+let CoverageEffectiveTo = "";
+let MemberID1 = ""; 
+let coverageGroupID = "";
+
+  if (player) {
+    patientFname = player.GetVar("patientFname") || "";
+    patientLname = player.GetVar("patientLname") || "";
+	CoverageEffectiveTo  = player.GetVar("CoverageEffectiveTo") || "";
+	CoverageEffectiveStart  = player.GetVar("CoverageEffectiveStart") || "";
+	MemberID1 = player.GetVar("MemberID1") || "0000000";
+	patientDOB = player.GetVar("patientDOB") || "";
+	SubscriberID1 = player.GetVar("MemberID1") || "0000000";
+	coverageGroupID = player.GetVar("coverageGroupID") || "zip";
+
+} 
+	document.getElementById("subscriberName").value = patientLname + ", " + patientFname;
+	document.getElementById("effectiveToDate").value = CoverageEffectiveStart;
+	document.getElementById("effectiveFrom").value = CoverageEffectiveTo;
+	document.getElementById("memberID").textContent = MemberID1;
+	document.getElementById("member-tab").textContent = patientLname + ", " + patientFname;
+	document.getElementById("subscriberDOB").value = patientDOB;
+	document.getElementById("subscriberLink").textContent = patientLname + ", " + patientFname + " [200... ↗"
+    document.getElementById("subscriberID").value = MemberID1;
+	document.getElementById("groupNumber").value = coverageGroupID;
+  console.log("vee4");
+  console.log(document.getElementById("subscriberID"))
+  
+// Date functions
+const effectiveToField = document.getElementById("effectiveToDate");
+
+  function formatDate(date) {
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return month + "/" + day + "/" + year;
+  }
+
+function parseDate(value) {
+console.log("processEffectiveToDate fired");
+  // 12122009
+  let match = value.match(/^(\d{2})(\d{2})(\d{4})$/);
+
+  if (match) {
+    const month = Number(match[1]);
+    const day = Number(match[2]);
+    const year = Number(match[3]);
+
+    const date = new Date(year, month - 1, day);
+
+    if (
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day
+    ) {
+      return date;
+    }
+  }
+
+  // 12/12/2009
+  match = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+
+  if (match) {
+    const month = Number(match[1]);
+    const day = Number(match[2]);
+    const year = Number(match[3]);
+
+    const date = new Date(year, month - 1, day);
+
+    if (
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day
+    ) {
+      return date;
+    }
+  }
+
+  return null;
+}
+
+  function processEffectiveToDate() {
+    //const enteredValue = effectiveToField.value.trim();
+	const enteredValue = String(effectiveToField.value).trim();
+    if (!enteredValue) {
+      if (player) {
+        player.SetVar("CoverageEffectiveTo", "");
+      }
+
+      return;
+    }
+
+    let resolvedDate = null;
+
+    // Handles T-1, t-1, T+1, T - 1, etc.
+    const relativeMatch = enteredValue.match(
+      /^T\s*([+-])\s*(\d+)$/i
+    );
+
+    if (relativeMatch) {
+      const direction = relativeMatch[1] === "-" ? -1 : 1;
+      const offset = Number(relativeMatch[2]) * direction;
+
+      resolvedDate = new Date();
+      resolvedDate.setHours(12, 0, 0, 0);
+      resolvedDate.setDate(resolvedDate.getDate() + offset);
+    } else {
+      resolvedDate = parseDate(enteredValue);
+    }
+
+    // Leave unrecognized or invalid entries unchanged.
+    if (!resolvedDate) {
+      return;
+    }
+
+    const formattedValue = formatDate(resolvedDate);
+
+    effectiveToField.value = formattedValue;
+
+    if (player) {
+      player.SetVar("CoverageEffectiveTo", formattedValue);
+    }
+  }
+
+  effectiveToField.addEventListener("change", processEffectiveToDate);
+  effectiveToField.addEventListener("blur", processEffectiveToDate);
+
+  effectiveToField.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      processEffectiveToDate();
+    } else if (event.key === "Tab") {
+      processEffectiveToDate();
+    }
+  });
+  document.getElementById("groupNumber").addEventListener("input", function () {
+    if (player) {
+        player.SetVar("coverageGroupID", this.value);
+    }
+  });
+	document.getElementById("payerReturnedName").addEventListener("input", function () {
+    if (player) {
+        player.SetVar("payerReturnedName", this.value);
+    }
+});
+
+});
+
+</script>
+
+</body>
+</html>

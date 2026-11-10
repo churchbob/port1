@@ -1,0 +1,29 @@
+
+
+
+0 - no members - notify - empty
+1 - no members - notify - closed
+2 - no members - notify - open
+3 - no members - notify - returned
+
+
+10 - 1 members - open - notify - empty
+11 - 1 members - closed - notify - empty
+12 - 1 members - open - notify - closed
+13 - 1 members - open - notify - open
+14 - 1 members - closed - notify - closed
+15 - 1 members - closed - notify - open
+
+--------------------------
+CoverageVar	 - controlled by CoverageCancelled (True=hide)
+responseHistory1 - controlled by
+Member1-1Open 	 - controlled by
+
+
+
+HARstate
+0 - no coverage loaded - Normal
+1- 1 coverage loaded - HARopen1Coverage
+2 - 2 coverages loaded - NA
+10 - coverage ineffective - HARopen1CoverageOff
+
